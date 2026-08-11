@@ -1,84 +1,109 @@
-<div class="py-8" x-data="{ quickOpen: false }">
+<div class="py-8" x-data>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">لوحة التحكم</h1>
-            <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">
-                {{ now()->translatedFormat('l، j F Y') }}
-            </p>
+            <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">{{ now()->translatedFormat('l، j F Y') }}</p>
         </div>
 
-        {{-- Stat cards with soft gradients (dashboard-only style) --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {{-- Active goals --}}
-            <div class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-primary/15 to-primary/5 dark:from-primary-dark/20 dark:to-transparent backdrop-blur">
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">أهداف نشطة</p>
-                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $activeGoals }}</p>
-                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">من {{ $totalGoals }} هدف</p>
-            </div>
+        {{-- Today at a glance --}}
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {{-- Plan --}}
+            <a href="{{ route('planner.day', now()->toDateString()) }}" wire:navigate class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-primary/15 to-primary/5 dark:from-primary-dark/20 dark:to-transparent hover:shadow-md transition">
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">مخطط اليوم</p>
+                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $todayPlan['percent'] }}%</p>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">
+                    {{ $todayPlan['done'] }}/{{ $todayPlan['total'] }} تاسك ·
+                    {{ $todayPlan['closed'] ? 'مقفل' : ($todayPlan['started'] ? 'جارٍ' : 'لم يبدأ') }}
+                </p>
+            </a>
 
-            {{-- Logs today --}}
-            <div class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-success/15 to-success/5 dark:from-success/20 dark:to-transparent backdrop-blur">
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">سجلات اليوم</p>
-                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $logsToday }}</p>
-                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">تم تسجيلها اليوم</p>
-            </div>
+            {{-- Prayers --}}
+            <a href="{{ route('religion.prayers') }}" wire:navigate class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-success/15 to-success/5 dark:from-success/20 dark:to-transparent hover:shadow-md transition">
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">🕌 الصلوات</p>
+                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $prayers['done'] }}<span class="text-lg text-ink-soft dark:text-ink-dark-soft">/5</span></p>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">{{ $prayers['onTime'] }} في وقتها</p>
+            </a>
 
-            {{-- Upcoming deadlines --}}
-            <div class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-warning/15 to-warning/5 dark:from-warning/20 dark:to-transparent backdrop-blur">
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">مواعيد قادمة</p>
-                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $deadlines->count() }}</p>
-                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">أهداف لها تاريخ</p>
-            </div>
+            {{-- Habits --}}
+            <a href="{{ route('habits.index') }}" wire:navigate class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-secondary/25 to-secondary/5 dark:from-secondary-dark/25 dark:to-transparent hover:shadow-md transition">
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">🔁 العادات</p>
+                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $habits['done'] }}<span class="text-lg text-ink-soft dark:text-ink-dark-soft">/{{ $habits['total'] }}</span></p>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">اتعملت النهاردة</p>
+            </a>
 
-            {{-- Mood 7-day sparkline --}}
-            <div class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-secondary/25 to-secondary/5 dark:from-secondary-dark/25 dark:to-transparent backdrop-blur">
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mb-2">المزاج (٧ أيام)</p>
-                <div class="flex items-end gap-1 h-12" dir="ltr">
-                    @foreach ($moodTrend as $point)
-                        <div class="flex-1 rounded-t bg-primary/70 dark:bg-primary-dark/70"
-                             style="height: {{ $point['mood'] ? ($point['mood'] * 10) : 4 }}%"
-                             title="{{ $point['date'] }}: {{ $point['mood'] ?? '—' }}"></div>
-                    @endforeach
-                </div>
-            </div>
+            {{-- Challenges --}}
+            <a href="{{ route('challenges.index') }}" wire:navigate class="rounded-2xl p-5 shadow-sm bg-gradient-to-br from-warning/20 to-warning/5 dark:from-warning/20 dark:to-transparent hover:shadow-md transition">
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft">🔥 التحديات</p>
+                <p class="text-3xl font-bold text-ink dark:text-ink-dark mt-2">{{ $challenges['done'] }}<span class="text-lg text-ink-soft dark:text-ink-dark-soft">/{{ $challenges['total'] }}</span></p>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">علّمتها النهاردة</p>
+            </a>
         </div>
 
-        {{-- Two columns: today's logs + upcoming deadlines --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-            {{-- Today's logs --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-6">
+            {{-- Upcoming appointments --}}
             <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6">
-                <h3 class="font-semibold text-ink dark:text-ink-dark mb-4">سجلات اليوم</h3>
-                @forelse ($todaysLogs as $log)
-                    <div wire:key="today-log-{{ $log->id }}" class="flex items-center justify-between py-2 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0">
-                        <div>
-                            <p class="text-sm text-ink dark:text-ink-dark">{{ $log->module_type->label() }}</p>
-                            @if ($log->goal)<p class="text-xs text-ink-soft dark:text-ink-dark-soft">{{ $log->goal->title }}</p>@endif
-                        </div>
-                        <div class="text-xs text-ink-soft dark:text-ink-dark-soft">
-                            @if ($log->mood)<span>😊 {{ $log->mood }}/10</span>@endif
-                        </div>
-                    </div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-ink dark:text-ink-dark">📅 مواعيد قادمة</h3>
+                    <a href="{{ route('appointments') }}" wire:navigate class="text-xs text-primary dark:text-primary-dark hover:underline">الكل</a>
+                </div>
+                @forelse ($appointments as $ap)
+                    <a href="{{ route('appointments') }}" wire:navigate wire:key="dash-ap-{{ $ap->id }}" class="flex items-center justify-between gap-2 py-2 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0 hover:opacity-80">
+                        <span class="flex items-center gap-2 min-w-0">
+                            <span class="w-2 h-2 rounded-full shrink-0" style="background: {{ $ap->type->hex() }}"></span>
+                            <span class="text-sm text-ink dark:text-ink-dark truncate">{{ $ap->title }}</span>
+                        </span>
+                        <span class="text-xs text-ink-soft dark:text-ink-dark-soft shrink-0">{{ $ap->date->translatedFormat('j M') }}@if ($ap->timeLabel()) · <span dir="ltr">{{ $ap->timeLabel() }}</span>@endif</span>
+                    </a>
                 @empty
-                    <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-8">لم تسجّل شيئًا اليوم بعد.</p>
+                    <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-6">مفيش مواعيد قادمة.</p>
                 @endforelse
             </div>
 
-            {{-- Upcoming deadlines --}}
+            {{-- Recovery streaks --}}
             <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6">
-                <h3 class="font-semibold text-ink dark:text-ink-dark mb-4">مواعيد قادمة</h3>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-ink dark:text-ink-dark">🌱 التعافي</h3>
+                    <a href="{{ route('recovery.index') }}" wire:navigate class="text-xs text-primary dark:text-primary-dark hover:underline">الكل</a>
+                </div>
+                @forelse ($recoveries as $rec)
+                    <a href="{{ route('recovery.show', $rec) }}" wire:navigate wire:key="dash-rec-{{ $rec->id }}" class="flex items-center justify-between gap-2 py-2 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0 hover:opacity-80">
+                        <span class="text-sm text-ink dark:text-ink-dark truncate">{{ $rec->title }}</span>
+                        <span class="text-sm font-bold text-success shrink-0">{{ $rec->currentStreakDays() }} يوم</span>
+                    </a>
+                @empty
+                    <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-6">مفيش حالات تعافٍ نشطة.</p>
+                @endforelse
+            </div>
+
+            {{-- Goal deadlines --}}
+            <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-ink dark:text-ink-dark">🎯 مواعيد الأهداف</h3>
+                    <a href="{{ route('goals.index') }}" wire:navigate class="text-xs text-primary dark:text-primary-dark hover:underline">الكل ({{ $activeGoals }})</a>
+                </div>
                 @forelse ($deadlines as $goal)
-                    <a href="{{ route('goals.show', $goal) }}" wire:navigate wire:key="deadline-{{ $goal->id }}"
-                       class="group flex items-center justify-between gap-2 -mx-2 px-2 py-2.5 rounded-lg cursor-pointer transition hover:bg-primary/5 dark:hover:bg-primary-dark/10">
-                        <span class="flex items-center gap-2 min-w-0">
-                            <svg class="w-4 h-4 text-primary dark:text-primary-dark shrink-0 rotate-180 opacity-60 group-hover:opacity-100 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            <span class="text-sm text-ink dark:text-ink-dark truncate group-hover:text-primary dark:group-hover:text-primary-dark transition">{{ $goal->title }}</span>
-                        </span>
+                    <a href="{{ route('goals.show', $goal) }}" wire:navigate wire:key="dash-goal-{{ $goal->id }}" class="flex items-center justify-between gap-2 py-2 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0 hover:opacity-80">
+                        <span class="text-sm text-ink dark:text-ink-dark truncate">{{ $goal->title }}</span>
                         <span class="text-xs text-ink-soft dark:text-ink-dark-soft shrink-0">{{ $goal->target_date->translatedFormat('j M') }}</span>
                     </a>
                 @empty
-                    <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-8">لا توجد مواعيد قادمة.</p>
+                    <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-6">مفيش مواعيد أهداف.</p>
                 @endforelse
+            </div>
+        </div>
+
+        {{-- Mood trend --}}
+        <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6 mt-6">
+            <h3 class="font-semibold text-ink dark:text-ink-dark mb-3">المزاج (٧ أيام)</h3>
+            <div class="flex items-end gap-2 h-20" dir="ltr">
+                @foreach ($moodTrend as $point)
+                    <div class="flex-1 flex flex-col items-center justify-end gap-1">
+                        <div class="w-full rounded-t bg-primary/70 dark:bg-primary-dark/70"
+                             style="height: {{ $point['mood'] ? ($point['mood'] * 10) : 3 }}%"
+                             title="{{ $point['date'] }}: {{ $point['mood'] ?? '—' }}"></div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -94,7 +119,6 @@
         </button>
     </div>
 
-    {{-- Quick-add modals --}}
     <livewire:goals.manage-goal />
     <livewire:daily-logs.manage-log />
 </div>

@@ -12,3 +12,22 @@ html {
 [x-cloak] {
     display: none !important;
 }
+
+/* Trix rich-text editor + rendered content.
+   Kept on a light surface in both themes so the dark toolbar icons stay legible. */
+trix-editor {
+    min-height: 8rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(209 213 219);
+    background: #fff;
+    color: #2B2B2B;
+}
+.trix-content h1 { font-size: 1.25rem; font-weight: 700; margin: 0.5rem 0; }
+.trix-content ul { list-style: disc; padding-inline-start: 1.5rem; }
+.trix-content ol { list-style: decimal; padding-inline-start: 1.5rem; }
+.trix-content blockquote {
+    border-inline-start: 3px solid rgb(63 125 122 / 0.5);
+    padding-inline-start: 0.75rem;
+    color: #767676;
+}
+.trix-content a { color: #3F7D7A; text-decoration: underline; }

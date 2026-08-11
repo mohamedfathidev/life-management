@@ -52,6 +52,22 @@ class User extends Authenticatable
         return $this->hasMany(Task::class);
     }
 
+    public function recoveries(): HasMany
+    {
+        return $this->hasMany(Recovery::class);
+    }
+
+    public function habits(): HasMany
+    {
+        return $this->hasMany(Habit::class);
+    }
+
+    /** Whether the user configured a privacy PIN. */
+    public function hasPin(): bool
+    {
+        return $this->pin !== null;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -59,6 +75,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'pin',
         'remember_token',
     ];
 
@@ -72,6 +89,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'pin' => 'hashed',
             'theme' => \App\Enums\Theme::class,
         ];
     }

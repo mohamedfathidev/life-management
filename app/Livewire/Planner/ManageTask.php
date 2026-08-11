@@ -18,12 +18,16 @@ class ManageTask extends Component
     public bool $open = false;
 
     #[On('create-task')]
-    public function openForCreate(?int $dayId = null, ?int $goalId = null): void
+    public function openForCreate(?int $dayId = null, ?int $goalId = null, ?int $studyTrackId = null): void
     {
         $this->form->reset();
         $this->resetValidation();
         $this->form->day_id = $dayId;
         $this->form->goal_id = $goalId;
+        $this->form->study_track_id = $studyTrackId;
+        if ($studyTrackId) {
+            $this->form->kind = \App\Enums\TaskKind::Study->value;
+        }
         $this->open = true;
     }
 

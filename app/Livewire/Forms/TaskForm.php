@@ -17,6 +17,7 @@ class TaskForm extends Form
 
     public ?int $day_id = null;
     public ?int $goal_id = null;
+    public ?int $study_track_id = null;
     public string $title = '';
     public string $kind = 'other';
     public int $progress = 0;
@@ -27,6 +28,7 @@ class TaskForm extends Form
         return [
             'day_id' => ['nullable', 'integer', 'exists:days,id'],
             'goal_id' => ['nullable', 'integer', 'exists:goals,id', $this->withinGoalRange()],
+            'study_track_id' => ['nullable', 'integer', 'exists:study_tracks,id'],
             'title' => ['required', 'string', 'max:255'],
             'kind' => ['required', new Enum(TaskKind::class)],
             'progress' => ['required', 'integer', 'between:0,100'],
@@ -73,6 +75,7 @@ class TaskForm extends Form
         $this->task = $task;
         $this->day_id = $task->day_id;
         $this->goal_id = $task->goal_id;
+        $this->study_track_id = $task->study_track_id;
         $this->title = $task->title;
         $this->kind = $task->kind->value;
         $this->progress = $task->progress;
@@ -84,9 +87,11 @@ class TaskForm extends Form
         $data['user_id'] = $userId;
         $data['status'] = TaskStatus::fromProgress($this->progress)->value;
 
-        // A task linked to a goal is implicitly of kind "goal".
+        // A task linked to a goal / study track takes the matching kind.
         if ($this->goal_id) {
             $data['kind'] = TaskKind::Goal->value;
+        } elseif ($this->study_track_id) {
+            $data['kind'] = TaskKind::Study->value;
         }
 
         if ($this->task) {

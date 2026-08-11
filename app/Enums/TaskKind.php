@@ -9,6 +9,7 @@ namespace App\Enums;
 enum TaskKind: string
 {
     case Goal = 'goal';
+    case Study = 'study';
     case Errand = 'errand';
     case Chore = 'chore';
     case Challenge = 'challenge';
@@ -19,6 +20,7 @@ enum TaskKind: string
     {
         return match ($this) {
             self::Goal => 'هدف',
+            self::Study => 'مذاكرة',
             self::Errand => 'مشوار',
             self::Chore => 'مصلحة',
             self::Challenge => 'تحدٍّ',
@@ -31,6 +33,7 @@ enum TaskKind: string
     {
         return match ($this) {
             self::Goal => '🎯',
+            self::Study => '📚',
             self::Errand => '🚗',
             self::Chore => '🧾',
             self::Challenge => '🔥',

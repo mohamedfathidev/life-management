@@ -14,7 +14,7 @@ class Task extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'day_id', 'goal_id', 'title', 'kind',
+        'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind',
         'progress', 'status', 'position', 'carry_count',
     ];
 
@@ -43,6 +43,11 @@ class Task extends Model
     public function goal(): BelongsTo
     {
         return $this->belongsTo(Goal::class);
+    }
+
+    public function studyTrack(): BelongsTo
+    {
+        return $this->belongsTo(StudyTrack::class);
     }
 
     // ---------------------------------------------------------------------

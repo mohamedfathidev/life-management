@@ -30,15 +30,34 @@ new class extends Component
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden sm:-my-px sm:ms-10 sm:flex sm:gap-8">
+                <div class="hidden sm:-my-px sm:ms-10 sm:flex sm:gap-6 sm:items-stretch">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         لوحة التحكم
                     </x-nav-link>
-                    <x-nav-link :href="route('goals.index')" :active="request()->routeIs('goals.*')" wire:navigate>
-                        الأهداف
+
+                    {{-- Planning group --}}
+                    <x-nav-dropdown label="التخطيط"
+                        :active="request()->routeIs('goals.*') || request()->routeIs('planner*') || request()->routeIs('appointments')">
+                        <x-dropdown-link :href="route('goals.index')" wire:navigate>🎯 الأهداف</x-dropdown-link>
+                        <x-dropdown-link :href="route('planner')" wire:navigate>🗓️ المخطط</x-dropdown-link>
+                        <x-dropdown-link :href="route('appointments')" wire:navigate>📅 المواعيد</x-dropdown-link>
+                    </x-nav-dropdown>
+
+                    {{-- Self-development group --}}
+                    <x-nav-dropdown label="التطوير"
+                        :active="request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
+                        <x-dropdown-link :href="route('habits.index')" wire:navigate>🔁 العادات</x-dropdown-link>
+                        <x-dropdown-link :href="route('challenges.index')" wire:navigate>🔥 التحديات</x-dropdown-link>
+                        <x-dropdown-link :href="route('recovery.index')" wire:navigate>🌱 التعافي</x-dropdown-link>
+                        <x-dropdown-link :href="route('diary.index')" wire:navigate>📖 المذكرات</x-dropdown-link>
+                        <x-dropdown-link :href="route('comfort-zone')" wire:navigate>🚀 خارج الزون</x-dropdown-link>
+                    </x-nav-dropdown>
+
+                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('cvs.*')" wire:navigate>
+                        الكارير
                     </x-nav-link>
-                    <x-nav-link :href="route('planner')" :active="request()->routeIs('planner*')" wire:navigate>
-                        المخطط
+                    <x-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
+                        الدين
                     </x-nav-link>
                     <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')" wire:navigate>
                         إحصائيات
@@ -100,6 +119,30 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('planner')" :active="request()->routeIs('planner*')" wire:navigate>
                 المخطط
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" wire:navigate>
+                المواعيد
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('recovery.index')" :active="request()->routeIs('recovery.*')" wire:navigate>
+                التعافي
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('diary.index')" :active="request()->routeIs('diary.*')" wire:navigate>
+                المذكرات
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('comfort-zone')" :active="request()->routeIs('comfort-zone')" wire:navigate>
+                خارج الزون
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('habits.index')" :active="request()->routeIs('habits.*')" wire:navigate>
+                العادات
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('challenges.index')" :active="request()->routeIs('challenges.*')" wire:navigate>
+                التحديات
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('cvs.*')" wire:navigate>
+                الكارير
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
+                الدين
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')" wire:navigate>
                 إحصائيات

@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('diary_entries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('goal_id')->nullable()->constrained()->nullOnDelete();
+            $table->date('date');
+            $table->string('title')->nullable();
+            $table->text('content')->nullable(); // encrypted rich HTML
+            $table->unsignedTinyInteger('mood')->nullable(); // 1-10
+            $table->json('tags')->nullable();
+            $table->timestamps();
+
+            $table->index(['user_id', 'date']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('diary_entries');
+    }
+};
