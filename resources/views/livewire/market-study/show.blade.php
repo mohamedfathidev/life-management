@@ -84,5 +84,4 @@
     </div>
 
     <livewire:market-study.manage-track />
-    <livewire:planner.manage-task />
 </div>

@@ -1,5 +1,5 @@
-/* إدارة الحياة — service worker (basic app-shell caching) */
-const CACHE = 'hayah-v1';
+/* سيبها على الله — service worker (basic app-shell caching) */
+const CACHE = 'hayah-v2';
 const PRECACHE = ['/offline.html', '/icons/icon-192.png', '/icons/icon-512.png', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

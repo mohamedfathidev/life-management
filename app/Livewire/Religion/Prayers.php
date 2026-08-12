@@ -45,6 +45,7 @@ class Prayers extends Component
 
         $doneTotal = $monthDays->sum(fn (PrayerDay $d) => $d->doneCount());
         $onTimeTotal = $monthDays->sum(fn (PrayerDay $d) => $d->onTimeCount());
+        $jamaahTotal = $monthDays->sum(fn (PrayerDay $d) => $d->jamaahCount());
         $possible = max(1, $daysElapsed * 5);
 
         return view('livewire.religion.prayers', [
@@ -54,6 +55,7 @@ class Prayers extends Component
             'states' => PrayerState::cases(),
             'completionPercent' => (int) round($doneTotal / $possible * 100),
             'onTimePercent' => (int) round($onTimeTotal / $possible * 100),
+            'jamaahPercent' => (int) round($jamaahTotal / $possible * 100),
             'daysElapsed' => $daysElapsed,
         ]);
     }

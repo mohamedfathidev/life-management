@@ -8,10 +8,10 @@ export default {
     // Semantic status/category colors are chosen at runtime (enums), so the
     // JIT scanner can't see them in source — safelist the badge variants.
     safelist: [
-        'bg-primary/15', 'text-primary',
-        'bg-success/15', 'text-success',
-        'bg-warning/15', 'text-warning',
-        'bg-danger/15', 'text-danger',
+        'bg-primary/15', 'text-primary', 'bg-primary',
+        'bg-success/15', 'text-success', 'bg-success',
+        'bg-warning/15', 'text-warning', 'bg-warning',
+        'bg-danger/15', 'text-danger', 'bg-danger',
     ],
 
     content: [

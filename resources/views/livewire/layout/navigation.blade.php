@@ -25,7 +25,7 @@ new class extends Component
                 <div class="shrink-0 flex items-center gap-2">
                     <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2">
                         <x-application-logo class="block h-9 w-auto fill-current text-primary dark:text-primary-dark" />
-                        <span class="font-bold text-primary dark:text-primary-dark hidden sm:inline">إدارة الحياة</span>
+                        <span class="font-bold text-primary dark:text-primary-dark hidden sm:inline">سيبها على الله</span>
                     </a>
                 </div>
 
@@ -37,8 +37,10 @@ new class extends Component
 
                     {{-- Planning group --}}
                     <x-nav-dropdown label="التخطيط"
-                        :active="request()->routeIs('goals.*') || request()->routeIs('planner*') || request()->routeIs('appointments')">
+                        :active="request()->routeIs('dreams.*') || request()->routeIs('goals.*') || request()->routeIs('planner*') || request()->routeIs('tasks.*') || request()->routeIs('appointments')">
+                        <x-dropdown-link :href="route('dreams.index')" wire:navigate>✨ الأحلام</x-dropdown-link>
                         <x-dropdown-link :href="route('goals.index')" wire:navigate>🎯 الأهداف</x-dropdown-link>
+                        <x-dropdown-link :href="route('tasks.index')" wire:navigate>🗂️ كل التاسكات</x-dropdown-link>
                         <x-dropdown-link :href="route('planner')" wire:navigate>🗓️ المخطط</x-dropdown-link>
                         <x-dropdown-link :href="route('appointments')" wire:navigate>📅 المواعيد</x-dropdown-link>
                     </x-nav-dropdown>
@@ -53,20 +55,31 @@ new class extends Component
                         <x-dropdown-link :href="route('comfort-zone')" wire:navigate>🚀 خارج الزون</x-dropdown-link>
                     </x-nav-dropdown>
 
-                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('cvs.*')" wire:navigate>
+                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('cvs.*')" wire:navigate>
                         الكارير
                     </x-nav-link>
                     <x-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
                         الدين
                     </x-nav-link>
-                    <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')" wire:navigate>
-                        إحصائيات
+                    <x-nav-link :href="route('wallet')" :active="request()->routeIs('wallet')" wire:navigate>
+                        المحفظة
                     </x-nav-link>
+                    {{-- Reports group --}}
+                    <x-nav-dropdown label="التقارير" :active="request()->routeIs('statistics') || request()->routeIs('review') || request()->routeIs('achievements')">
+                        <x-dropdown-link :href="route('statistics')" wire:navigate>📊 الإحصائيات</x-dropdown-link>
+                        <x-dropdown-link :href="route('review')" wire:navigate>🗒️ المراجعة</x-dropdown-link>
+                        <x-dropdown-link :href="route('achievements')" wire:navigate>🏅 الإنجازات</x-dropdown-link>
+                    </x-nav-dropdown>
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 sm:gap-4">
+                <a href="{{ route('search') }}" wire:navigate title="بحث"
+                   class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-dark hover:bg-gray-100 dark:hover:bg-gray-700 transition {{ request()->routeIs('search') ? 'text-primary dark:text-primary-dark' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+                </a>
+                <livewire:notifications.bell />
                 <livewire:settings.theme-toggle />
                 <x-dropdown align="left" width="48">
                     <x-slot name="trigger">
@@ -114,8 +127,17 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 لوحة التحكم
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('search')" :active="request()->routeIs('search')" wire:navigate>
+                🔍 بحث
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('dreams.index')" :active="request()->routeIs('dreams.*')" wire:navigate>
+                ✨ الأحلام
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('goals.index')" :active="request()->routeIs('goals.*')" wire:navigate>
                 الأهداف
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('tasks.index')" :active="request()->routeIs('tasks.*')" wire:navigate>
+                🗂️ كل التاسكات
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('planner')" :active="request()->routeIs('planner*')" wire:navigate>
                 المخطط
@@ -138,14 +160,23 @@ new class extends Component
             <x-responsive-nav-link :href="route('challenges.index')" :active="request()->routeIs('challenges.*')" wire:navigate>
                 التحديات
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('cvs.*')" wire:navigate>
+            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('cvs.*')" wire:navigate>
                 الكارير
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
                 الدين
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('wallet')" :active="request()->routeIs('wallet')" wire:navigate>
+                المحفظة
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')" wire:navigate>
                 إحصائيات
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('review')" :active="request()->routeIs('review')" wire:navigate>
+                المراجعة
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('achievements')" :active="request()->routeIs('achievements')" wire:navigate>
+                الإنجازات
             </x-responsive-nav-link>
         </div>
 

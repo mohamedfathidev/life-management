@@ -135,12 +135,18 @@
 
         {{-- Tasks --}}
         <div class="mt-6 rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-1">
                 <h3 class="font-semibold text-ink dark:text-ink-dark">تاسكات اليوم</h3>
                 <button type="button" wire:click="addTask" class="text-sm px-3 py-1.5 rounded-lg bg-primary dark:bg-primary-dark text-white hover:opacity-90 transition">
                     + تاسك
                 </button>
             </div>
+            @if ($planStartLabel || $plannedLabel)
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mb-4">
+                    @if ($planStartLabel && $planEndLabel)<span dir="ltr" class="inline-block">🕒 {{ $planStartLabel }} → {{ $planEndLabel }}</span>@endif
+                    @if ($plannedLabel)<span class="mx-1">·</span> إجمالي متوقع: {{ $plannedLabel }}@endif
+                </p>
+            @endif
 
             @forelse ($tasks as $task)
                 <div wire:key="task-{{ $task->id }}" class="py-3 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0"
@@ -153,6 +159,10 @@
                             </p>
                             <div class="flex items-center gap-2 mt-1 text-xs text-ink-soft dark:text-ink-dark-soft flex-wrap">
                                 <span class="px-2 py-0.5 rounded-full bg-{{ $task->status->color() }}/15 text-{{ $task->status->color() }}">{{ $task->status->label() }}</span>
+                                @if ($task->start_time)
+                                    <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary dark:text-primary-dark" dir="ltr">🕒 {{ $task->startLabel() }}@if ($task->endLabel()) – {{ $task->endLabel() }}@endif</span>
+                                    @if ($task->durationLabel())<span>({{ $task->durationLabel() }})</span>@endif
+                                @endif
                                 @if ($task->goal)
                                     <a href="{{ route('goals.show', $task->goal) }}" wire:navigate class="hover:underline">{{ $task->kind->emoji() }} {{ $task->goal->title }}</a>
                                 @endif
@@ -181,7 +191,6 @@
         </div>
     </div>
 
-    {{-- Modals --}}
-    <livewire:planner.manage-task />
+    {{-- Modals (manage-task modal lives globally in the app layout) --}}
     <livewire:planner.close-day />
 </div>

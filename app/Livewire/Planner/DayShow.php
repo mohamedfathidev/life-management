@@ -114,8 +114,21 @@ class DayShow extends Component
     {
         $this->day->load(['tasks.goal', 'breaks']);
 
+        // Arrange the day as a timeline: scheduled tasks (by start time) first, then unscheduled.
+        $tasks = $this->day->tasks
+            ->sortBy(fn (Task $t) => $t->start_time ?: '99:99:99')
+            ->values();
+
+        $scheduled = $this->day->tasks->filter(fn (Task $t) => $t->start_time);
+        $planStart = $scheduled->min('start_time');
+        $planEnd = $this->day->tasks->filter(fn (Task $t) => $t->end_time)->max('end_time');
+        $plannedMinutes = (int) $this->day->tasks->sum(fn (Task $t) => $t->durationMinutes() ?? 0);
+
         return view('livewire.planner.day-show', [
-            'tasks' => $this->day->tasks,
+            'tasks' => $tasks,
+            'planStartLabel' => $planStart ? Carbon::parse($planStart)->format('g:i A') : null,
+            'planEndLabel' => $planEnd ? Carbon::parse($planEnd)->format('g:i A') : null,
+            'plannedLabel' => Task::minutesToLabel($plannedMinutes),
             'ongoingBreak' => $this->day->breaks->firstWhere('ended_at', null),
             'completion' => $this->day->completionPercent(),
             'workedLabel' => $this->day->workedHoursLabel(),

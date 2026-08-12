@@ -47,6 +47,5 @@
         </div>
     </div>
 
-    {{-- Reuse the task modal for editing/deleting --}}
-    <livewire:planner.manage-task />
+    {{-- The task modal lives globally in the app layout --}}
 </div>

@@ -15,7 +15,7 @@ class Task extends Model
 
     protected $fillable = [
         'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind',
-        'progress', 'status', 'position', 'carry_count',
+        'start_time', 'end_time', 'progress', 'status', 'position', 'carry_count',
     ];
 
     protected $casts = [
@@ -87,5 +87,59 @@ class Task extends Model
 
         $this->progress = $progress;
         $this->status = TaskStatus::fromProgress($progress);
+    }
+
+    // ---------------------------------------------------------------------
+    // Scheduling (planned start/end clock times)
+    // ---------------------------------------------------------------------
+
+    public function startLabel(): ?string
+    {
+        return $this->start_time ? \Illuminate\Support\Carbon::parse($this->start_time)->format('g:i A') : null;
+    }
+
+    public function endLabel(): ?string
+    {
+        return $this->end_time ? \Illuminate\Support\Carbon::parse($this->end_time)->format('g:i A') : null;
+    }
+
+    /** Planned duration in minutes (when both times are set and end > start). */
+    public function durationMinutes(): ?int
+    {
+        if (! $this->start_time || ! $this->end_time) {
+            return null;
+        }
+
+        $start = \Illuminate\Support\Carbon::parse($this->start_time);
+        $end = \Illuminate\Support\Carbon::parse($this->end_time);
+
+        return $end->greaterThan($start) ? (int) $start->diffInMinutes($end) : null;
+    }
+
+    /** Arabic label for the planned duration, e.g. "1 س 30 د". */
+    public function durationLabel(): ?string
+    {
+        return self::minutesToLabel($this->durationMinutes());
+    }
+
+    /** Format a minutes count as an Arabic hours/minutes label. */
+    public static function minutesToLabel(?int $minutes): ?string
+    {
+        if ($minutes === null || $minutes <= 0) {
+            return null;
+        }
+
+        $hours = intdiv($minutes, 60);
+        $mins = $minutes % 60;
+
+        $parts = [];
+        if ($hours) {
+            $parts[] = $hours.' س';
+        }
+        if ($mins) {
+            $parts[] = $mins.' د';
+        }
+
+        return implode(' ', $parts);
     }
 }

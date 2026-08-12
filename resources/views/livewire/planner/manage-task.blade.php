@@ -20,6 +20,35 @@
                 <x-input-error :messages="$errors->get('form.title')" class="mt-1" />
             </div>
 
+            {{-- Planned time (optional) → expected duration + day timeline --}}
+            <div x-data="{
+                    s: @entangle('form.start_time'),
+                    e: @entangle('form.end_time'),
+                    get dur() {
+                        if (! this.s || ! this.e) return '';
+                        const [sh, sm] = this.s.split(':').map(Number);
+                        const [eh, em] = this.e.split(':').map(Number);
+                        let mins = (eh * 60 + em) - (sh * 60 + sm);
+                        if (mins <= 0) return '';
+                        const h = Math.floor(mins / 60), m = mins % 60;
+                        return (h ? h + ' س ' : '') + (m ? m + ' د' : '');
+                    }
+                 }">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <x-input-label for="task_start" value="من (اختياري)" />
+                        <input id="task_start" type="time" wire:model="form.start_time" x-model="s" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm" dir="ltr" />
+                        <x-input-error :messages="$errors->get('form.start_time')" class="mt-1" />
+                    </div>
+                    <div>
+                        <x-input-label for="task_end" value="إلى (اختياري)" />
+                        <input id="task_end" type="time" wire:model="form.end_time" x-model="e" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm" dir="ltr" />
+                        <x-input-error :messages="$errors->get('form.end_time')" class="mt-1" />
+                    </div>
+                </div>
+                <p x-show="dur" x-cloak class="mt-2 text-xs text-primary dark:text-primary-dark" x-text="'⏱️ المدة المتوقعة: ' + dur"></p>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 {{-- Goal link (optional) --}}
                 <div>
@@ -27,9 +56,17 @@
                     <select id="task_goal" wire:model="form.goal_id" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm">
                         <option value="">— بدون هدف —</option>
                         @foreach ($goals as $goal)
-                            <option value="{{ $goal->id }}">{{ $goal->parent ? $goal->parent->title.' › ' : '' }}{{ $goal->title }}</option>
+                            <option value="{{ $goal->id }}">{{ $goal->title }}</option>
+                            @if ($goal->children->isNotEmpty())
+                                <optgroup label="↳ أهداف فرعية لـ «{{ $goal->title }}»">
+                                    @foreach ($goal->children as $child)
+                                        <option value="{{ $child->id }}">&nbsp;&nbsp;↳ {{ $child->title }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
                         @endforeach
                     </select>
+                    <p class="mt-1 text-xs text-ink-soft dark:text-ink-dark-soft">اختَر هدف فرعي مباشرةً ومش لازم تختار الكبير.</p>
                     <x-input-error :messages="$errors->get('form.goal_id')" class="mt-1" />
                 </div>
 

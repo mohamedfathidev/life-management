@@ -21,5 +21,15 @@
                 {{ $slot }}
             </main>
         </div>
+
+        {{-- Global task hub: one modal any page can open via the `create-task` event --}}
+        <livewire:planner.manage-task />
+
+        {{-- Floating quick-capture: drop a task straight into today's plan from anywhere --}}
+        <button type="button" title="أضف تاسك النهاردة"
+            onclick="Livewire.dispatch('create-task', { today: true, kind: 'other' })"
+            class="fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary dark:bg-primary-dark text-white shadow-lg hover:scale-105 hover:opacity-95 transition print:hidden">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </button>
     </body>
 </html>

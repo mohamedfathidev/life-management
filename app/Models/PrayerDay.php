@@ -51,7 +51,12 @@ class PrayerDay extends Model
 
     public function onTimeCount(): int
     {
-        return collect(self::PRAYERS)->filter(fn ($p) => $this->{$p} === PrayerState::OnTime)->count();
+        return collect(self::PRAYERS)->filter(fn ($p) => $this->{$p}->isOnTime())->count();
+    }
+
+    public function jamaahCount(): int
+    {
+        return collect(self::PRAYERS)->filter(fn ($p) => $this->{$p} === PrayerState::Congregation)->count();
     }
 
     public function isComplete(): bool

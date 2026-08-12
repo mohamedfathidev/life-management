@@ -23,6 +23,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'privacy.lock' => \App\Http\Middleware\EnsurePrivacyUnlocked::class,
         ]);
+
+        // Re-lock the PIN whenever the user navigates out of the sensitive sections,
+        // so Diary/Recovery ask for the PIN on every fresh entry.
+        $middleware->web(append: [
+            \App\Http\Middleware\RelockPrivacyWhenLeaving::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

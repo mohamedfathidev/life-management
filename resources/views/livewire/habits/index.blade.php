@@ -6,9 +6,12 @@
                 <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">العادات</h1>
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">علّم عادة النهاردة، وادخل على أي عادة تشوف تفاصيل التزامك.</p>
             </div>
-            <button type="button" wire:click="$dispatch('create-habit')" class="inline-flex items-center gap-2 rounded-lg bg-primary dark:bg-primary-dark px-4 py-2 text-white text-sm font-medium shadow-sm hover:opacity-90 transition">
-                + عادة جديدة
-            </button>
+            <div class="flex items-center gap-2 shrink-0">
+                <x-add-to-today kind="habit" label="تاسك عادة النهاردة" />
+                <button type="button" wire:click="$dispatch('create-habit')" class="inline-flex items-center gap-2 rounded-lg bg-primary dark:bg-primary-dark px-4 py-2 text-white text-sm font-medium shadow-sm hover:opacity-90 transition">
+                    + عادة جديدة
+                </button>
+            </div>
         </div>
 
         @if ($habits->isEmpty())

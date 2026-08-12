@@ -18,6 +18,8 @@ class JobForm extends Form
     public ?string $url = null;
     public ?string $description = null;
     public ?string $applied_on = null;
+    public ?string $deadline = null;
+    public ?string $interview_at = null;
     public string $stage = 'wishlist';
     public ?string $rejection_reason = null;
 
@@ -32,6 +34,8 @@ class JobForm extends Form
             'url' => ['nullable', 'url', 'max:2000'],
             'description' => ['nullable', 'string', 'max:20000'],
             'applied_on' => ['nullable', 'date'],
+            'deadline' => ['nullable', 'date'],
+            'interview_at' => ['nullable', 'date'],
             'stage' => ['required', new Enum(JobStage::class)],
             'rejection_reason' => ['nullable', 'string', 'max:5000'],
         ];
@@ -59,6 +63,8 @@ class JobForm extends Form
         $this->url = $job->url;
         $this->description = $job->description;
         $this->applied_on = $job->applied_on?->toDateString();
+        $this->deadline = $job->deadline?->toDateString();
+        $this->interview_at = $job->interview_at?->toDateString();
         $this->stage = $job->stage->value;
         $this->rejection_reason = $job->rejection_reason;
     }

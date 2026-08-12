@@ -5,6 +5,7 @@
             <div>
                 <a href="{{ route('religion') }}" wire:navigate class="text-sm text-primary dark:text-primary-dark hover:underline">← الدين</a>
                 <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1">الصدقات</h1>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-1">💡 كل صدقة بتتسجّل تلقائيًا كمصروف «صدقة» في <a href="{{ route('wallet') }}" wire:navigate class="text-primary dark:text-primary-dark hover:underline">المحفظة</a>.</p>
             </div>
             <button type="button" wire:click="openCreate" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ صدقة</button>
         </div>

@@ -9,6 +9,9 @@
             <button type="button" wire:click="openCreate" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ ورد</button>
         </div>
 
+        {{-- Verse of the day --}}
+        <x-quran-quote class="mb-6" />
+
         {{-- Khatmah progress --}}
         <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6 mb-6">
             <div class="flex items-center justify-between mb-2">

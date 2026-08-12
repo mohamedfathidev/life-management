@@ -34,7 +34,8 @@ class Donations extends Component
 
     public function deleteDonation(int $id): void
     {
-        Donation::ownedBy(Auth::user())->where('id', $id)->delete();
+        // Instance delete (not mass delete) so the mirrored wallet expense is removed too.
+        Donation::ownedBy(Auth::user())->find($id)?->delete();
     }
 
     public function save(): void

@@ -19,6 +19,8 @@ class TaskForm extends Form
     public ?int $goal_id = null;
     public ?int $study_track_id = null;
     public string $title = '';
+    public ?string $start_time = null;
+    public ?string $end_time = null;
     public string $kind = 'other';
     public int $progress = 0;
 
@@ -30,9 +32,21 @@ class TaskForm extends Form
             'goal_id' => ['nullable', 'integer', 'exists:goals,id', $this->withinGoalRange()],
             'study_track_id' => ['nullable', 'integer', 'exists:study_tracks,id'],
             'title' => ['required', 'string', 'max:255'],
+            'start_time' => ['nullable', 'date_format:H:i'],
+            'end_time' => ['nullable', 'date_format:H:i', $this->endAfterStart()],
             'kind' => ['required', new Enum(TaskKind::class)],
             'progress' => ['required', 'integer', 'between:0,100'],
         ];
+    }
+
+    /** End time (when set) must be later than the start time. */
+    protected function endAfterStart(): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail): void {
+            if ($value && $this->start_time && $value <= $this->start_time) {
+                $fail('وقت النهاية لازم يكون بعد وقت البداية.');
+            }
+        };
     }
 
     /**
@@ -65,6 +79,8 @@ class TaskForm extends Form
         return [
             'title' => 'عنوان التاسك',
             'goal_id' => 'الهدف',
+            'start_time' => 'وقت البداية',
+            'end_time' => 'وقت النهاية',
             'kind' => 'النوع',
             'progress' => 'نسبة الإنجاز',
         ];
@@ -77,6 +93,8 @@ class TaskForm extends Form
         $this->goal_id = $task->goal_id;
         $this->study_track_id = $task->study_track_id;
         $this->title = $task->title;
+        $this->start_time = $task->start_time ? \Illuminate\Support\Carbon::parse($task->start_time)->format('H:i') : null;
+        $this->end_time = $task->end_time ? \Illuminate\Support\Carbon::parse($task->end_time)->format('H:i') : null;
         $this->kind = $task->kind->value;
         $this->progress = $task->progress;
     }

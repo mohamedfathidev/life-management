@@ -19,17 +19,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('goals', GoalsIndex::class)->name('goals.index');
     Route::get('goals/{goal}', GoalShow::class)->name('goals.show');
 
+    Route::get('dreams', \App\Livewire\Dreams\Index::class)->name('dreams.index');
+    Route::get('dreams/{dream}', \App\Livewire\Dreams\Show::class)->name('dreams.show');
+
+    Route::get('tasks', \App\Livewire\Tasks\Index::class)->name('tasks.index');
+
     Route::get('planner', WeekView::class)->name('planner');
     Route::get('planner/pool', \App\Livewire\Planner\Pool::class)->name('planner.pool');
     Route::get('planner/week/{date}', WeekView::class)->name('planner.week');
     Route::get('planner/day/{date?}', DayShow::class)->name('planner.day');
 
     Route::get('statistics', StatisticsIndex::class)->name('statistics');
+    Route::get('review', \App\Livewire\Review\Index::class)->name('review');
+    Route::get('achievements', \App\Livewire\Achievements\Index::class)->name('achievements');
 
     Route::get('habits', \App\Livewire\Habits\Index::class)->name('habits.index');
     Route::get('habits/{habit}', \App\Livewire\Habits\Show::class)->name('habits.show');
 
+    Route::get('search', \App\Livewire\Search\Index::class)->name('search');
     Route::get('appointments', \App\Livewire\Appointments\Index::class)->name('appointments');
+    Route::get('wallet', \App\Livewire\Wallet\Index::class)->name('wallet');
     Route::get('comfort-zone', \App\Livewire\ComfortZone\Index::class)->name('comfort-zone');
     Route::get('challenges', \App\Livewire\Challenges\Index::class)->name('challenges.index');
     Route::get('challenges/{challenge}', \App\Livewire\Challenges\Show::class)->name('challenges.show');
@@ -56,6 +65,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('career/marketing', \App\Livewire\Marketing\Index::class)->name('marketing.index');
 
+    Route::get('career/activities', \App\Livewire\Activities\Index::class)->name('activities.index');
+    Route::get('career/activities/{activity}', \App\Livewire\Activities\Show::class)->name('activities.show');
+
     Route::get('career/cvs', \App\Livewire\Cvs\Index::class)->name('cvs.index');
     Route::get('career/cvs/{cv}', \App\Livewire\Cvs\Show::class)->name('cvs.show');
     Route::get('career/cvs/{cv}/file', function (\App\Models\Cv $cv) {
@@ -75,6 +87,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('recovery', RecoveryIndex::class)->name('recovery.index');
         Route::get('recovery/topics', \App\Livewire\Recovery\Topics::class)->name('recovery.topics');
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
+        Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });
 });

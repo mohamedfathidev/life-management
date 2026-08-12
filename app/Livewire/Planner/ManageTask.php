@@ -6,7 +6,9 @@ use App\Enums\TaskKind;
 use App\Livewire\Forms\TaskForm;
 use App\Models\Goal;
 use App\Models\Task;
+use App\Services\PlannerService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -17,17 +19,41 @@ class ManageTask extends Component
 
     public bool $open = false;
 
+    /**
+     * Open the task modal, optionally pre-filled by whichever module launched it.
+     * `today: true` drops the task straight into today's plan (no dayId needed),
+     * so any page across the app can collect a task into "today's tasks".
+     */
     #[On('create-task')]
-    public function openForCreate(?int $dayId = null, ?int $goalId = null, ?int $studyTrackId = null): void
-    {
+    public function openForCreate(
+        ?int $dayId = null,
+        ?int $goalId = null,
+        ?int $studyTrackId = null,
+        ?string $title = null,
+        ?string $kind = null,
+        bool $today = false,
+    ): void {
         $this->form->reset();
         $this->resetValidation();
+
+        if ($today && ! $dayId) {
+            $dayId = app(PlannerService::class)->resolveDay(Auth::user(), Carbon::today())->id;
+        }
+
         $this->form->day_id = $dayId;
         $this->form->goal_id = $goalId;
         $this->form->study_track_id = $studyTrackId;
-        if ($studyTrackId) {
-            $this->form->kind = \App\Enums\TaskKind::Study->value;
+
+        if ($title) {
+            $this->form->title = $title;
         }
+
+        if ($studyTrackId) {
+            $this->form->kind = TaskKind::Study->value;
+        } elseif ($kind && TaskKind::tryFrom($kind)) {
+            $this->form->kind = $kind;
+        }
+
         $this->open = true;
     }
 
@@ -74,7 +100,8 @@ class ManageTask extends Component
             'kinds' => TaskKind::cases(),
             'goals' => Goal::query()
                 ->ownedBy(Auth::user())
-                ->with('parent:id,title')
+                ->topLevel()
+                ->with(['children' => fn ($q) => $q->orderBy('title')])
                 ->orderBy('title')
                 ->get(['id', 'title', 'parent_id']),
         ]);

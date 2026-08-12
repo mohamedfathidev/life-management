@@ -6,6 +6,9 @@
             <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">{{ now()->translatedFormat('l، j F Y') }}</p>
         </div>
 
+        {{-- Verse of the day --}}
+        <x-quran-quote class="mb-6" />
+
         {{-- Today at a glance --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {{-- Plan --}}

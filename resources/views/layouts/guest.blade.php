@@ -8,7 +8,7 @@
             <div>
                 <a href="/" wire:navigate class="flex flex-col items-center gap-2">
                     <x-application-logo class="w-16 h-16 fill-current text-primary dark:text-primary-dark" />
-                    <span class="text-lg font-semibold text-primary dark:text-primary-dark">إدارة الحياة</span>
+                    <span class="text-lg font-semibold text-primary dark:text-primary-dark">سيبها على الله</span>
                 </a>
             </div>
 

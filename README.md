@@ -1,59 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# سيبها على الله (فانية) — منصّة إدارة الحياة
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+تطبيق شخصي لإدارة حياتك: أحلام، أهداف، مخطط يومي، عادات، تحديات، تعافٍ، مذكرات، دين، مالية، كارير، وأكتر — عربي بالكامل (RTL)، وضع داكن، وقابل للتثبيت على الموبايل (PWA).
 
-## About Laravel
+> **ملاحظة:** التطبيق **single-user** والتسجيل من المتصفح **مقفول**. كل واحد بيشغّل نسخته الخاصة وبيعمل مستخدمه بأمر واحد (خطوة ٧).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## المتطلبات
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| الأداة | النسخة |
+|---|---|
+| PHP | 8.2 أو أحدث (مع إضافات: `gd`, `pdo_mysql`, `mbstring`, `openssl`) |
+| Composer | 2.x |
+| Node.js + npm | Node 18+ |
+| MySQL / MariaDB | أي نسخة حديثة (XAMPP / Laragon تمام) |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## خطوات التنصيب
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1) نزّل المشروع
+```bash
+git clone <repo-url> life
+cd life
+```
+(أو فك ضغط الملفات في فولدر واعمل `cd` عليه.)
 
-## Laravel Sponsors
+### 2) نصّب حزم PHP
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3) نصّب حزم الواجهة
+```bash
+npm install
+```
 
-### Premium Partners
+### 4) جهّز ملف الإعدادات
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 5) اعمل قاعدة البيانات
+اعمل قاعدة بيانات فاضية اسمها `life` (من phpMyAdmin أو):
+```bash
+mysql -u root -e "CREATE DATABASE life CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+لو بياناتك مختلفة، عدّل `DB_DATABASE` / `DB_USERNAME` / `DB_PASSWORD` في ملف `.env`.
 
-## Contributing
+### 6) جهّز الجداول
+```bash
+php artisan migrate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 7) اعمل مستخدم للدخول (بدل التسجيل)
+```bash
+php artisan app:create-user
+```
+هيسألك الاسم والبريد وكلمة المرور. (أو مرّرهم مباشرة: `php artisan app:create-user "اسمك" you@example.com`)
 
-## Code of Conduct
+### 8) ابنِ ملفات الواجهة
+```bash
+npm run build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 9) شغّل التطبيق
+```bash
+php artisan serve
+```
+افتح **http://127.0.0.1:8000** وسجّل الدخول ببيانات الخطوة ٧. 🎉
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## تثبيته على الموبايل (PWA)
 
-## License
+التثبيت محتاج **HTTPS** (أو localhost). أسهل طريقة للتجربة على الموبايل هي نفق HTTPS مؤقّت:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+# بعد ما تشغّل php artisan serve على 8000
+ngrok http 8000
+```
+افتح رابط الـ `https://...ngrok...` على موبايلك → من قائمة المتصفح اختر **«تثبيت التطبيق / إضافة للشاشة الرئيسية»**.
+
+> التطبيق مضبوط على **trusted proxies** فبيشتغل صح من خلال النفق (الـ CSS/JS بيتحمّلوا بـ HTTPS).
+
+---
+
+## أوامر مفيدة
+
+| الأمر | الوظيفة |
+|---|---|
+| `php artisan app:create-user` | إنشاء مستخدم جديد |
+| `php artisan migrate` | تشغيل أي جداول جديدة |
+| `php artisan migrate:fresh` | **مسح كل البيانات** والبدء من جديد |
+| `npm run dev` | وضع التطوير (watch) بدل `build` |
+| `php artisan optimize:clear` | تنظيف الكاش |
+
+---
+
+## التقنية
+Laravel 12 · Livewire 3 + Alpine.js · Tailwind CSS · MySQL · محرّر Trix · التوقيت: القاهرة.
+
+الحقول الحسّاسة (المذكرات، ملاحظات التعافي، التغذية الذهنية) **مشفّرة** في قاعدة البيانات، والمذكرات والتعافي خلف **قفل PIN** إضافي (تفعّله من الملف الشخصي).

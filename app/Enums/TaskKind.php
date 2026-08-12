@@ -3,13 +3,18 @@
 namespace App\Enums;
 
 /**
- * Lightweight categorization for a task when it isn't tied to a goal.
- * Independent of the heavier modules (challenge/recovery) which arrive later.
+ * Categorizes a task by its type / originating module, so a task collected from
+ * any part of the app (career, dreams, worship, habits, study…) still shows a
+ * meaningful badge inside today's plan and the unified task hub.
  */
 enum TaskKind: string
 {
     case Goal = 'goal';
     case Study = 'study';
+    case Career = 'career';
+    case Habit = 'habit';
+    case Dream = 'dream';
+    case Worship = 'worship';
     case Errand = 'errand';
     case Chore = 'chore';
     case Challenge = 'challenge';
@@ -21,6 +26,10 @@ enum TaskKind: string
         return match ($this) {
             self::Goal => 'هدف',
             self::Study => 'مذاكرة',
+            self::Career => 'كارير',
+            self::Habit => 'عادة',
+            self::Dream => 'حلم',
+            self::Worship => 'عبادة',
             self::Errand => 'مشوار',
             self::Chore => 'مصلحة',
             self::Challenge => 'تحدٍّ',
@@ -34,6 +43,10 @@ enum TaskKind: string
         return match ($this) {
             self::Goal => '🎯',
             self::Study => '📚',
+            self::Career => '💼',
+            self::Habit => '🔁',
+            self::Dream => '✨',
+            self::Worship => '🕌',
             self::Errand => '🚗',
             self::Chore => '🧾',
             self::Challenge => '🔥',

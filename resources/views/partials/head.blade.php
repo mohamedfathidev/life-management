@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="إدارة الحياة">
+<meta name="apple-mobile-web-app-title" content="سيبها على الله">
 
-<title>{{ $title ?? config('app.name', 'إدارة الحياة') }}</title>
+<title>{{ $title ?? config('app.name', 'سيبها على الله (فانية)') }}</title>
 
 {{-- No-flash dark mode. Applied before paint AND re-applied after every
      wire:navigate swap (Livewire morphs in a <html> without the .dark class). --}}

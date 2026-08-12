@@ -1,7 +1,12 @@
 <div class="py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">الدين</h1>
-        <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1 mb-6">صلواتك وقرآنك وصدقاتك وأدعيتك في مكان واحد.</p>
+        <div class="flex items-start justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">الدين</h1>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">صلواتك وقرآنك وصدقاتك وأدعيتك في مكان واحد.</p>
+            </div>
+            <x-add-to-today kind="worship" label="تاسك عبادة النهاردة" />
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <a href="{{ route('religion.prayers') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">

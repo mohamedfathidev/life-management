@@ -1,7 +1,12 @@
 <div class="py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">الكارير</h1>
-        <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1 mb-6">كل اللي يخص مسارك المهني في مكان واحد.</p>
+        <div class="flex items-start justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">الكارير</h1>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">كل اللي يخص مسارك المهني في مكان واحد.</p>
+            </div>
+            <x-add-to-today kind="career" label="تاسك كارير النهاردة" />
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {{-- Scholarships (active) --}}
@@ -30,6 +35,13 @@
                 <div class="text-3xl mb-2">📣</div>
                 <h3 class="font-semibold text-ink dark:text-ink-dark">التسويق الشخصي</h3>
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">جدولة بوستات لينكدإن وبناء حضورك.</p>
+            </a>
+
+            {{-- Activities & participations --}}
+            <a href="{{ route('activities.index') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
+                <div class="text-3xl mb-2">🏆</div>
+                <h3 class="font-semibold text-ink dark:text-ink-dark">أنشطة ومشاركات</h3>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">مسابقات وهاكاثونات وورش ومؤتمرات — من التقديم للنتيجة.</p>
             </a>
 
             {{-- CVs --}}

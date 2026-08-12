@@ -87,6 +87,20 @@ class Habit extends Model
     // Completion helpers
     // ---------------------------------------------------------------------
 
+    /** Whether the habit's window includes the given date (so it's "due" then). */
+    public function isActiveOn(Carbon $date): bool
+    {
+        if ($this->start_date && $date->lt($this->start_date)) {
+            return false;
+        }
+
+        if ($this->end_date && $date->gt($this->end_date)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function isDoneOn(Carbon|string $date): bool
     {
         $date = $date instanceof Carbon ? $date->toDateString() : $date;

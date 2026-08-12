@@ -37,6 +37,19 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="jb_deadline" value="آخر موعد تقديم (اختياري)" />
+                    <x-text-input id="jb_deadline" wire:model="form.deadline" type="date" class="mt-1 block w-full" />
+                    <x-input-error :messages="$errors->get('form.deadline')" class="mt-1" />
+                </div>
+                <div>
+                    <x-input-label for="jb_interview" value="يوم الإنترفيو (اختياري)" />
+                    <x-text-input id="jb_interview" wire:model="form.interview_at" type="date" class="mt-1 block w-full" />
+                    <x-input-error :messages="$errors->get('form.interview_at')" class="mt-1" />
+                </div>
+            </div>
+
             <div>
                 <x-input-label for="jb_url" value="رابط الإعلان (اختياري)" />
                 <x-text-input id="jb_url" wire:model="form.url" type="url" class="mt-1 block w-full" placeholder="https://…" dir="ltr" />
