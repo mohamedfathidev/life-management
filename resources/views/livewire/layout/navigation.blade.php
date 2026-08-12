@@ -47,7 +47,8 @@ new class extends Component
 
                     {{-- Self-development group --}}
                     <x-nav-dropdown label="التطوير"
-                        :active="request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
+                        :active="request()->routeIs('focus') || request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
+                        <x-dropdown-link :href="route('focus')" wire:navigate>🎯 التركيز</x-dropdown-link>
                         <x-dropdown-link :href="route('habits.index')" wire:navigate>🔁 العادات</x-dropdown-link>
                         <x-dropdown-link :href="route('challenges.index')" wire:navigate>🔥 التحديات</x-dropdown-link>
                         <x-dropdown-link :href="route('recovery.index')" wire:navigate>🌱 التعافي</x-dropdown-link>
@@ -55,7 +56,7 @@ new class extends Component
                         <x-dropdown-link :href="route('comfort-zone')" wire:navigate>🚀 خارج الزون</x-dropdown-link>
                     </x-nav-dropdown>
 
-                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('cvs.*')" wire:navigate>
+                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('cvs.*')" wire:navigate>
                         الكارير
                     </x-nav-link>
                     <x-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
@@ -154,13 +155,16 @@ new class extends Component
             <x-responsive-nav-link :href="route('comfort-zone')" :active="request()->routeIs('comfort-zone')" wire:navigate>
                 خارج الزون
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('focus')" :active="request()->routeIs('focus')" wire:navigate>
+                🎯 التركيز
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('habits.index')" :active="request()->routeIs('habits.*')" wire:navigate>
                 العادات
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('challenges.index')" :active="request()->routeIs('challenges.*')" wire:navigate>
                 التحديات
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('cvs.*')" wire:navigate>
+            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('cvs.*')" wire:navigate>
                 الكارير
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>

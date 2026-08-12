@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\HabitType;
+use App\Models\Concerns\HasFocusSessions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Support\Carbon;
 class Habit extends Model
 {
     use HasFactory;
+    use HasFocusSessions;
 
     protected $fillable = [
         'user_id', 'goal_id', 'title', 'type',

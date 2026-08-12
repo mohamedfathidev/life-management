@@ -44,6 +44,13 @@
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">مسابقات وهاكاثونات وورش ومؤتمرات — من التقديم للنتيجة.</p>
             </a>
 
+            {{-- Career pitfalls --}}
+            <a href="{{ route('career.pitfalls') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
+                <div class="text-3xl mb-2">⚠️</div>
+                <h3 class="font-semibold text-ink dark:text-ink-dark">أخطاء الكارير في عصر الـ AI</h3>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">أخطاء شائعة تتجنّبها — عامة وفي عصر الـ AI — + دروسك أنت.</p>
+            </a>
+
             {{-- CVs --}}
             <a href="{{ route('cvs.index') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
                 <div class="text-3xl mb-2">📄</div>

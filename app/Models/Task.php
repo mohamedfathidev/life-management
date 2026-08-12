@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TaskKind;
 use App\Enums\TaskStatus;
+use App\Models\Concerns\HasFocusSessions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     use HasFactory;
+    use HasFocusSessions;
 
     protected $fillable = [
         'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind',

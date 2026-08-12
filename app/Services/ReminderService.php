@@ -12,7 +12,7 @@ use App\Models\Goal;
 use App\Models\Habit;
 use App\Models\MentalNutritionLog;
 use App\Models\PrayerDay;
-use App\Models\QuranLog;
+use App\Models\QuranWirdDay;
 use App\Models\RecoveryTopic;
 use App\Models\Scholarship;
 use App\Models\User;
@@ -88,10 +88,10 @@ class ReminderService
             }
         }
 
-        // Quran: today's wird not logged yet
-        $quranToday = QuranLog::query()->where('user_id', $this->user->id)->whereDate('date', $today)->exists();
+        // Quran: today's wird not marked as read yet
+        $quranToday = QuranWirdDay::query()->where('user_id', $this->user->id)->whereDate('date', $today)->exists();
         if (! $quranToday) {
-            $items[] = ['emoji' => '📖', 'text' => 'لسه ماسجلتش وردك من القرآن النهاردة', 'url' => route('religion.quran'), 'priority' => 0];
+            $items[] = ['emoji' => '📖', 'text' => 'لسه ماقرأتش وردك من القرآن النهاردة', 'url' => route('religion.quran'), 'priority' => 0];
         }
 
         // Goal deadlines within 3 days

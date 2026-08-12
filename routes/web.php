@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dreams/{dream}', \App\Livewire\Dreams\Show::class)->name('dreams.show');
 
     Route::get('tasks', \App\Livewire\Tasks\Index::class)->name('tasks.index');
+    Route::get('focus', \App\Livewire\Focus\Index::class)->name('focus');
 
     Route::get('planner', WeekView::class)->name('planner');
     Route::get('planner/pool', \App\Livewire\Planner\Pool::class)->name('planner.pool');
@@ -67,6 +68,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('career/activities', \App\Livewire\Activities\Index::class)->name('activities.index');
     Route::get('career/activities/{activity}', \App\Livewire\Activities\Show::class)->name('activities.show');
+
+    Route::get('career/pitfalls', \App\Livewire\Career\Pitfalls::class)->name('career.pitfalls');
 
     Route::get('career/cvs', \App\Livewire\Cvs\Index::class)->name('cvs.index');
     Route::get('career/cvs/{cv}', \App\Livewire\Cvs\Show::class)->name('cvs.show');

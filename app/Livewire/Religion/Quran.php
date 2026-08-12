@@ -4,7 +4,9 @@ namespace App\Livewire\Religion;
 
 use App\Livewire\Forms\QuranLogForm;
 use App\Models\QuranLog;
+use App\Models\QuranWirdDay;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -36,6 +38,19 @@ class Quran extends Component
         QuranLog::ownedBy(Auth::user())->where('id', $logId)->delete();
     }
 
+    /** Explicitly mark (or unmark) today's wird as read. */
+    public function toggleWirdRead(): void
+    {
+        $today = Carbon::today()->toDateString();
+        $mark = QuranWirdDay::ownedBy(Auth::user())->whereDate('date', $today)->first();
+
+        if ($mark) {
+            $mark->delete();
+        } else {
+            QuranWirdDay::create(['user_id' => Auth::id(), 'date' => $today]);
+        }
+    }
+
     public function save(): void
     {
         $this->form->persist(Auth::id());
@@ -59,6 +74,7 @@ class Quran extends Component
 
         return view('livewire.religion.quran', [
             'logs' => $logs,
+            'wirdReadToday' => QuranWirdDay::ownedBy(Auth::user())->whereDate('date', Carbon::today())->exists(),
             'totalPages' => $totalPages,
             'khatmahs' => $khatmahs,
             'currentPages' => $currentPages,

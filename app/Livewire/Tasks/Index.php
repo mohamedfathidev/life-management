@@ -65,7 +65,9 @@ class Index extends Component
             ->ownedBy($user)
             ->with(['goal:id,title,parent_id', 'goal.parent:id,title', 'day:id,date'])
             ->orderByRaw('day_id IS NULL')       // dated tasks first, pool last
-            ->orderByDesc('id');
+            ->orderByRaw('start_time IS NULL')   // timed tasks before untimed
+            ->orderBy('start_time')              // earliest → latest (logical sequence)
+            ->orderBy('id');
 
         match ($this->scope) {
             'today' => $query->whereHas('day', fn ($q) => $q->whereDate('date', $today)),

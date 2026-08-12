@@ -10,7 +10,7 @@ use App\Models\Habit;
 use App\Models\JobApplication;
 use App\Models\MentalNutritionLog;
 use App\Models\PrayerDay;
-use App\Models\QuranLog;
+use App\Models\QuranWirdDay;
 use App\Models\RecoveryTopic;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -89,7 +89,7 @@ class TodayAgendaService
         $religionItems[] = [
             'emoji' => '📖',
             'label' => 'ورد القرآن',
-            'done' => QuranLog::query()->where('user_id', $this->user->id)->whereDate('date', $today)->exists(),
+            'done' => QuranWirdDay::query()->where('user_id', $this->user->id)->whereDate('date', $today)->exists(),
             'url' => route('religion.quran'),
         ];
         $groups[] = ['title' => 'الدين', 'items' => $religionItems];

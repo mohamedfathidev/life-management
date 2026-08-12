@@ -12,6 +12,27 @@
         {{-- Verse of the day --}}
         <x-quran-quote class="mb-6" />
 
+        {{-- Today's wird — explicit "done reading" mark (separate from the page log) --}}
+        <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-5 mb-6 flex items-center justify-between gap-4">
+            <div>
+                <p class="font-semibold text-ink dark:text-ink-dark">ورد النهاردة</p>
+                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-0.5">
+                    @if ($wirdReadToday) قرأت وردك النهاردة — بارك الله فيك 🤍 @else علّم إنك قرأت وردك بعد ما تخلّص فعلاً. @endif
+                </p>
+            </div>
+            <button type="button" wire:click="toggleWirdRead"
+                class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition
+                    {{ $wirdReadToday
+                        ? 'bg-success/15 text-success hover:bg-success/25'
+                        : 'bg-primary dark:bg-primary-dark text-white hover:opacity-90' }}">
+                @if ($wirdReadToday)
+                    <span>✓ تم القراءة</span>
+                @else
+                    <span>تم القراءة</span>
+                @endif
+            </button>
+        </div>
+
         {{-- Khatmah progress --}}
         <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6 mb-6">
             <div class="flex items-center justify-between mb-2">
