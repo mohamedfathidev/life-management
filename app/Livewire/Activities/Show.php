@@ -14,16 +14,29 @@ class Show extends Component
 {
     public Activity $activity;
 
+    public ?string $feedback = null;
+
     public function mount(Activity $activity): void
     {
         $this->authorize('view', $activity);
         $this->activity = $activity;
+        $this->feedback = $activity->feedback;
     }
 
     #[On('activity-saved')]
     public function refresh(): void
     {
         $this->activity->refresh();
+        $this->feedback = $this->activity->feedback;
+    }
+
+    /** Save my comment + the feedback I got (after interview / rejection). */
+    public function saveFeedback(): void
+    {
+        $this->authorize('update', $this->activity);
+        $this->activity->update(['feedback' => $this->feedback ?: null]);
+        $this->activity->refresh();
+        $this->dispatch('activity-feedback-saved');
     }
 
     public function editActivity(): void

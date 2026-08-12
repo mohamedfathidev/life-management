@@ -56,7 +56,7 @@ new class extends Component
                         <x-dropdown-link :href="route('comfort-zone')" wire:navigate>🚀 خارج الزون</x-dropdown-link>
                     </x-nav-dropdown>
 
-                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('cvs.*')" wire:navigate>
+                    <x-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('career.interviews') || request()->routeIs('cvs.*')" wire:navigate>
                         الكارير
                     </x-nav-link>
                     <x-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>
@@ -164,7 +164,7 @@ new class extends Component
             <x-responsive-nav-link :href="route('challenges.index')" :active="request()->routeIs('challenges.*')" wire:navigate>
                 التحديات
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('cvs.*')" wire:navigate>
+            <x-responsive-nav-link :href="route('career')" :active="request()->routeIs('career') || request()->routeIs('scholarships.*') || request()->routeIs('jobs.*') || request()->routeIs('market-study.*') || request()->routeIs('marketing.*') || request()->routeIs('activities.*') || request()->routeIs('career.pitfalls') || request()->routeIs('career.interviews') || request()->routeIs('cvs.*')" wire:navigate>
                 الكارير
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('religion')" :active="request()->routeIs('religion*')" wire:navigate>

@@ -23,4 +23,10 @@ trait HasFocusSessions
 
         return (int) $this->focusSessions()->whereDate('date', $date)->sum('seconds');
     }
+
+    /** Total seconds focused on this item across all days. */
+    public function focusSecondsTotal(): int
+    {
+        return (int) $this->focusSessions()->sum('seconds');
+    }
 }

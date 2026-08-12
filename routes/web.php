@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dreams/{dream}', \App\Livewire\Dreams\Show::class)->name('dreams.show');
 
     Route::get('tasks', \App\Livewire\Tasks\Index::class)->name('tasks.index');
+    Route::get('tasks/{task}', \App\Livewire\Tasks\Show::class)->name('tasks.show');
     Route::get('focus', \App\Livewire\Focus\Index::class)->name('focus');
 
     Route::get('planner', WeekView::class)->name('planner');
@@ -70,6 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('career/activities/{activity}', \App\Livewire\Activities\Show::class)->name('activities.show');
 
     Route::get('career/pitfalls', \App\Livewire\Career\Pitfalls::class)->name('career.pitfalls');
+    Route::get('career/interviews', \App\Livewire\Career\Interviews::class)->name('career.interviews');
 
     Route::get('career/cvs', \App\Livewire\Cvs\Index::class)->name('cvs.index');
     Route::get('career/cvs/{cv}', \App\Livewire\Cvs\Show::class)->name('cvs.show');
@@ -91,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('recovery/topics', \App\Livewire\Recovery\Topics::class)->name('recovery.topics');
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
         Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
+        Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });
 });

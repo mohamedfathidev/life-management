@@ -16,7 +16,7 @@ class JobApplication extends Model
     protected $fillable = [
         'user_id', 'goal_id', 'position', 'company', 'applied_via',
         'url', 'description', 'applied_on', 'deadline', 'interview_at',
-        'stage', 'rejection_reason', 'company_research',
+        'stage', 'rejection_reason', 'company_research', 'interview_focus',
     ];
 
     protected $casts = [

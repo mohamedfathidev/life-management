@@ -14,7 +14,7 @@ class VolunteerActivity extends Model
 
     protected $fillable = [
         'user_id', 'title', 'organization', 'applied_via', 'start_date', 'end_date',
-        'hours', 'description', 'stage', 'submitted_on', 'decided_on', 'rejection_reason',
+        'hours', 'description', 'stage', 'submitted_on', 'decided_on', 'rejection_reason', 'interview_focus',
     ];
 
     protected $casts = [

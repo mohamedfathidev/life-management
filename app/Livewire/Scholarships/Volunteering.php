@@ -48,6 +48,11 @@ class Volunteering extends Component
         $this->advance($id, ScholarshipStage::Waiting);
     }
 
+    public function markInterview(int $id): void
+    {
+        $this->advance($id, ScholarshipStage::Interview);
+    }
+
     public function markAccepted(int $id): void
     {
         $activity = VolunteerActivity::ownedBy(Auth::user())->findOrFail($id);

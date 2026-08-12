@@ -8,6 +8,7 @@ enum ActivityStage: string
 {
     case Interested = 'interested'; // مهتم / ناوي أشارك
     case Applied = 'applied';       // قدّمت
+    case Interview = 'interview';   // إنترفيو
     case Accepted = 'accepted';     // مقبول / مشارك
     case Done = 'done';             // خلصت المشاركة
     case Rejected = 'rejected';     // معتذر / مرفوض
@@ -17,9 +18,10 @@ enum ActivityStage: string
         return match ($this) {
             self::Interested => 'مهتم',
             self::Applied => 'قدّمت',
+            self::Interview => 'إنترفيو',
             self::Accepted => 'مقبول / مشارك',
             self::Done => 'خلصت',
-            self::Rejected => 'معتذر',
+            self::Rejected => 'مرفوض',
         };
     }
 
@@ -28,6 +30,7 @@ enum ActivityStage: string
         return match ($this) {
             self::Interested => 'warning',
             self::Applied => 'primary',
+            self::Interview => 'primary',
             self::Accepted => 'primary',
             self::Done => 'success',
             self::Rejected => 'danger',
@@ -39,8 +42,9 @@ enum ActivityStage: string
         return match ($this) {
             self::Interested => 0,
             self::Applied => 1,
-            self::Accepted => 2,
-            self::Done, self::Rejected => 3,
+            self::Interview => 2,
+            self::Accepted => 3,
+            self::Done, self::Rejected => 4,
         };
     }
 
@@ -49,7 +53,8 @@ enum ActivityStage: string
     {
         return match ($this) {
             self::Interested => self::Applied,
-            self::Applied => self::Accepted,
+            self::Applied => self::Interview,
+            self::Interview => self::Accepted,
             self::Accepted => self::Done,
             self::Done, self::Rejected => null,
         };
@@ -58,7 +63,7 @@ enum ActivityStage: string
     /** Linear pipeline stations (done/rejected share the final one). */
     public static function pipeline(): array
     {
-        return [self::Interested, self::Applied, self::Accepted];
+        return [self::Interested, self::Applied, self::Interview, self::Accepted];
     }
 
     /**
@@ -87,7 +92,7 @@ enum ActivityStage: string
 
         $steps[] = match ($current) {
             self::Done => ['label' => 'خلصت', 'sub' => null, 'reached' => true, 'mark' => '✓', 'circleClass' => 'bg-success text-white', 'lineColor' => 'bg-success'],
-            self::Rejected => ['label' => 'معتذر', 'sub' => null, 'reached' => true, 'mark' => '✕', 'circleClass' => 'bg-danger text-white', 'lineColor' => 'bg-danger'],
+            self::Rejected => ['label' => 'مرفوض', 'sub' => null, 'reached' => true, 'mark' => '✕', 'circleClass' => 'bg-danger text-white', 'lineColor' => 'bg-danger'],
             default => ['label' => 'النتيجة', 'sub' => null, 'reached' => false, 'mark' => '؟', 'circleClass' => 'bg-ink-soft/20 text-ink-soft', 'lineColor' => 'bg-ink-soft/20'],
         };
 

@@ -15,7 +15,7 @@ class Scholarship extends Model
 
     protected $fillable = [
         'user_id', 'name', 'institution', 'apply_from', 'apply_to',
-        'requirements', 'notes', 'stage', 'submitted_on', 'decided_on', 'rejection_reason',
+        'requirements', 'notes', 'stage', 'submitted_on', 'decided_on', 'rejection_reason', 'interview_focus',
     ];
 
     protected $casts = [

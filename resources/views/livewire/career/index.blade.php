@@ -44,6 +44,13 @@
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">مسابقات وهاكاثونات وورش ومؤتمرات — من التقديم للنتيجة.</p>
             </a>
 
+            {{-- Interviews --}}
+            <a href="{{ route('career.interviews') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
+                <div class="text-3xl mb-2">🎙️</div>
+                <h3 class="font-semibold text-ink dark:text-ink-dark">انترفيوز</h3>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">كل اللي في مرحلة إنترفيو — واكتب أكتر حاجة تركّز عليها.</p>
+            </a>
+
             {{-- Career pitfalls --}}
             <a href="{{ route('career.pitfalls') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
                 <div class="text-3xl mb-2">⚠️</div>

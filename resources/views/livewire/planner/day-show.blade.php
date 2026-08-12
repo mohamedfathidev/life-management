@@ -153,10 +153,10 @@
                      x-data="{ p: {{ $task->progress }} }">
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
-                            <p class="text-sm text-ink dark:text-ink-dark flex items-center gap-2">
+                            <a href="{{ route('tasks.show', $task) }}" wire:navigate class="text-sm text-ink dark:text-ink-dark flex items-center gap-2 hover:text-primary dark:hover:text-primary-dark transition">
                                 <span>{{ $task->kind->emoji() }}</span>
                                 <span>{{ $task->title }}</span>
-                            </p>
+                            </a>
                             <div class="flex items-center gap-2 mt-1 text-xs text-ink-soft dark:text-ink-dark-soft flex-wrap">
                                 <span class="px-2 py-0.5 rounded-full bg-{{ $task->status->color() }}/15 text-{{ $task->status->color() }}">{{ $task->status->label() }}</span>
                                 @if ($task->start_time)

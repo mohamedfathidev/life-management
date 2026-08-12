@@ -40,6 +40,11 @@
                         <button type="button" wire:click="markWaiting" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm hover:opacity-90 transition">في انتظار الرد →</button>
                         @break
                     @case('waiting')
+                        <button type="button" wire:click="markInterview" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm hover:opacity-90 transition">🎙️ عندي إنترفيو</button>
+                        <button type="button" wire:click="markAccepted" class="px-4 py-2 rounded-lg bg-success text-white text-sm hover:opacity-90 transition">✓ قبول</button>
+                        <button type="button" wire:click="markRejected" class="px-4 py-2 rounded-lg bg-danger/15 text-danger text-sm hover:bg-danger/25 transition">✕ رفض</button>
+                        @break
+                    @case('interview')
                         <button type="button" wire:click="markAccepted" class="px-4 py-2 rounded-lg bg-success text-white text-sm hover:opacity-90 transition">✓ قبول</button>
                         <button type="button" wire:click="markRejected" class="px-4 py-2 rounded-lg bg-danger/15 text-danger text-sm hover:bg-danger/25 transition">✕ رفض</button>
                         @break

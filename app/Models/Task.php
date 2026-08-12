@@ -17,13 +17,17 @@ class Task extends Model
 
     protected $fillable = [
         'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind',
-        'start_time', 'end_time', 'progress', 'status', 'position', 'carry_count',
+        'start_time', 'end_time', 'notes', 'estimated_minutes', 'actual_minutes',
+        'rating', 'progress', 'status', 'position', 'carry_count',
     ];
 
     protected $casts = [
         'kind' => TaskKind::class,
         'status' => TaskStatus::class,
         'progress' => 'integer',
+        'estimated_minutes' => 'integer',
+        'actual_minutes' => 'integer',
+        'rating' => 'integer',
         'position' => 'integer',
         'carry_count' => 'integer',
     ];
@@ -122,6 +126,22 @@ class Task extends Model
     public function durationLabel(): ?string
     {
         return self::minutesToLabel($this->durationMinutes());
+    }
+
+    /** Actual minutes: an explicit override, else derived from focus sessions. */
+    public function actualMinutes(): int
+    {
+        return $this->actual_minutes ?? (int) round($this->focusSecondsTotal() / 60);
+    }
+
+    public function actualLabel(): ?string
+    {
+        return self::minutesToLabel($this->actualMinutes());
+    }
+
+    public function estimatedLabel(): ?string
+    {
+        return self::minutesToLabel($this->estimated_minutes);
     }
 
     /** Format a minutes count as an Arabic hours/minutes label. */

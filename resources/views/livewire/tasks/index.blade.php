@@ -106,7 +106,7 @@
 
                     {{-- Body --}}
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-ink dark:text-ink-dark truncate {{ $task->isDone() ? 'line-through opacity-60' : '' }}">{{ $task->title }}</p>
+                        <a href="{{ route('tasks.show', $task) }}" wire:navigate class="block text-sm font-medium text-ink dark:text-ink-dark truncate hover:text-primary dark:hover:text-primary-dark transition {{ $task->isDone() ? 'line-through opacity-60' : '' }}">{{ $task->title }}</a>
                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-ink-soft dark:text-ink-dark-soft">
                             @if ($task->start_time)
                                 <span class="text-primary dark:text-primary-dark" dir="ltr">🕒 {{ $task->startLabel() }}@if ($task->endLabel()) – {{ $task->endLabel() }}@endif</span>

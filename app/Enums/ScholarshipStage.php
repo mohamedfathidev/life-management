@@ -7,6 +7,7 @@ enum ScholarshipStage: string
     case Preparing = 'preparing';   // تحضير الأوراق
     case Submitted = 'submitted';   // قدّمت الأوراق
     case Waiting = 'waiting';       // انتظار الرد
+    case Interview = 'interview';   // إنترفيو
     case Accepted = 'accepted';     // قبول
     case Rejected = 'rejected';     // رفض
 
@@ -16,6 +17,7 @@ enum ScholarshipStage: string
             self::Preparing => 'تحضير',
             self::Submitted => 'تقديم الأوراق',
             self::Waiting => 'انتظار الرد',
+            self::Interview => 'إنترفيو',
             self::Accepted => 'قبول',
             self::Rejected => 'رفض',
         };
@@ -27,6 +29,7 @@ enum ScholarshipStage: string
             self::Preparing => 'warning',
             self::Submitted => 'primary',
             self::Waiting => 'primary',
+            self::Interview => 'primary',
             self::Accepted => 'success',
             self::Rejected => 'danger',
         };
@@ -39,14 +42,15 @@ enum ScholarshipStage: string
             self::Preparing => 0,
             self::Submitted => 1,
             self::Waiting => 2,
-            self::Accepted, self::Rejected => 3,
+            self::Interview => 3,
+            self::Accepted, self::Rejected => 4,
         };
     }
 
     /** The linear pipeline stations (accepted/rejected share the final one). */
     public static function pipeline(): array
     {
-        return [self::Preparing, self::Submitted, self::Waiting];
+        return [self::Preparing, self::Submitted, self::Waiting, self::Interview];
     }
 
     /**

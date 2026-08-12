@@ -52,6 +52,11 @@ class Show extends Component
         $this->moveTo(ScholarshipStage::Waiting);
     }
 
+    public function markInterview(): void
+    {
+        $this->moveTo(ScholarshipStage::Interview);
+    }
+
     public function markAccepted(): void
     {
         $this->moveTo(ScholarshipStage::Accepted, [

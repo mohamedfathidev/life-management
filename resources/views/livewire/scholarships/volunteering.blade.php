@@ -95,6 +95,11 @@
                                 <button type="button" wire:click="markWaiting({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-primary dark:bg-primary-dark text-white hover:opacity-90">انتظار الرد →</button>
                                 @break
                             @case('waiting')
+                                <button type="button" wire:click="markInterview({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-primary dark:bg-primary-dark text-white hover:opacity-90">🎙️ عندي إنترفيو</button>
+                                <button type="button" wire:click="markAccepted({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-success text-white hover:opacity-90">✓ قبول</button>
+                                <button type="button" wire:click="markRejected({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-danger/15 text-danger hover:bg-danger/25">✕ رفض</button>
+                                @break
+                            @case('interview')
                                 <button type="button" wire:click="markAccepted({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-success text-white hover:opacity-90">✓ قبول</button>
                                 <button type="button" wire:click="markRejected({{ $a->id }})" class="text-xs px-3 py-1.5 rounded-lg bg-danger/15 text-danger hover:bg-danger/25">✕ رفض</button>
                                 @break

@@ -15,7 +15,7 @@ class Activity extends Model
 
     protected $fillable = [
         'user_id', 'goal_id', 'title', 'type', 'organizer', 'location',
-        'url', 'start_date', 'end_date', 'stage', 'result', 'notes',
+        'url', 'start_date', 'end_date', 'stage', 'result', 'notes', 'interview_focus', 'feedback',
     ];
 
     protected $casts = [
