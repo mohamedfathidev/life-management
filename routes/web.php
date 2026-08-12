@@ -25,11 +25,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('tasks', \App\Livewire\Tasks\Index::class)->name('tasks.index');
     Route::get('tasks/{task}', \App\Livewire\Tasks\Show::class)->name('tasks.show');
     Route::get('focus', \App\Livewire\Focus\Index::class)->name('focus');
+    Route::get('mind', \App\Livewire\Mind\Index::class)->name('mind');
 
     Route::get('planner', WeekView::class)->name('planner');
     Route::get('planner/pool', \App\Livewire\Planner\Pool::class)->name('planner.pool');
     Route::get('planner/week/{date}', WeekView::class)->name('planner.week');
     Route::get('planner/day/{date?}', DayShow::class)->name('planner.day');
+
+    Route::get('archive', \App\Livewire\Archive\Index::class)->name('archive');
 
     Route::get('statistics', StatisticsIndex::class)->name('statistics');
     Route::get('review', \App\Livewire\Review\Index::class)->name('review');

@@ -47,8 +47,9 @@ new class extends Component
 
                     {{-- Self-development group --}}
                     <x-nav-dropdown label="التطوير"
-                        :active="request()->routeIs('focus') || request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
+                        :active="request()->routeIs('focus') || request()->routeIs('mind') || request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
                         <x-dropdown-link :href="route('focus')" wire:navigate>🎯 التركيز</x-dropdown-link>
+                        <x-dropdown-link :href="route('mind')" wire:navigate>🧠 تنضيف العقل</x-dropdown-link>
                         <x-dropdown-link :href="route('habits.index')" wire:navigate>🔁 العادات</x-dropdown-link>
                         <x-dropdown-link :href="route('challenges.index')" wire:navigate>🔥 التحديات</x-dropdown-link>
                         <x-dropdown-link :href="route('recovery.index')" wire:navigate>🌱 التعافي</x-dropdown-link>
@@ -66,10 +67,11 @@ new class extends Component
                         المحفظة
                     </x-nav-link>
                     {{-- Reports group --}}
-                    <x-nav-dropdown label="التقارير" :active="request()->routeIs('statistics') || request()->routeIs('review') || request()->routeIs('achievements')">
+                    <x-nav-dropdown label="التقارير" :active="request()->routeIs('statistics') || request()->routeIs('review') || request()->routeIs('achievements') || request()->routeIs('archive')">
                         <x-dropdown-link :href="route('statistics')" wire:navigate>📊 الإحصائيات</x-dropdown-link>
                         <x-dropdown-link :href="route('review')" wire:navigate>🗒️ المراجعة</x-dropdown-link>
                         <x-dropdown-link :href="route('achievements')" wire:navigate>🏅 الإنجازات</x-dropdown-link>
+                        <x-dropdown-link :href="route('archive')" wire:navigate>🗄️ الأرشيف</x-dropdown-link>
                     </x-nav-dropdown>
                 </div>
             </div>
@@ -158,6 +160,9 @@ new class extends Component
             <x-responsive-nav-link :href="route('focus')" :active="request()->routeIs('focus')" wire:navigate>
                 🎯 التركيز
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('mind')" :active="request()->routeIs('mind')" wire:navigate>
+                🧠 تنضيف العقل
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('habits.index')" :active="request()->routeIs('habits.*')" wire:navigate>
                 العادات
             </x-responsive-nav-link>
@@ -181,6 +186,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('achievements')" :active="request()->routeIs('achievements')" wire:navigate>
                 الإنجازات
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('archive')" :active="request()->routeIs('archive')" wire:navigate>
+                🗄️ الأرشيف
             </x-responsive-nav-link>
         </div>
 
