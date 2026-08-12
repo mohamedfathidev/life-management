@@ -12,11 +12,12 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'title', 'type', 'date', 'time', 'location', 'note'];
+    protected $fillable = ['user_id', 'title', 'type', 'date', 'time', 'location', 'note', 'is_done'];
 
     protected $casts = [
         'date' => 'date',
         'type' => AppointmentType::class,
+        'is_done' => 'boolean',
     ];
 
     public function user(): BelongsTo

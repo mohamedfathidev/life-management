@@ -72,6 +72,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" wire:click="toggleDone({{ $ev->id }})" class="text-xs text-success hover:underline">تم ✓</button>
                         <button type="button" wire:click="editAppointment({{ $ev->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
                         <button type="button" wire:click="deleteAppointment({{ $ev->id }})" wire:confirm="حذف الموعد؟" class="text-xs text-danger hover:underline">حذف</button>
                     </div>
@@ -80,6 +81,36 @@
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-8">مفيش مواعيد قادمة.</p>
             @endforelse
         </div>
+
+        {{-- Past / done --}}
+        @if ($past->isNotEmpty())
+            <div class="mt-6 rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-6"
+                 x-data="{ open: false }">
+                <button type="button" @click="open = ! open" class="w-full flex items-center justify-between">
+                    <h3 class="font-semibold text-ink dark:text-ink-dark">المنتهية / السابقة</h3>
+                    <svg class="w-4 h-4 text-ink-soft transition" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div x-show="open" x-cloak class="mt-3">
+                    @foreach ($past as $ev)
+                        <div wire:key="past-{{ $ev->id }}" class="flex items-start justify-between gap-3 py-3 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0 opacity-75">
+                            <div class="min-w-0">
+                                <p class="text-sm text-ink dark:text-ink-dark {{ $ev->is_done ? 'line-through' : '' }}">
+                                    {{ $ev->type->emoji() }} {{ $ev->title }}
+                                    @if ($ev->is_done)<span class="text-xs text-success">تمّ ✓</span>@endif
+                                </p>
+                                <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-0.5">{{ $ev->date->translatedFormat('j M Y') }}@if ($ev->timeLabel()) · <span dir="ltr">{{ $ev->timeLabel() }}</span>@endif</p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                @if ($ev->is_done)
+                                    <button type="button" wire:click="toggleDone({{ $ev->id }})" class="text-xs text-ink-soft dark:text-ink-dark-soft hover:underline">تراجع</button>
+                                @endif
+                                <button type="button" wire:click="deleteAppointment({{ $ev->id }})" wire:confirm="حذف الموعد؟" class="text-xs text-danger hover:underline">حذف</button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
     {{-- Modal --}}

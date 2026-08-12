@@ -13,8 +13,38 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+// ---------------------------------------------------------------------------
+// Arena — shared challenges (owner + participants). Separate login; participants
+// can reach ONLY this area.
+// ---------------------------------------------------------------------------
+Route::middleware('guest')->group(function () {
+    Route::get('arena/login', \App\Livewire\Arena\Login::class)->name('arena.login');
+    Route::get('arena/register', \App\Livewire\Arena\Register::class)->name('arena.register');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('arena', \App\Livewire\Arena\Index::class)->name('arena.index');
+    Route::get('arena/c/{challenge}', \App\Livewire\Arena\ChallengeShow::class)->name('arena.challenges.show');
+
+    // Owner-only: create / edit a shared challenge.
+    Route::middleware('owner.only')->group(function () {
+        Route::get('arena/new', \App\Livewire\Arena\ManageChallenge::class)->name('arena.challenges.create');
+        Route::get('arena/c/{challenge}/edit', \App\Livewire\Arena\ManageChallenge::class)->name('arena.challenges.edit');
+    });
+
+    Route::post('arena/logout', function (\Illuminate\Http\Request $request) {
+        \Illuminate\Support\Facades\Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('arena.login');
+    })->name('arena.logout');
+});
+
+// The personal app — owner only.
+Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::get('dashboard', DashboardOverview::class)->name('dashboard');
+    Route::get('simply', \App\Livewire\Simply\Index::class)->name('simply');
 
     Route::get('goals', GoalsIndex::class)->name('goals.index');
     Route::get('goals/{goal}', GoalShow::class)->name('goals.show');

@@ -130,7 +130,7 @@ class TodayAgendaService
 
         // Appointments today
         $appointmentItems = [];
-        foreach (Appointment::query()->where('user_id', $this->user->id)
+        foreach (Appointment::query()->where('user_id', $this->user->id)->where('is_done', false)
             ->whereDate('date', $today)->orderBy('time')->get() as $ap) {
             $appointmentItems[] = [
                 'emoji' => $ap->type->emoji(),

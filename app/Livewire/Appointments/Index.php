@@ -60,6 +60,13 @@ class Index extends Component
         Appointment::ownedBy(Auth::user())->where('id', $id)->delete();
     }
 
+    /** Mark an appointment as done (or undo) so it leaves the upcoming list. */
+    public function toggleDone(int $id): void
+    {
+        $appointment = Appointment::ownedBy(Auth::user())->findOrFail($id);
+        $appointment->update(['is_done' => ! $appointment->is_done]);
+    }
+
     public function save(): void
     {
         $this->form->persist(Auth::id());
@@ -106,20 +113,36 @@ class Index extends Component
             $weeks[] = $week;
         }
 
-        // Upcoming list (today onward).
+        // Upcoming = not done, and not past its date/time yet.
+        $today = Carbon::today()->toDateString();
+        $nowTime = Carbon::now()->format('H:i:s');
+
         $upcoming = Appointment::query()
             ->ownedBy(Auth::user())
-            ->whereDate('date', '>=', Carbon::today()->toDateString())
-            ->orderBy('date')
-            ->orderBy('time')
-            ->limit(12)
-            ->get();
+            ->where('is_done', false)
+            ->where(function ($q) use ($today, $nowTime) {
+                $q->whereDate('date', '>', $today)
+                    ->orWhere(fn ($q2) => $q2->whereDate('date', $today)
+                        ->where(fn ($q3) => $q3->whereNull('time')->orWhere('time', '>=', $nowTime)));
+            })
+            ->orderBy('date')->orderBy('time')->limit(20)->get();
+
+        // Past / done — recent history.
+        $past = Appointment::query()
+            ->ownedBy(Auth::user())
+            ->where(function ($q) use ($today, $nowTime) {
+                $q->where('is_done', true)
+                    ->orWhereDate('date', '<', $today)
+                    ->orWhere(fn ($q2) => $q2->whereDate('date', $today)->whereNotNull('time')->where('time', '<', $nowTime));
+            })
+            ->orderByDesc('date')->orderByDesc('time')->limit(15)->get();
 
         return view('livewire.appointments.index', [
             'monthLabel' => $monthDate->translatedFormat('F Y'),
             'weekDays' => ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
             'weeks' => $weeks,
             'upcoming' => $upcoming,
+            'past' => $past,
             'types' => AppointmentType::cases(),
         ]);
     }

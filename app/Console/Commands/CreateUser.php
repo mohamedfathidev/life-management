@@ -47,6 +47,7 @@ class CreateUser extends Command
             'email' => $email,
             'password' => $password,          // hashed via the model cast
             'email_verified_at' => now(),     // so the "verified" routes work
+            'role' => \App\Enums\UserRole::Owner->value,
         ]);
 
         $this->info("✓ تم إنشاء المستخدم: {$user->email}");

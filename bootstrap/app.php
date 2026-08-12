@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'privacy.lock' => \App\Http\Middleware\EnsurePrivacyUnlocked::class,
+            'owner.only' => \App\Http\Middleware\EnsureOwner::class,
         ]);
 
         // Re-lock the PIN whenever the user navigates out of the sensitive sections,

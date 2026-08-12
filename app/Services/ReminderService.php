@@ -40,11 +40,11 @@ class ReminderService
         $items = [];
 
         // Appointments today / tomorrow
-        foreach (Appointment::query()->where('user_id', $this->user->id)
+        foreach (Appointment::query()->where('user_id', $this->user->id)->where('is_done', false)
             ->whereDate('date', $today)->orderBy('time')->get() as $ap) {
             $items[] = ['emoji' => $ap->type->emoji(), 'text' => 'موعد النهاردة: '.$ap->title.($ap->timeLabel() ? ' ('.$ap->timeLabel().')' : ''), 'url' => route('appointments'), 'priority' => 2];
         }
-        foreach (Appointment::query()->where('user_id', $this->user->id)
+        foreach (Appointment::query()->where('user_id', $this->user->id)->where('is_done', false)
             ->whereDate('date', $today->copy()->addDay())->get() as $ap) {
             $items[] = ['emoji' => $ap->type->emoji(), 'text' => 'موعد بكرة: '.$ap->title, 'url' => route('appointments'), 'priority' => 1];
         }

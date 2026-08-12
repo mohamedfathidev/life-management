@@ -25,7 +25,18 @@ class User extends Authenticatable
         'password',
         'locale',
         'theme',
+        'role',
     ];
+
+    public function isOwner(): bool
+    {
+        return $this->role === \App\Enums\UserRole::Owner;
+    }
+
+    public function isParticipant(): bool
+    {
+        return $this->role === \App\Enums\UserRole::Participant;
+    }
 
     public function goals(): HasMany
     {
@@ -62,6 +73,12 @@ class User extends Authenticatable
         return $this->hasMany(Habit::class);
     }
 
+    /** Shared arena challenges this user has joined. */
+    public function sharedChallenges(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(SharedChallenge::class, 'shared_challenge_user')->withTimestamps();
+    }
+
     /** Whether the user configured a privacy PIN. */
     public function hasPin(): bool
     {
@@ -91,6 +108,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'pin' => 'hashed',
             'theme' => \App\Enums\Theme::class,
+            'role' => \App\Enums\UserRole::class,
         ];
     }
 }

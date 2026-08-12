@@ -34,6 +34,9 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         لوحة التحكم
                     </x-nav-link>
+                    <x-nav-link :href="route('simply')" :active="request()->routeIs('simply')" wire:navigate>
+                        🌿 ببساطة
+                    </x-nav-link>
 
                     {{-- Planning group --}}
                     <x-nav-dropdown label="التخطيط"
@@ -129,6 +132,9 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 لوحة التحكم
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('simply')" :active="request()->routeIs('simply')" wire:navigate>
+                🌿 ببساطة
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('search')" :active="request()->routeIs('search')" wire:navigate>
                 🔍 بحث
