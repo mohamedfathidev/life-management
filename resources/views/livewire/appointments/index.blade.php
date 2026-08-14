@@ -72,6 +72,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
+                        <a href="{{ $ev->googleCalendarUrl() }}" target="_blank" rel="noopener" title="أضف لجوجل كاليندر" class="text-xs text-primary dark:text-primary-dark hover:underline">📅 جوجل</a>
                         <button type="button" wire:click="toggleDone({{ $ev->id }})" class="text-xs text-success hover:underline">تم ✓</button>
                         <button type="button" wire:click="editAppointment({{ $ev->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
                         <button type="button" wire:click="deleteAppointment({{ $ev->id }})" wire:confirm="حذف الموعد؟" class="text-xs text-danger hover:underline">حذف</button>

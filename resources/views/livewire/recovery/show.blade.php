@@ -28,8 +28,12 @@
 
             <div class="flex items-center justify-center gap-8 mt-6 text-sm">
                 <div>
+                    <p class="text-xl font-bold text-success">{{ $cleanDays }}</p>
+                    <p class="text-xs text-ink-soft dark:text-ink-dark-soft">عدد الأيام النضيفة</p>
+                </div>
+                <div>
                     <p class="text-xl font-bold text-ink dark:text-ink-dark">{{ $bestStreak }}</p>
-                    <p class="text-xs text-ink-soft dark:text-ink-dark-soft">أطول فترة</p>
+                    <p class="text-xs text-ink-soft dark:text-ink-dark-soft">أطول مدة بدون انتكاسة</p>
                 </div>
                 <div>
                     <p class="text-xl font-bold text-ink dark:text-ink-dark">{{ $setbackCount }}</p>
@@ -38,7 +42,7 @@
             </div>
 
             <div class="flex items-center justify-center gap-3 mt-6">
-                <button type="button" wire:click="addLog(false)" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium hover:opacity-90 transition">سجّل اليوم</button>
+                <button type="button" wire:click="addLog(false)" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium hover:opacity-90 transition">سجّل يوم نضيف</button>
                 <button type="button" wire:click="addLog(true)" class="px-4 py-2 rounded-lg bg-danger/15 text-danger text-sm font-medium hover:bg-danger/25 transition">سجّل انتكاسة</button>
             </div>
         </div>
@@ -51,12 +55,16 @@
                     <div class="min-w-0">
                         <p class="text-sm text-ink dark:text-ink-dark flex items-center gap-2">
                             {{ $log->date->translatedFormat('l، j M Y') }}
-                            @if ($log->is_setback)<span class="text-xs px-2 py-0.5 rounded-full bg-danger/15 text-danger">انتكاسة</span>@endif
+                            @if ($log->is_setback)
+                                <span class="text-xs px-2 py-0.5 rounded-full bg-danger/15 text-danger">انتكاسة</span>
+                            @else
+                                <span class="text-xs px-2 py-0.5 rounded-full bg-success/15 text-success">يوم نضيف ✓</span>
+                            @endif
                         </p>
                         <div class="flex items-center gap-3 mt-1 text-xs text-ink-soft dark:text-ink-dark-soft flex-wrap">
                             @if ($log->urge_level)<span>🌊 الرغبة: {{ $log->urge_level }}/10</span>@endif
                             @if ($log->mood)<span>😊 المزاج: {{ $log->mood }}/10</span>@endif
-                            @if ($log->hardest_from && $log->hardest_to)<span dir="ltr">⏰ {{ substr($log->hardest_from, 0, 5) }}–{{ substr($log->hardest_to, 0, 5) }}</span>@endif
+                            @if ($log->hardest_from && $log->hardest_to)<span>⏰ أصعب فترة: {{ \Illuminate\Support\Carbon::parse($log->hardest_from)->translatedFormat('g:i A') }} – {{ \Illuminate\Support\Carbon::parse($log->hardest_to)->translatedFormat('g:i A') }}</span>@endif
                         </div>
                         @if ($log->trigger_note)<p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">المُحفّز: {{ $log->trigger_note }}</p>@endif
                         @if ($log->note)<p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">{{ $log->note }}</p>@endif

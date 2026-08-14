@@ -23,6 +23,12 @@ class Index extends Component
     #[Url]
     public string $scope = 'month';
 
+    #[\Livewire\Attributes\On('wallet-updated')]
+    public function refreshWallet(): void
+    {
+        // A wishlist purchase created a transaction — re-render to update totals.
+    }
+
     public function openCreate(string $type = 'expense'): void
     {
         $this->resetValidation();

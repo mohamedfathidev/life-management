@@ -107,6 +107,13 @@
                                 <span class="text-xs text-ink-soft dark:text-ink-dark-soft">مُغلق</span>
                         @endswitch
                     </div>
+
+                    <div x-data="{ o: false }" class="mt-3">
+                        <button type="button" @click="o = ! o" class="text-xs text-primary dark:text-primary-dark hover:underline">📄 الأوراق المطلوبة</button>
+                        <div x-show="o" x-cloak class="mt-2">
+                            <livewire:career.item-documents documentable-type="volunteer" :documentable-id="$a->id" :wire:key="'vodocs-'.$a->id" />
+                        </div>
+                    </div>
                 </div>
             @empty
                 <div class="text-center py-16 rounded-xl border border-dashed border-ink-soft/30 dark:border-ink-dark-soft/30">

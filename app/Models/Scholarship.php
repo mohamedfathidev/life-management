@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ScholarshipStage;
+use App\Models\Concerns\HasItemDocuments;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Support\Carbon;
 class Scholarship extends Model
 {
     use HasFactory;
+    use HasItemDocuments;
 
     protected $fillable = [
         'user_id', 'name', 'institution', 'apply_from', 'apply_to',
@@ -41,6 +43,36 @@ class Scholarship extends Model
         return in_array($this->stage, [ScholarshipStage::Accepted, ScholarshipStage::Rejected], true);
     }
 
+    /**
+     * The application window status relative to today:
+     *   open      → you can apply now
+     *   upcoming  → its window hasn't opened yet
+     *   closed    → the deadline has passed
+     */
+    public function windowStatus(): string
+    {
+        $today = Carbon::today();
+
+        if ($this->apply_to && $today->gt($this->apply_to)) {
+            return 'closed';
+        }
+
+        if ($this->apply_from && $today->lt($this->apply_from)) {
+            return 'upcoming';
+        }
+
+        return 'open';
+    }
+
+    public function windowLabel(): string
+    {
+        return match ($this->windowStatus()) {
+            'open' => 'مفتوحة الآن',
+            'upcoming' => 'لسه ماجاش معادها',
+            default => 'اتقفلت',
+        };
+    }
+
     /** Days left until the application deadline (negative = passed). */
     public function daysToDeadline(): ?int
     {
@@ -49,5 +81,15 @@ class Scholarship extends Model
         }
 
         return (int) Carbon::today()->diffInDays($this->apply_to, false);
+    }
+
+    /** Days until the application window opens (positive = future). */
+    public function daysToOpen(): ?int
+    {
+        if (! $this->apply_from) {
+            return null;
+        }
+
+        return (int) Carbon::today()->diffInDays($this->apply_from, false);
     }
 }

@@ -12,6 +12,19 @@
         <p class="text-sm text-ink-soft dark:text-ink-dark-soft mb-4">قيّم يومك، وقرر مصير التاسكات غير المكتملة.</p>
 
         <form wire:submit="save" class="space-y-5">
+            {{-- What you didn't do today (besides tasks) --}}
+            @if (! empty($missedItems))
+                <div class="rounded-xl bg-warning/10 p-4">
+                    <p class="text-sm font-semibold text-warning mb-2">⚠️ لسه ماعملتش النهاردة:</p>
+                    <ul class="space-y-1">
+                        @foreach ($missedItems as $item)
+                            <li class="text-sm text-ink dark:text-ink-dark">• {{ $item }}</li>
+                        @endforeach
+                    </ul>
+                    <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-2">تقدر تعملها قبل ما تقفل اليوم، أو تقفل عادي.</p>
+                </div>
+            @endif
+
             {{-- Rating 1-10 --}}
             <div>
                 <x-input-label value="تقييم اليوم (١–١٠)" />

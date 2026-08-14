@@ -46,6 +46,11 @@ class Recovery extends Model
         return $query->where('user_id', $user->id);
     }
 
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', RecoveryStatus::Active);
+    }
+
     // ---------------------------------------------------------------------
     // Streak logic — resets to zero on each setback (days since last setback)
     // ---------------------------------------------------------------------
@@ -71,6 +76,12 @@ class Recovery extends Model
     public function setbackCount(): int
     {
         return $this->logs()->where('is_setback', true)->count();
+    }
+
+    /** Total distinct clean days logged. */
+    public function cleanDaysCount(): int
+    {
+        return $this->logs()->where('is_setback', false)->distinct('date')->count('date');
     }
 
     /** Longest clean streak across the whole history, in days. */

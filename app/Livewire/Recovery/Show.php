@@ -46,6 +46,7 @@ class Show extends Component
             'streakSince' => $this->recovery->streakSince(),
             'bestStreak' => $this->recovery->bestStreakDays(),
             'setbackCount' => $this->recovery->setbackCount(),
+            'cleanDays' => $this->recovery->cleanDaysCount(),
         ]);
     }
 }

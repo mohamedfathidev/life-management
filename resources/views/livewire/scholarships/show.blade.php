@@ -64,6 +64,11 @@
             @endif
         </div>
 
+        {{-- Required documents checklist --}}
+        <div class="mt-6">
+            <livewire:career.item-documents documentable-type="scholarship" :documentable-id="$scholarship->id" :wire:key="'scdocs-'.$scholarship->id" />
+        </div>
+
         {{-- Requirements + notes --}}
         @if ($scholarship->requirements || $scholarship->notes)
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">

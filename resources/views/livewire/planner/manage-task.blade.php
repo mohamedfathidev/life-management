@@ -82,6 +82,12 @@
                 </div>
             </div>
 
+            {{-- Most important task --}}
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" wire:model="form.is_important" class="rounded border-gray-300 dark:border-gray-600 text-warning focus:ring-warning" />
+                <span class="text-sm text-ink dark:text-ink-dark">⭐ أهم تاسك النهاردة (يتميّز بلون بارز)</span>
+            </label>
+
             {{-- Progress --}}
             <div x-data="{ p: @entangle('form.progress') }">
                 <div class="flex justify-between">

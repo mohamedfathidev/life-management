@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\JobStage;
+use App\Models\Concerns\HasItemDocuments;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class JobApplication extends Model
 {
     use HasFactory;
+    use HasItemDocuments;
 
     protected $fillable = [
         'user_id', 'goal_id', 'position', 'company', 'applied_via',
@@ -55,5 +57,25 @@ class JobApplication extends Model
     public function isClosed(): bool
     {
         return in_array($this->stage, [JobStage::Offer, JobStage::Rejected], true);
+    }
+
+    /** "Add to Google Calendar" link for the interview (all-day on interview_at). */
+    public function interviewCalendarUrl(): ?string
+    {
+        if (! $this->interview_at) {
+            return null;
+        }
+
+        $start = $this->interview_at->copy();
+        $dates = $start->format('Ymd').'/'.$start->copy()->addDay()->format('Ymd');
+        $title = 'انترفيو: '.$this->position.' — '.$this->company;
+        $details = $this->interview_focus ?: (string) $this->description;
+
+        $query = 'action=TEMPLATE'
+            .'&text='.rawurlencode($title)
+            .'&dates='.$dates
+            .'&details='.rawurlencode($details);
+
+        return 'https://calendar.google.com/calendar/render?'.$query;
     }
 }

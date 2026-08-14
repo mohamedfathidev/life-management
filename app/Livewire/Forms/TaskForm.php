@@ -22,6 +22,7 @@ class TaskForm extends Form
     public ?string $start_time = null;
     public ?string $end_time = null;
     public string $kind = 'other';
+    public bool $is_important = false;
     public int $progress = 0;
 
     /** @return array<string, mixed> */
@@ -35,6 +36,7 @@ class TaskForm extends Form
             'start_time' => ['nullable', 'date_format:H:i'],
             'end_time' => ['nullable', 'date_format:H:i', $this->endAfterStart()],
             'kind' => ['required', new Enum(TaskKind::class)],
+            'is_important' => ['boolean'],
             'progress' => ['required', 'integer', 'between:0,100'],
         ];
     }
@@ -96,6 +98,7 @@ class TaskForm extends Form
         $this->start_time = $task->start_time ? \Illuminate\Support\Carbon::parse($task->start_time)->format('H:i') : null;
         $this->end_time = $task->end_time ? \Illuminate\Support\Carbon::parse($task->end_time)->format('H:i') : null;
         $this->kind = $task->kind->value;
+        $this->is_important = $task->is_important;
         $this->progress = $task->progress;
     }
 

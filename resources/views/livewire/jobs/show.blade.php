@@ -14,8 +14,15 @@
                 <div class="flex items-center gap-3 mt-2 text-xs text-ink-soft dark:text-ink-dark-soft flex-wrap">
                     @if ($job->applied_via)<span>عن طريق {{ $job->applied_via }}</span>@endif
                     @if ($job->applied_on)<span>· قدّمت {{ $job->applied_on->translatedFormat('j M Y') }}</span>@endif
+                    @if ($job->deadline)<span>· ⏰ آخر موعد {{ $job->deadline->translatedFormat('j M') }}</span>@endif
                     @if ($job->url)<a href="{{ $job->url }}" target="_blank" rel="noopener" class="text-primary dark:text-primary-dark hover:underline">🔗 الإعلان</a>@endif
                 </div>
+                @if ($job->interview_at)
+                    <div class="mt-2 inline-flex items-center gap-2 text-xs">
+                        <span class="text-primary dark:text-primary-dark font-medium">🎙️ انترفيو: {{ $job->interview_at->translatedFormat('l، j M Y') }}</span>
+                        <a href="{{ $job->interviewCalendarUrl() }}" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-full bg-primary/10 text-primary dark:text-primary-dark hover:bg-primary/20 transition">📅 أضف لجوجل</a>
+                    </div>
+                @endif
             </div>
             <div class="flex items-center gap-2 shrink-0">
                 <button type="button" wire:click="editJob" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary dark:text-primary-dark text-sm hover:bg-primary/10 transition">تعديل</button>
@@ -100,6 +107,11 @@
                 </div>
             </div>
         @endif
+
+        {{-- Required documents checklist --}}
+        <div class="mt-6">
+            <livewire:career.item-documents documentable-type="job" :documentable-id="$job->id" :wire:key="'jbdocs-'.$job->id" />
+        </div>
     </div>
 
     <livewire:jobs.manage-job />

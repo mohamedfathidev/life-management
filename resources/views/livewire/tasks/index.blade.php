@@ -92,7 +92,8 @@
             @forelse ($tasks as $task)
                 @php($sc = $task->status->color())
                 <div wire:key="task-{{ $task->id }}"
-                    class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark rounded-xl px-4 py-3 shadow-sm">
+                    class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark rounded-xl px-4 py-3 shadow-sm {{ $task->is_important ? 'ring-2 ring-warning/50 bg-warning/5' : '' }}">
+                    <button type="button" wire:click="toggleImportant({{ $task->id }})" title="أهم تاسك" class="shrink-0 text-lg {{ $task->is_important ? 'text-warning' : 'text-ink-soft/40 dark:text-ink-dark-soft/40 hover:text-warning' }}">{{ $task->is_important ? '⭐' : '☆' }}</button>
 
                     {{-- Done toggle --}}
                     <button wire:click="toggleDone({{ $task->id }})" title="تعليم كمكتملة"
@@ -126,12 +127,12 @@
                         </div>
                     </div>
 
-                    {{-- Progress --}}
-                    <div class="hidden sm:flex flex-col items-end gap-1 w-24 shrink-0">
-                        <span class="text-xs font-medium text-{{ $sc }}">{{ $task->progress }}%</span>
-                        <div class="w-full h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-{{ $sc }}" style="width: {{ $task->progress }}%"></div>
-                        </div>
+                    {{-- Progress slider (set how much you finished) --}}
+                    <div class="hidden sm:flex items-center gap-2 w-36 shrink-0" dir="ltr" x-data="{ p: {{ $task->progress }} }">
+                        <input type="range" min="0" max="100" step="5" value="{{ $task->progress }}"
+                               x-model.number="p" x-on:change="$wire.setProgress({{ $task->id }}, p)"
+                               class="flex-1 accent-primary" title="حدّد قد إيه خلصت" />
+                        <span class="text-xs font-medium text-{{ $sc }} w-9 text-left" x-text="p + '%'"></span>
                     </div>
 
                     {{-- Actions --}}

@@ -99,6 +99,14 @@ class DayShow extends Component
         $this->day->refresh();
     }
 
+    public function toggleImportant(int $taskId): void
+    {
+        $task = Task::findOrFail($taskId);
+        $this->authorize('update', $task);
+        $task->update(['is_important' => ! $task->is_important]);
+        $this->day->refresh();
+    }
+
     public function addTask(): void
     {
         $this->dispatch('create-task', dayId: $this->day->id);
@@ -114,9 +122,9 @@ class DayShow extends Component
     {
         $this->day->load(['tasks.goal', 'breaks']);
 
-        // Arrange the day as a timeline: scheduled tasks (by start time) first, then unscheduled.
+        // Important tasks first, then by start time (timeline order).
         $tasks = $this->day->tasks
-            ->sortBy(fn (Task $t) => $t->start_time ?: '99:99:99')
+            ->sortBy(fn (Task $t) => [$t->is_important ? 0 : 1, $t->start_time ?: '99:99:99'])
             ->values();
 
         $scheduled = $this->day->tasks->filter(fn (Task $t) => $t->start_time);

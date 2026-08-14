@@ -7,7 +7,10 @@
                 <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1">الوظائف</h1>
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">تتبّع تقديماتك واستعدادك للإنترفيو.</p>
             </div>
-            <button type="button" wire:click="$dispatch('create-job')" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition shrink-0">+ وظيفة</button>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ route('jobs.resources') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🔖 مصادر</a>
+                <button type="button" wire:click="$dispatch('create-job')" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ وظيفة</button>
+            </div>
         </div>
 
         {{-- Filter --}}

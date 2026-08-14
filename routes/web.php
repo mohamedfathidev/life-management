@@ -89,10 +89,28 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::get('career', \App\Livewire\Career\Index::class)->name('career');
     Route::get('career/scholarships', \App\Livewire\Scholarships\Index::class)->name('scholarships.index');
     Route::get('career/scholarships/topics', \App\Livewire\Scholarships\Topics::class)->name('scholarships.topics');
+    Route::get('career/scholarships/topics/{topic}', \App\Livewire\Scholarships\TopicShow::class)->name('scholarships.topics.show');
     Route::get('career/scholarships/volunteering', \App\Livewire\Scholarships\Volunteering::class)->name('scholarships.volunteering');
+    Route::get('career/scholarships/documents', \App\Livewire\Scholarships\Documents::class)->name('scholarships.documents');
+    Route::get('career/scholarships/resources', \App\Livewire\Career\Resources::class)->defaults('context', 'scholarship')->name('scholarships.resources');
+    Route::get('career/resources/{resource}/image', function (\App\Models\CareerResource $resource) {
+        abort_unless($resource->user_id === auth()->id(), 403);
+        $path = \Illuminate\Support\Facades\Storage::disk('local')->path($resource->image_path);
+        abort_unless($resource->image_path && is_file($path), 404);
+
+        return response()->file($path);
+    })->name('career.resources.image');
+    Route::get('career/scholarships/documents/{document}/file', function (\App\Models\ScholarshipDocument $document) {
+        abort_unless($document->user_id === auth()->id(), 403);
+        $path = \Illuminate\Support\Facades\Storage::disk('local')->path($document->file_path);
+        abort_unless($document->file_path && is_file($path), 404);
+
+        return response()->file($path);
+    })->name('scholarships.documents.file');
     Route::get('career/scholarships/{scholarship}', \App\Livewire\Scholarships\Show::class)->name('scholarships.show');
 
     Route::get('career/jobs', \App\Livewire\Jobs\Index::class)->name('jobs.index');
+    Route::get('career/jobs/resources', \App\Livewire\Career\Resources::class)->defaults('context', 'job')->name('jobs.resources');
     Route::get('career/jobs/{job}', \App\Livewire\Jobs\Show::class)->name('jobs.show');
 
     Route::get('career/study', \App\Livewire\MarketStudy\Index::class)->name('market-study.index');

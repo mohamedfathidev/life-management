@@ -4,12 +4,15 @@
         <div class="flex items-center justify-between gap-4 mb-6">
             <div>
                 <a href="{{ route('scholarships.index') }}" wire:navigate class="text-sm text-primary dark:text-primary-dark hover:underline">← المنح</a>
-                <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1">تعلّم عن المنح</h1>
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">خطاب التحفيز، التوصية، وكل ما يخص التقديم — منظّم بالوسوم.</p>
+                <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1">التعلّم عن المنح والاستعداد</h1>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">كل حاجة تتعلّمها (خطاب الدوافع، IELTS…) بتبقى ملف تفتحه وفيه خطة تمشي عليها.</p>
             </div>
-            <button type="button" wire:click="$dispatch('create-scholarship-topic')" class="inline-flex items-center gap-2 rounded-lg bg-primary dark:bg-primary-dark px-4 py-2 text-white text-sm font-medium shadow-sm hover:opacity-90 transition">
-                + موضوع
-            </button>
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" wire:click="addSuggested" class="text-xs text-primary dark:text-primary-dark hover:underline">✨ مواضيع مقترحة</button>
+                <button type="button" wire:click="$dispatch('create-scholarship-topic')" class="inline-flex items-center gap-2 rounded-lg bg-primary dark:bg-primary-dark px-4 py-2 text-white text-sm font-medium shadow-sm hover:opacity-90 transition">
+                    + موضوع
+                </button>
+            </div>
         </div>
 
         @if ($allTags->isNotEmpty())
@@ -32,14 +35,17 @@
                 @foreach ($topics as $topic)
                     <div wire:key="sctopic-{{ $topic->id }}" class="rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-5">
                         <div class="flex items-start justify-between gap-3">
-                            <h3 class="font-semibold text-ink dark:text-ink-dark">{{ $topic->title }}</h3>
+                            <a href="{{ route('scholarships.topics.show', $topic) }}" wire:navigate class="font-semibold text-ink dark:text-ink-dark hover:text-primary dark:hover:text-primary-dark transition flex items-center gap-2">
+                                📘 {{ $topic->title }}
+                            </a>
                             <div class="flex items-center gap-2 shrink-0">
                                 <button type="button" wire:click="$dispatch('edit-scholarship-topic', { topic: {{ $topic->id }} })" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
                                 <button type="button" wire:click="$dispatch('delete-scholarship-topic', { topic: {{ $topic->id }} })" wire:confirm="حذف هذا الموضوع؟" class="text-xs text-danger hover:underline">حذف</button>
                             </div>
                         </div>
+                        <a href="{{ route('scholarships.topics.show', $topic) }}" wire:navigate class="inline-block mt-2 text-xs text-primary dark:text-primary-dark hover:underline">📋 افتح الخطة والتفاصيل →</a>
                         @if ($topic->content)
-                            <div class="trix-content text-sm text-ink-soft dark:text-ink-dark-soft mt-2">{!! $topic->content !!}</div>
+                            <div class="trix-content text-sm text-ink-soft dark:text-ink-dark-soft mt-2 line-clamp-2">{!! $topic->content !!}</div>
                         @endif
                         @if (! empty($topic->tags))
                             <div class="flex flex-wrap gap-1.5 mt-3">

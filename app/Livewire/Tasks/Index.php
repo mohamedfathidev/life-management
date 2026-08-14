@@ -50,6 +50,20 @@ class Index extends Component
         $this->dispatch('task-saved');
     }
 
+    public function toggleImportant(Task $task): void
+    {
+        $this->authorize('update', $task);
+        $task->update(['is_important' => ! $task->is_important]);
+    }
+
+    /** Set partial progress (0–100) from the inline slider. */
+    public function setProgress(Task $task, int $progress): void
+    {
+        $this->authorize('update', $task);
+        $task->setProgress($progress);
+        $task->save();
+    }
+
     public function resetFilters(): void
     {
         $this->reset(['kind', 'status', 'goalId']);
@@ -64,6 +78,7 @@ class Index extends Component
         $query = Task::query()
             ->ownedBy($user)
             ->with(['goal:id,title,parent_id', 'goal.parent:id,title', 'day:id,date'])
+            ->orderByDesc('is_important')         // most important first
             ->orderByRaw('day_id IS NULL')       // dated tasks first, pool last
             ->orderByRaw('start_time IS NULL')   // timed tasks before untimed
             ->orderBy('start_time')              // earliest → latest (logical sequence)

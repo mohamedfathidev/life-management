@@ -149,11 +149,12 @@
             @endif
 
             @forelse ($tasks as $task)
-                <div wire:key="task-{{ $task->id }}" class="py-3 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0"
+                <div wire:key="task-{{ $task->id }}" class="py-3 border-b border-ink-soft/10 dark:border-ink-dark-soft/10 last:border-0 {{ $task->is_important ? 'bg-warning/5 border-s-4 border-warning ps-3 rounded-lg' : '' }}"
                      x-data="{ p: {{ $task->progress }} }">
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
-                            <a href="{{ route('tasks.show', $task) }}" wire:navigate class="text-sm text-ink dark:text-ink-dark flex items-center gap-2 hover:text-primary dark:hover:text-primary-dark transition">
+                            <a href="{{ route('tasks.show', $task) }}" wire:navigate class="text-sm flex items-center gap-2 hover:text-primary dark:hover:text-primary-dark transition {{ $task->is_important ? 'font-bold text-ink dark:text-ink-dark' : 'text-ink dark:text-ink-dark' }}">
+                                @if ($task->is_important)<span class="text-warning">⭐</span>@endif
                                 <span>{{ $task->kind->emoji() }}</span>
                                 <span>{{ $task->title }}</span>
                             </a>

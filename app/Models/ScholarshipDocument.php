@@ -2,21 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasItemDocuments;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ScholarshipTopic extends Model
+class ScholarshipDocument extends Model
 {
-    use HasFactory;
-    use HasItemDocuments;
-
-    protected $fillable = ['user_id', 'title', 'content', 'tags'];
+    protected $fillable = ['user_id', 'name', 'is_ready', 'file_path', 'original_name', 'position'];
 
     protected $casts = [
-        'tags' => 'array',
+        'is_ready' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -29,8 +24,8 @@ class ScholarshipTopic extends Model
         return $query->where('user_id', $user->id);
     }
 
-    public function scopeWithTag(Builder $query, string $tag): Builder
+    public function hasFile(): bool
     {
-        return $query->whereJsonContains('tags', $tag);
+        return (bool) $this->file_path;
     }
 }

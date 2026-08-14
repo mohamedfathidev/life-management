@@ -16,7 +16,7 @@ class Task extends Model
     use HasFocusSessions;
 
     protected $fillable = [
-        'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind',
+        'user_id', 'day_id', 'goal_id', 'study_track_id', 'title', 'kind', 'is_important',
         'start_time', 'end_time', 'notes', 'estimated_minutes', 'actual_minutes',
         'rating', 'progress', 'status', 'position', 'carry_count',
     ];
@@ -24,6 +24,7 @@ class Task extends Model
     protected $casts = [
         'kind' => TaskKind::class,
         'status' => TaskStatus::class,
+        'is_important' => 'boolean',
         'progress' => 'integer',
         'estimated_minutes' => 'integer',
         'actual_minutes' => 'integer',

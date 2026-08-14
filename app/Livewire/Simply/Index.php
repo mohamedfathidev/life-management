@@ -8,8 +8,11 @@ use App\Models\Challenge;
 use App\Models\Habit;
 use App\Models\JobApplication;
 use App\Models\MentalNutritionLog;
+use App\Models\NightCheck;
 use App\Models\PrayerDay;
 use App\Models\QuranWirdDay;
+use App\Models\Recovery;
+use App\Models\RecoveryLog;
 use App\Models\RecoveryTopic;
 use App\Models\Task;
 use Illuminate\Contracts\View\View;
@@ -46,6 +49,34 @@ class Index extends Component
             : $habit->logs()->create(['date' => $today]);
     }
 
+    /**
+     * Record how *yesterday* went for a recovery (clean / setback). We log the
+     * previous day because you evaluate it when you wake up the next morning.
+     */
+    public function recordYesterday(int $recoveryId, bool $setback): void
+    {
+        $recovery = Recovery::query()->ownedBy(Auth::user())->active()->find($recoveryId);
+        if (! $recovery) {
+            return;
+        }
+
+        RecoveryLog::updateOrCreate(
+            ['recovery_id' => $recovery->id, 'date' => Carbon::yesterday()->toDateString()],
+            ['is_setback' => $setback],
+        );
+    }
+
+    /** Daily check: fed my mind (against addiction) + prepared for sleep. */
+    public function toggleNightCheck(): void
+    {
+        $today = Carbon::today()->toDateString();
+        $existing = NightCheck::where('user_id', Auth::id())->whereDate('date', $today)->first();
+
+        $existing
+            ? $existing->delete()
+            : NightCheck::create(['user_id' => Auth::id(), 'date' => $today]);
+    }
+
     public function toggleAppointment(int $id): void
     {
         $appointment = Appointment::where('user_id', Auth::id())->find($id);
@@ -74,6 +105,7 @@ class Index extends Component
         // Today's tasks
         $tasks = Task::query()->ownedBy($user)
             ->whereHas('day', fn ($q) => $q->whereDate('date', $today))
+            ->orderByDesc('is_important')
             ->orderByRaw('start_time IS NULL')->orderBy('start_time')->get();
 
         // Timeline: timed tasks + appointments + job interviews today
@@ -81,15 +113,15 @@ class Index extends Component
         foreach ($tasks->whereNotNull('start_time') as $t) {
             $timeline->push([
                 'sort' => $t->start_time, 'time' => $t->startLabel(),
-                'emoji' => $t->kind->emoji(), 'title' => $t->title,
+                'emoji' => $t->kind->emoji(), 'title' => $t->title, 'kind' => $t->kind->label(),
                 'toggle' => 'toggleTask', 'id' => $t->id, 'done' => $t->isDone(),
-                'url' => route('tasks.show', $t),
+                'important' => $t->is_important, 'url' => route('tasks.show', $t),
             ]);
         }
         foreach (Appointment::query()->where('user_id', $user->id)->whereDate('date', $today)->get() as $a) {
             $timeline->push([
                 'sort' => $a->time ?? '23:58', 'time' => $a->timeLabel(),
-                'emoji' => $a->type->emoji(), 'title' => $a->title,
+                'emoji' => $a->type->emoji(), 'title' => $a->title, 'kind' => $a->type->label(),
                 'toggle' => 'toggleAppointment', 'id' => $a->id, 'done' => $a->is_done,
                 'url' => route('appointments'),
             ]);
@@ -97,7 +129,7 @@ class Index extends Component
         foreach (JobApplication::query()->where('user_id', $user->id)->whereDate('interview_at', $today)->get() as $j) {
             $timeline->push([
                 'sort' => '23:59', 'time' => null,
-                'emoji' => '🎙️', 'title' => 'انترفيو: '.$j->position.' — '.$j->company,
+                'emoji' => '🎙️', 'title' => 'انترفيو: '.$j->position.' — '.$j->company, 'kind' => 'انترفيو',
                 'toggle' => null, 'id' => null, 'done' => null,
                 'url' => route('jobs.show', $j),
             ]);
@@ -150,6 +182,13 @@ class Index extends Component
             'quranDone' => $quranDone,
             'nutritionDone' => $nutritionDone,
             'hasTopics' => $hasTopics,
+            'recoveries' => Recovery::query()->ownedBy($user)->active()->get()->map(function (Recovery $r) use ($today) {
+                $log = RecoveryLog::where('recovery_id', $r->id)->whereDate('date', $today->copy()->subDay())->first();
+
+                return ['id' => $r->id, 'title' => $r->title, 'state' => $log ? ($log->is_setback ? 'setback' : 'clean') : null];
+            })->all(),
+            'yesterdayLabel' => $today->copy()->subDay()->translatedFormat('l، j M'),
+            'nightDone' => NightCheck::where('user_id', $user->id)->whereDate('date', $today)->exists(),
         ]);
     }
 

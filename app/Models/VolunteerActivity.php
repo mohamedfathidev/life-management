@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ScholarshipStage;
+use App\Models\Concerns\HasItemDocuments;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class VolunteerActivity extends Model
 {
     use HasFactory;
+    use HasItemDocuments;
 
     protected $fillable = [
         'user_id', 'title', 'organization', 'applied_via', 'start_date', 'end_date',

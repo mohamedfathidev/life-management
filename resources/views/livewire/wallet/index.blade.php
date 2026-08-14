@@ -32,6 +32,11 @@
             </div>
         </div>
 
+        {{-- Essentials wishlist --}}
+        <div class="mt-6">
+            <livewire:wallet.wishlist />
+        </div>
+
         {{-- Scope toggle --}}
         <div class="flex items-center gap-1 mt-6 mb-4 rounded-lg bg-bg-light dark:bg-bg-dark p-1 w-fit">
             <button type="button" wire:click="$set('scope', 'month')" @class(['px-4 py-1.5 text-sm rounded-md', 'bg-primary text-white dark:bg-primary-dark' => $scope === 'month', 'text-ink-soft dark:text-ink-dark-soft' => $scope !== 'month'])>هذا الشهر</button>

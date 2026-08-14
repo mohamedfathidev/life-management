@@ -2,8 +2,18 @@
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <a href="{{ route('religion') }}" wire:navigate class="text-sm text-primary dark:text-primary-dark hover:underline">← الدين</a>
-        <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1 mb-1">الصلوات</h1>
-        <p class="text-sm text-ink-soft dark:text-ink-dark-soft mb-6">{{ now()->translatedFormat('l، j F Y') }}</p>
+        <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1 mb-3">الصلوات</h1>
+
+        {{-- Day navigation (go back to fix a missed day) --}}
+        <div class="flex items-center justify-between gap-2 rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-2 mb-4">
+            <button type="button" wire:click="changeDay(-1)" title="اليوم اللى قبله" class="p-2 rounded-lg text-ink-soft dark:text-ink-dark-soft hover:text-primary hover:bg-ink-soft/10 transition">‹ السابق</button>
+            <div class="text-center">
+                <p class="text-sm font-medium text-ink dark:text-ink-dark">{{ $dateLabel }}</p>
+                @unless ($isToday)<button type="button" wire:click="goToday" class="text-[11px] text-primary dark:text-primary-dark hover:underline">ارجع للنهاردة</button>@endunless
+            </div>
+            <button type="button" wire:click="changeDay(1)" @disabled($isToday) title="اليوم اللى بعده" class="p-2 rounded-lg text-ink-soft dark:text-ink-dark-soft hover:text-primary hover:bg-ink-soft/10 transition disabled:opacity-30 disabled:hover:bg-transparent">التالي ›</button>
+        </div>
+        @unless ($isToday)<p class="text-xs text-warning text-center mb-4">بتعدّل يوم فات — تقدر تسجّل صلواتك اللى نسيت تعلّمها.</p>@endunless
 
         {{-- Today's 5 prayers --}}
         <div class="rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-6 space-y-3">

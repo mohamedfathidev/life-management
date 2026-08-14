@@ -12,7 +12,7 @@ export default {
         'bg-success/15', 'text-success', 'bg-success',
         'bg-warning/15', 'text-warning', 'bg-warning',
         'bg-danger/15', 'text-danger', 'bg-danger',
-        'bg-ink-soft',
+        'bg-ink-soft', 'bg-ink-soft/15', 'text-ink-soft',
     ],
 
     content: [
