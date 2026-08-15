@@ -1,8 +1,8 @@
 <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6">
     <div class="flex items-center justify-between mb-3">
         <h3 class="font-semibold text-ink dark:text-ink-dark">{{ $heading }}</h3>
-        @if ($documents->isNotEmpty())
-            <span class="text-sm font-bold text-success">{{ $doneCount }}/{{ $documents->count() }}</span>
+        @if ($totalCount > 0)
+            <span class="text-sm font-bold text-success">{{ $doneCount }}/{{ $totalCount }}</span>
         @endif
     </div>
 
@@ -49,6 +49,27 @@
                     <button type="button" @click="$wire.saveNote({{ $doc->id }}, val)" class="text-xs px-3 py-1 rounded-lg bg-primary dark:bg-primary-dark text-white hover:opacity-90">حفظ الملاحظة</button>
                 </div>
             </div>
+
+            {{-- Sub-steps --}}
+            @if ($allowSubItems)
+                <div class="ps-7 mt-1 space-y-1 border-s-2 border-ink-soft/10 dark:border-ink-dark-soft/10 ms-2">
+                    @foreach ($doc->children as $child)
+                        <div wire:key="idoc-child-{{ $child->id }}" class="flex items-center gap-2">
+                            <button type="button" wire:click="toggle({{ $child->id }})"
+                                class="shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center transition {{ $child->isReady() ? 'bg-success border-success text-white' : 'border-ink-soft/40 text-transparent hover:border-success' }}">
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </button>
+                            <span class="flex-1 text-xs text-ink dark:text-ink-dark {{ $child->isReady() ? 'line-through opacity-60' : '' }}">{{ $child->name }}</span>
+                            <button type="button" wire:click="delete({{ $child->id }})" wire:confirm="حذف؟" class="text-[11px] text-danger hover:underline shrink-0">حذف</button>
+                        </div>
+                    @endforeach
+                    <div class="flex items-center gap-2">
+                        <input type="text" wire:model="subInputs.{{ $doc->id }}" wire:keydown.enter.prevent="addSub({{ $doc->id }})" placeholder="+ خطوة فرعية…"
+                            class="flex-1 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-xs py-1" />
+                        <button type="button" wire:click="addSub({{ $doc->id }})" class="text-[11px] text-primary dark:text-primary-dark hover:underline shrink-0">إضافة</button>
+                    </div>
+                </div>
+            @endif
         </div>
     @empty
         <p class="text-sm text-ink-soft dark:text-ink-dark-soft text-center py-4">لسه مفيش حاجات — أضف فوق.</p>

@@ -24,7 +24,7 @@
                 @php($date = $entry['date'])
                 @php($day = $entry['day'])
                 @php($isToday = $date->isToday())
-                @php($completion = $day ? (int) round($day->tasks->avg('progress') ?? 0) : 0)
+                @php($completion = $day ? $day->completionPercent() : 0)
 
                 <a href="{{ route('planner.day', $date->toDateString()) }}" wire:navigate
                    wire:key="day-{{ $date->toDateString() }}"
@@ -46,7 +46,11 @@
                         @else
                             <span class="px-2 py-0.5 rounded-full bg-ink-soft/10 text-ink-soft dark:text-ink-dark-soft">لم يبدأ</span>
                         @endif
-                        <span class="text-ink-soft dark:text-ink-dark-soft">{{ $day ? $day->tasks_count : 0 }} تاسك</span>
+                        @if ($day && $day->isClosed() && $day->close_summary)
+                            <span class="text-ink-soft dark:text-ink-dark-soft">{{ $day->close_summary['tasks_done'] }}/{{ $day->close_summary['tasks_total'] }} تاسك@if (($day->close_summary['carried'] ?? 0) > 0) · ↩{{ $day->close_summary['carried'] }}@endif</span>
+                        @else
+                            <span class="text-ink-soft dark:text-ink-dark-soft">{{ $day ? $day->tasks_count : 0 }} تاسك</span>
+                        @endif
                     </div>
 
                     {{-- Completion bar --}}

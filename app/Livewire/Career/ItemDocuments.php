@@ -7,6 +7,7 @@ use App\Models\JobApplication;
 use App\Models\Scholarship;
 use App\Models\ScholarshipDocument;
 use App\Models\ScholarshipTopic;
+use App\Models\Task;
 use App\Models\VolunteerActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,10 @@ class ItemDocuments extends Component
     public string $heading = '📄 الأوراق المطلوبة';
     public string $placeholder = 'أضف ورقة مطلوبة (مثال: كشف الدرجات)…';
     public bool $showLibrary = true;
+    public bool $allowSubItems = false;
+
+    /** Per-parent inputs for adding sub-steps. */
+    public array $subInputs = [];
 
     /** @var array<string, class-string<Model>> */
     private const MODELS = [
@@ -36,6 +41,7 @@ class ItemDocuments extends Component
         'job' => JobApplication::class,
         'volunteer' => VolunteerActivity::class,
         'topic' => ScholarshipTopic::class,
+        'task' => Task::class,
     ];
 
     private function parent(): ?Model
@@ -93,6 +99,31 @@ class ItemDocuments extends Component
         }
     }
 
+    /** Add a sub-step under a parent checklist item. */
+    public function addSub(int $parentId): void
+    {
+        $name = trim($this->subInputs[$parentId] ?? '');
+        if ($name === '') {
+            return;
+        }
+
+        $parent = ItemDocument::where('user_id', Auth::id())->find($parentId);
+        if (! $parent) {
+            return;
+        }
+
+        ItemDocument::create([
+            'user_id' => Auth::id(),
+            'parent_id' => $parent->id,
+            'documentable_type' => $parent->documentable_type,
+            'documentable_id' => $parent->documentable_id,
+            'name' => $name,
+            'position' => (int) ItemDocument::where('parent_id', $parent->id)->max('position') + 1,
+        ]);
+
+        unset($this->subInputs[$parentId]);
+    }
+
     public function saveNote(int $id, ?string $note): void
     {
         ItemDocument::where('user_id', Auth::id())->where('id', $id)
@@ -107,11 +138,24 @@ class ItemDocuments extends Component
     public function render(): View
     {
         $parent = $this->parent();
-        $documents = $parent ? $parent->documents()->with('generalDocument')->get() : collect();
+
+        if ($this->allowSubItems) {
+            $documents = $parent
+                ? $parent->documents()->whereNull('parent_id')
+                    ->with(['children.generalDocument', 'generalDocument'])->get()
+                : collect();
+            $totalCount = $documents->sum(fn (ItemDocument $d) => 1 + $d->children->count());
+            $doneCount = $documents->sum(fn (ItemDocument $d) => ($d->isReady() ? 1 : 0) + $d->children->filter(fn (ItemDocument $c) => $c->isReady())->count());
+        } else {
+            $documents = $parent ? $parent->documents()->with('generalDocument')->get() : collect();
+            $totalCount = $documents->count();
+            $doneCount = $documents->filter(fn (ItemDocument $d) => $d->isReady())->count();
+        }
 
         return view('livewire.career.item-documents', [
             'documents' => $documents,
-            'doneCount' => $documents->filter(fn (ItemDocument $d) => $d->isReady())->count(),
+            'doneCount' => $doneCount,
+            'totalCount' => $totalCount,
             'library' => $this->showLibrary ? ScholarshipDocument::ownedBy(Auth::user())->orderBy('name')->get() : collect(),
         ]);
     }

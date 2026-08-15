@@ -66,15 +66,27 @@ class Index extends Component
         );
     }
 
-    /** Daily check: fed my mind (against addiction) + prepared for sleep. */
-    public function toggleNightCheck(): void
+    /** Daily check: 'done' (fed mind + prepared for sleep) or 'missed' (stayed up). */
+    public function setNight(string $status): void
     {
+        if (! in_array($status, ['done', 'missed'], true)) {
+            return;
+        }
+
         $today = Carbon::today()->toDateString();
         $existing = NightCheck::where('user_id', Auth::id())->whereDate('date', $today)->first();
 
-        $existing
-            ? $existing->delete()
-            : NightCheck::create(['user_id' => Auth::id(), 'date' => $today]);
+        // Clicking the same state again clears it.
+        if ($existing && $existing->status === $status) {
+            $existing->delete();
+
+            return;
+        }
+
+        NightCheck::updateOrCreate(
+            ['user_id' => Auth::id(), 'date' => $today],
+            ['status' => $status],
+        );
     }
 
     public function toggleAppointment(int $id): void
@@ -188,7 +200,7 @@ class Index extends Component
                 return ['id' => $r->id, 'title' => $r->title, 'state' => $log ? ($log->is_setback ? 'setback' : 'clean') : null];
             })->all(),
             'yesterdayLabel' => $today->copy()->subDay()->translatedFormat('l، j M'),
-            'nightDone' => NightCheck::where('user_id', $user->id)->whereDate('date', $today)->exists(),
+            'nightStatus' => NightCheck::where('user_id', $user->id)->whereDate('date', $today)->value('status'),
         ]);
     }
 

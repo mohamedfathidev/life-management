@@ -24,10 +24,10 @@
                 </div>
             </div>
 
-            {{-- Progress --}}
-            <div class="mt-4">
-                <div class="flex justify-between text-xs text-ink-soft dark:text-ink-dark-soft mb-1"><span>الإنجاز</span><span>{{ $task->progress }}%</span></div>
-                <div class="h-2 rounded-full bg-ink-soft/15 dark:bg-ink-dark-soft/15 overflow-hidden"><div class="h-full rounded-full bg-{{ $task->status->color() }}" style="width: {{ $task->progress }}%"></div></div>
+            {{-- Progress slider (change how much you finished) --}}
+            <div class="mt-4" x-data="{ p: {{ $task->progress }} }" wire:key="prog-{{ $task->progress }}">
+                <div class="flex justify-between text-xs text-ink-soft dark:text-ink-dark-soft mb-1"><span>الإنجاز</span><span x-text="p + '%'"></span></div>
+                <input type="range" min="0" max="100" step="5" value="{{ $task->progress }}" x-model.number="p" x-on:change="$wire.setProgress(p)" class="block w-full accent-primary" dir="ltr" />
             </div>
 
             {{-- Focus shortcut --}}
@@ -36,6 +36,18 @@
                 🎯 ركّز على دي
                 @if ($focusMinutes > 0)<span class="text-ink-soft dark:text-ink-dark-soft">· ركّزت عليها {{ \App\Models\Task::minutesToLabel($focusMinutes) }}</span>@endif
             </a>
+        </div>
+
+        {{-- Steps checklist (break the task into checks + sub-checks) --}}
+        <div class="mt-6">
+            <livewire:career.item-documents
+                documentable-type="task"
+                :documentable-id="$task->id"
+                heading="✅ خطوات التاسك"
+                placeholder="أضف خطوة عشان تخلّص التاسك…"
+                :show-library="false"
+                :allow-sub-items="true"
+                :wire:key="'tasksteps-'.$task->id" />
         </div>
 
         {{-- Detail form --}}

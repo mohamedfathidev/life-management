@@ -71,6 +71,14 @@ class Show extends Component
         $this->dispatch('task-detail-saved');
     }
 
+    public function setProgress(int $progress): void
+    {
+        $this->authorize('update', $this->task);
+        $this->task->setProgress($progress);
+        $this->task->save();
+        $this->task->refresh();
+    }
+
     public function edit(): void
     {
         $this->dispatch('edit-task', task: $this->task->id);

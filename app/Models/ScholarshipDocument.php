@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasItemDocuments;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ScholarshipDocument extends Model
 {
+    use HasItemDocuments;
+
     protected $fillable = ['user_id', 'name', 'is_ready', 'file_path', 'original_name', 'position'];
 
     protected $casts = [

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ItemDocument extends Model
 {
-    protected $fillable = ['user_id', 'scholarship_document_id', 'name', 'note', 'is_done', 'position', 'documentable_type', 'documentable_id'];
+    protected $fillable = ['user_id', 'parent_id', 'scholarship_document_id', 'name', 'note', 'is_done', 'position', 'documentable_type', 'documentable_id'];
 
     protected $casts = [
         'is_done' => 'boolean',
@@ -17,6 +18,11 @@ class ItemDocument extends Model
     public function documentable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id')->orderBy('position')->orderBy('id');
     }
 
     /** The linked document in the general library, if any. */

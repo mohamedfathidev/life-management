@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Scholarships;
 
+use App\Models\ItemDocument;
 use App\Models\ScholarshipDocument;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,9 @@ class Documents extends Component
 
     /** @var array<int, \Livewire\Features\SupportFileUploads\TemporaryUploadedFile> keyed by document id */
     public array $uploads = [];
+
+    /** Per-document inputs for adding sub-checks. */
+    public array $subInputs = [];
 
     /** Commonly-required scholarship documents. */
     private const COMMON = [
@@ -65,7 +69,70 @@ class Documents extends Component
     public function toggleReady(int $id): void
     {
         $doc = ScholarshipDocument::ownedBy(Auth::user())->findOrFail($id);
+
+        // When it has sub-checks, readiness is derived — not manually toggled.
+        if ($doc->documents()->exists()) {
+            return;
+        }
+
         $doc->update(['is_ready' => ! $doc->is_ready]);
+    }
+
+    public function addSubCheck(int $docId): void
+    {
+        $name = trim($this->subInputs[$docId] ?? '');
+        if ($name === '') {
+            return;
+        }
+
+        $doc = ScholarshipDocument::ownedBy(Auth::user())->find($docId);
+        if (! $doc) {
+            return;
+        }
+
+        $doc->documents()->create([
+            'user_id' => Auth::id(),
+            'name' => $name,
+            'position' => (int) $doc->documents()->max('position') + 1,
+        ]);
+
+        unset($this->subInputs[$docId]);
+        $this->syncReady($doc);
+    }
+
+    public function toggleSubCheck(int $subId): void
+    {
+        $sub = ItemDocument::where('user_id', Auth::id())->find($subId);
+        if (! $sub) {
+            return;
+        }
+        $sub->update(['is_done' => ! $sub->is_done]);
+
+        if ($sub->documentable instanceof ScholarshipDocument) {
+            $this->syncReady($sub->documentable);
+        }
+    }
+
+    public function deleteSubCheck(int $subId): void
+    {
+        $sub = ItemDocument::where('user_id', Auth::id())->find($subId);
+        if (! $sub) {
+            return;
+        }
+        $parent = $sub->documentable;
+        $sub->delete();
+
+        if ($parent instanceof ScholarshipDocument) {
+            $this->syncReady($parent);
+        }
+    }
+
+    /** A document with sub-checks is ready only when all of them are checked. */
+    private function syncReady(ScholarshipDocument $doc): void
+    {
+        if ($doc->documents()->exists()) {
+            $doc->update(['is_ready' => ! $doc->documents()->where('is_done', false)->exists()]);
+        }
     }
 
     /** A file was chosen for a document row → store it. */
@@ -115,7 +182,7 @@ class Documents extends Component
 
     public function render(): View
     {
-        $documents = ScholarshipDocument::ownedBy(Auth::user())->orderBy('position')->orderBy('id')->get();
+        $documents = ScholarshipDocument::ownedBy(Auth::user())->with('documents')->orderBy('position')->orderBy('id')->get();
 
         return view('livewire.scholarships.documents', [
             'documents' => $documents,

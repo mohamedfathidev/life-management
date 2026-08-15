@@ -16,7 +16,7 @@ class Day extends Model
 
     protected $fillable = [
         'user_id', 'week_id', 'date', 'status',
-        'started_at', 'ended_at', 'rating', 'reflection',
+        'started_at', 'ended_at', 'rating', 'reflection', 'close_summary',
     ];
 
     protected $casts = [
@@ -25,6 +25,7 @@ class Day extends Model
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
         'rating' => 'integer',
+        'close_summary' => 'array',
     ];
 
     // ---------------------------------------------------------------------
@@ -119,9 +120,17 @@ class Day extends Model
         return sprintf('%dس %02dد', intdiv($minutes, 60), $minutes % 60);
     }
 
-    /** Day completion 0–100 = average of task progress. */
+    /**
+     * Day completion 0–100. For a closed day we return the snapshot taken at
+     * close time (before tasks were carried over), so it reflects real progress
+     * across tasks + habits + worship. Open days average the current tasks.
+     */
     public function completionPercent(): int
     {
+        if ($this->isClosed() && isset($this->close_summary['percent'])) {
+            return (int) $this->close_summary['percent'];
+        }
+
         $tasks = $this->relationLoaded('tasks') ? $this->tasks : $this->tasks()->get();
 
         if ($tasks->isEmpty()) {

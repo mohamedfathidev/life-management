@@ -145,6 +145,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
         Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
         Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
+        Route::get('recovery/setbacks', \App\Livewire\Recovery\Setbacks::class)->name('recovery.setbacks');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });
 });

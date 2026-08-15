@@ -117,12 +117,19 @@
             {{-- Day completion --}}
             <div class="mt-5">
                 <div class="flex justify-between text-xs text-ink-soft dark:text-ink-dark-soft mb-1">
-                    <span>إنجاز اليوم</span>
+                    <span>إنجاز اليوم @if ($day->isClosed())<span class="text-[10px] text-success">(محفوظ عند الإغلاق)</span>@endif</span>
                     <span>{{ $completion }}%</span>
                 </div>
                 <div class="h-2 rounded-full bg-ink-soft/15 dark:bg-ink-dark-soft/15 overflow-hidden">
                     <div class="h-full rounded-full bg-success transition-all" style="width: {{ $completion }}%"></div>
                 </div>
+                @if ($day->isClosed() && $day->close_summary)
+                    <div class="flex flex-wrap gap-2 mt-2 text-[11px] text-ink-soft dark:text-ink-dark-soft">
+                        <span class="px-2 py-0.5 rounded-full bg-bg-light dark:bg-bg-dark">✅ تاسكات: {{ $day->close_summary['tasks_done'] }}/{{ $day->close_summary['tasks_total'] }}</span>
+                        @if (($day->close_summary['carried'] ?? 0) > 0)<span class="px-2 py-0.5 rounded-full bg-warning/15 text-warning">↩ اترحّل: {{ $day->close_summary['carried'] }}</span>@endif
+                        <span class="px-2 py-0.5 rounded-full bg-bg-light dark:bg-bg-dark">📊 شامل العادات والعبادات: {{ $day->close_summary['done'] }}/{{ $day->close_summary['total'] }}</span>
+                    </div>
+                @endif
             </div>
 
             @if ($day->isClosed() && $day->reflection)

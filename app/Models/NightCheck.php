@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NightCheck extends Model
 {
-    protected $fillable = ['user_id', 'date'];
+    protected $fillable = ['user_id', 'date', 'status'];
 
     protected $casts = [
         'date' => 'date',

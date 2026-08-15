@@ -10,6 +10,7 @@
                 <a href="{{ route('recovery.nutrition') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🧠 التغذية الذهنية</a>
                 <a href="{{ route('recovery.pledge') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🤝 تعهد أمام الله</a>
                 <a href="{{ route('recovery.mistakes') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">⛓️ أخطاء التعافي</a>
+                <a href="{{ route('recovery.setbacks') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">💔 الانتكاسات</a>
                 <a href="{{ route('recovery.topics') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">📚 تعلّم</a>
                 <button type="button" wire:click="$dispatch('create-recovery')" class="inline-flex items-center gap-2 rounded-lg bg-primary dark:bg-primary-dark px-4 py-2 text-white text-sm font-medium shadow-sm hover:opacity-90 transition">
                     + تعافٍ جديد

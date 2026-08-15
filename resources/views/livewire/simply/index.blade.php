@@ -130,8 +130,19 @@
             <div>
                 <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-3">🌱 التعافي</h2>
                 <div class="space-y-2">
-                    {{-- Nightly check --}}
-                    <x-simply-check :done="$nightDone" toggle="toggleNightCheck" emoji="🌙" title="غذّيت دماغي واستعديت للنوم (مش سهر)" />
+                    {{-- Nightly check: fed the mind + prepared for sleep, or stayed up --}}
+                    <div class="flex items-center justify-between gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-ink dark:text-ink-dark">🌙 غذّيت دماغي واستعديت للنوم؟</p>
+                            @if ($nightStatus === 'missed')<p class="text-[11px] text-danger">سهرت ومغذّتش نفسي النهاردة</p>@elseif ($nightStatus === 'done')<p class="text-[11px] text-success">أحسنت — نمت بخير 🤍</p>@endif
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" wire:click="setNight('done')"
+                                class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ $nightStatus === 'done' ? 'bg-success text-white' : 'bg-success/15 text-success hover:bg-success/25' }}">✓ غذّيت واستعديت</button>
+                            <button type="button" wire:click="setNight('missed')"
+                                class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ $nightStatus === 'missed' ? 'bg-danger text-white' : 'bg-danger/15 text-danger hover:bg-danger/25' }}">😴 سهرت</button>
+                        </div>
+                    </div>
                     @if ($hasTopics && ! $nutritionDone)
                         <a href="{{ route('recovery.nutrition') }}" wire:navigate class="flex items-center gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
                             <span class="text-xl">📚</span>
