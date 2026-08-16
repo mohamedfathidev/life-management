@@ -31,9 +31,15 @@ class Index extends Component
     public function toggleTask(int $id): void
     {
         $task = Task::ownedBy(Auth::user())->find($id);
-        if ($task) {
-            $task->setProgress($task->isDone() ? 0 : 100);
+        if (! $task) {
+            return;
+        }
+
+        if ($task->isDone()) {
+            $task->setProgress(0);
             $task->save();
+        } else {
+            $this->dispatch('complete-task', task: $task->id);
         }
     }
 

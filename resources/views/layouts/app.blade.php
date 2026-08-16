@@ -24,6 +24,8 @@
 
         {{-- Global task hub: one modal any page can open via the `create-task` event --}}
         <livewire:planner.manage-task />
+        {{-- Task completion modal (rating + expected/actual time) via `complete-task` --}}
+        <livewire:tasks.complete-modal />
 
         {{-- Floating quick-capture: drop a task straight into today's plan from anywhere --}}
         <button type="button" title="أضف تاسك النهاردة"

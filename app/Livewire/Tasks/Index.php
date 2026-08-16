@@ -44,10 +44,14 @@ class Index extends Component
     {
         $this->authorize('update', $task);
 
-        $task->setProgress($task->isDone() ? 0 : 100);
-        $task->save();
-
-        $this->dispatch('task-saved');
+        if ($task->isDone()) {
+            $task->setProgress(0);
+            $task->save();
+            $this->dispatch('task-saved');
+        } else {
+            // Ask for rating + times before marking done.
+            $this->dispatch('complete-task', task: $task->id);
+        }
     }
 
     public function toggleImportant(Task $task): void
