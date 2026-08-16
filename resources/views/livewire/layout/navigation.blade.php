@@ -24,7 +24,7 @@ new class extends Component
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center gap-2">
                     <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2">
-                        <x-application-logo class="block h-9 w-auto fill-current text-primary dark:text-primary-dark" />
+                        <img src="{{ asset('icons/Logo.jpg') }}" alt="سيبها على الله" class="block h-9 w-9 rounded-lg object-cover" />
                         <span class="font-bold text-primary dark:text-primary-dark hidden sm:inline">سيبها على الله</span>
                     </a>
                 </div>

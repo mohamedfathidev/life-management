@@ -83,7 +83,7 @@ class ItemDocuments extends Component
         $this->reset('newName', 'newLinkId');
     }
 
-    /** Toggle readiness — syncs the library document when linked. */
+    /** Toggle readiness — syncs the library document when linked, then rolls up. */
     public function toggle(int $id): void
     {
         $doc = ItemDocument::where('user_id', Auth::id())->find($id);
@@ -97,6 +97,50 @@ class ItemDocuments extends Component
         } else {
             $doc->update(['is_done' => ! $doc->is_done]);
         }
+
+        // Roll up: sub-checks → parent step → the whole task.
+        $this->resyncParent($doc->parent_id);
+        $this->resyncTask($doc->documentable_type, $doc->documentable_id);
+    }
+
+    /** A parent step becomes done when all its sub-checks are done. */
+    private function resyncParent(?int $parentId): void
+    {
+        if (! $parentId) {
+            return;
+        }
+
+        $parent = ItemDocument::find($parentId);
+        if (! $parent || ! $parent->children()->exists()) {
+            return;
+        }
+
+        $parent->update(['is_done' => ! $parent->children()->where('is_done', false)->exists()]);
+    }
+
+    /** When a task has steps, its progress = % of top-level steps done. */
+    private function resyncTask(string $type, int $id): void
+    {
+        if ($type !== Task::class) {
+            return;
+        }
+
+        $task = Task::where('user_id', Auth::id())->find($id);
+        if (! $task) {
+            return;
+        }
+
+        $top = ItemDocument::where('documentable_type', Task::class)
+            ->where('documentable_id', $id)->whereNull('parent_id')->get();
+
+        if ($top->isEmpty()) {
+            return;
+        }
+
+        $task->setProgress((int) round($top->where('is_done', true)->count() / $top->count() * 100));
+        $task->save();
+
+        $this->dispatch('task-saved');
     }
 
     /** Add a sub-step under a parent checklist item. */
@@ -122,6 +166,9 @@ class ItemDocuments extends Component
         ]);
 
         unset($this->subInputs[$parentId]);
+
+        $this->resyncParent($parent->id);
+        $this->resyncTask($parent->documentable_type, $parent->documentable_id);
     }
 
     public function saveNote(int $id, ?string $note): void
@@ -132,7 +179,19 @@ class ItemDocuments extends Component
 
     public function delete(int $id): void
     {
-        ItemDocument::where('user_id', Auth::id())->where('id', $id)->delete();
+        $doc = ItemDocument::where('user_id', Auth::id())->find($id);
+        if (! $doc) {
+            return;
+        }
+
+        $parentId = $doc->parent_id;
+        $type = $doc->documentable_type;
+        $documentableId = $doc->documentable_id;
+
+        $doc->delete();
+
+        $this->resyncParent($parentId);
+        $this->resyncTask($type, $documentableId);
     }
 
     public function render(): View
