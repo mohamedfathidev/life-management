@@ -21,6 +21,9 @@ class RecoveryLogFactory extends Factory
             'trigger_note' => null,
             'note' => null,
             'is_setback' => false,
+            'stayed_up_late' => fake()->boolean(),
+            'had_dinner' => fake()->boolean(),
+            'prepared_for_sleep' => fake()->boolean(),
         ];
     }
 

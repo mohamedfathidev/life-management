@@ -28,19 +28,29 @@ export default {
             },
             colors: {
                 // Quiet & clear palette (§9) — light + dark handled via `dark:` variants
+                // Now using CSS custom properties for dynamic color schemes
                 bg: { light: '#F7F7F5', dark: '#15191A' },
                 surface: { light: '#FFFFFF', dark: '#1E2422' },
                 primary: {
-                    DEFAULT: '#3F7D7A', // muted teal
-                    dark: '#5FA6A2',
+                    DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
+                    dark: 'rgb(var(--color-primary-dark) / <alpha-value>)',
                 },
                 secondary: {
-                    DEFAULT: '#D8C9A3', // soft sand
-                    dark: '#B9A97C',
+                    DEFAULT: 'rgb(var(--color-secondary) / <alpha-value>)',
+                    dark: 'rgb(var(--color-secondary-dark) / <alpha-value>)',
                 },
-                success: { DEFAULT: '#7A9E7E', dark: '#8FB693' },
-                warning: { DEFAULT: '#D9A25A', dark: '#E0B378' },
-                danger: { DEFAULT: '#C77B7B', dark: '#D08F8F' },
+                success: {
+                    DEFAULT: 'rgb(var(--color-success) / <alpha-value>)',
+                    dark: 'rgb(var(--color-success-dark) / <alpha-value>)',
+                },
+                warning: {
+                    DEFAULT: 'rgb(var(--color-warning) / <alpha-value>)',
+                    dark: 'rgb(var(--color-warning-dark) / <alpha-value>)',
+                },
+                danger: {
+                    DEFAULT: 'rgb(var(--color-danger) / <alpha-value>)',
+                    dark: 'rgb(var(--color-danger-dark) / <alpha-value>)',
+                },
                 ink: {
                     DEFAULT: '#2B2B2B', // text primary (light)
                     soft: '#767676',    // text secondary (light)

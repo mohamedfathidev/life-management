@@ -19,6 +19,9 @@ class RecoveryLogForm extends Form
     public bool $is_setback = false;
     public ?string $hardest_from = null;
     public ?string $hardest_to = null;
+    public ?bool $stayed_up_late = null;
+    public ?bool $had_dinner = null;
+    public ?bool $prepared_for_sleep = null;
 
     /** @return array<string, mixed> */
     public function rules(): array
@@ -33,6 +36,9 @@ class RecoveryLogForm extends Form
             'is_setback' => ['boolean'],
             'hardest_from' => ['nullable', 'date_format:H:i'],
             'hardest_to' => ['nullable', 'date_format:H:i'],
+            'stayed_up_late' => ['nullable', 'boolean'],
+            'had_dinner' => ['nullable', 'boolean'],
+            'prepared_for_sleep' => ['nullable', 'boolean'],
         ];
     }
 
@@ -60,6 +66,9 @@ class RecoveryLogForm extends Form
         $this->is_setback = $log->is_setback;
         $this->hardest_from = $log->hardest_from ? substr($log->hardest_from, 0, 5) : null;
         $this->hardest_to = $log->hardest_to ? substr($log->hardest_to, 0, 5) : null;
+        $this->stayed_up_late = $log->stayed_up_late;
+        $this->had_dinner = $log->had_dinner;
+        $this->prepared_for_sleep = $log->prepared_for_sleep;
     }
 
     public function persist(): RecoveryLog

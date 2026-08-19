@@ -86,10 +86,18 @@ class SearchService
                 ->limit($perType)->get(),
             fn (RecoveryTopic $t) => ['title' => $t->title, 'subtitle' => null, 'url' => route('recovery.topics')]);
 
-        // Diary (title only — content encrypted)
+        // Diary (title & tags — content encrypted)
         $push('المذكرات', '📖',
-            DiaryEntry::query()->where('user_id', $user->id)->where('title', 'like', $like)->limit($perType)->get(),
-            fn (DiaryEntry $d) => ['title' => $d->title ?: $d->date->translatedFormat('j M Y'), 'subtitle' => $d->date->translatedFormat('j M Y'), 'url' => route('diary.index')]);
+            DiaryEntry::query()->where('user_id', $user->id)
+                ->where(function ($w) use ($like, $q) {
+                    $clean = ltrim($q, '#');
+                    $w->where('title', 'like', $like)
+                      ->orWhereJsonContains('tags', $clean)
+                      ->orWhereJsonContains('tags', '#'.$clean)
+                      ->orWhere('tags', 'like', '%'.$clean.'%');
+                })
+                ->limit($perType)->get(),
+            fn (DiaryEntry $d) => ['title' => $d->title ?: $d->date->translatedFormat('j M Y'), 'subtitle' => $d->date->translatedFormat('j M Y'), 'url' => route('diary.show', $d)]);
 
         // Comfort zone
         $push('خارج الزون', '🚀',

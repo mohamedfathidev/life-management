@@ -61,6 +61,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::get('planner/pool', \App\Livewire\Planner\Pool::class)->name('planner.pool');
     Route::get('planner/week/{date}', WeekView::class)->name('planner.week');
     Route::get('planner/day/{date?}', DayShow::class)->name('planner.day');
+    Route::get('planner/day-overview/{date?}', \App\Livewire\Planner\DayOverview::class)->name('planner.day-overview');
 
     Route::get('archive', \App\Livewire\Archive\Index::class)->name('archive');
 
@@ -140,11 +141,14 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     // Sensitive sections gated by the privacy PIN
     Route::middleware('privacy.lock')->group(function () {
         Route::get('diary', \App\Livewire\Diary\Index::class)->name('diary.index');
+        Route::get('diary/{entry}', \App\Livewire\Diary\Show::class)->name('diary.show');
         Route::get('recovery', RecoveryIndex::class)->name('recovery.index');
         Route::get('recovery/topics', \App\Livewire\Recovery\Topics::class)->name('recovery.topics');
+        Route::get('recovery/topics/{topic}', \App\Livewire\Recovery\TopicShow::class)->name('recovery.topics.show');
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
         Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
         Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
+        Route::get('recovery/mistakes/{mistake}', \App\Livewire\Recovery\MistakeShow::class)->name('recovery.mistakes.show');
         Route::get('recovery/setbacks', \App\Livewire\Recovery\Setbacks::class)->name('recovery.setbacks');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });

@@ -42,7 +42,8 @@ class DiaryForm extends Form
         $this->title = $entry->title;
         $this->content = $entry->content;
         $this->mood = $entry->mood;
-        $this->tagsInput = implode('، ', $entry->tags ?? []);
+        $tags = array_map(fn ($t) => '#'.ltrim(trim($t), '#'), $entry->tags ?? []);
+        $this->tagsInput = implode(' ', $tags);
     }
 
     public function prepareForCreate(): void
@@ -76,10 +77,11 @@ class DiaryForm extends Form
     /** @return array<int, string> */
     private function parseTags(string $input): array
     {
-        $parts = preg_split('/[،,]+/u', $input) ?: [];
+        // Split by commas, or whitespace when hashtags are entered
+        $parts = preg_split('/[،,\s]+/u', $input) ?: [];
 
         return collect($parts)
-            ->map(fn ($t) => Str::of($t)->trim()->value())
+            ->map(fn ($t) => ltrim(trim($t), '#'))
             ->filter(fn ($t) => $t !== '')
             ->unique()
             ->values()

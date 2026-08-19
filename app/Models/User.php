@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'locale',
         'theme',
+        'color_scheme',
         'role',
     ];
 
@@ -108,6 +109,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'pin' => 'hashed',
             'theme' => \App\Enums\Theme::class,
+            'color_scheme' => \App\Enums\ColorScheme::class,
             'role' => \App\Enums\UserRole::class,
         ];
     }

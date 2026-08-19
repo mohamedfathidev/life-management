@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-color-scheme="{{ auth()->user()->color_scheme?->value ?? 'default' }}">
     <head>
         @include('partials.head')
     </head>

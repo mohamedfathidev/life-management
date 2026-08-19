@@ -64,7 +64,7 @@ class DayService
      *
      * @param  array<int, string>  $decisions  taskId => 'carry' | 'pool' (default 'carry')
      */
-    public function close(Day $day, int $rating, ?string $reflection, array $decisions = []): void
+    public function close(Day $day, int $rating, ?int $mood, ?string $reflection, array $decisions = []): void
     {
         // Close any running break first so worked-time is accurate.
         $running = $day->breaks()->whereNull('ended_at')->first();
@@ -97,6 +97,14 @@ class DayService
         $day->rating = $rating;
         $day->reflection = $reflection;
         $day->save();
+
+        // Save or update daily log with mood
+        if ($mood !== null) {
+            $day->user->dailyLogs()->updateOrCreate(
+                ['date' => $day->date->toDateString()],
+                ['mood' => $mood, 'module_type' => 'general']
+            );
+        }
     }
 
     /**
