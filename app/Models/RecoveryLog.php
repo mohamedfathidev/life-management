@@ -14,6 +14,7 @@ class RecoveryLog extends Model
         'recovery_id', 'date', 'urge_level', 'mood',
         'trigger_note', 'note', 'is_setback',
         'hardest_from', 'hardest_to',
+        'stayed_up_late', 'had_dinner', 'prepared_for_sleep',
     ];
 
     protected $casts = [
@@ -21,6 +22,9 @@ class RecoveryLog extends Model
         'urge_level' => 'integer',
         'mood' => 'integer',
         'is_setback' => 'boolean',
+        'stayed_up_late' => 'boolean',
+        'had_dinner' => 'boolean',
+        'prepared_for_sleep' => 'boolean',
         // sensitive fields encrypted at rest (§12)
         'trigger_note' => 'encrypted',
         'note' => 'encrypted',

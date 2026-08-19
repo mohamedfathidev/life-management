@@ -56,7 +56,7 @@
                                 </span>
                                 @if ($tx->category)<span class="text-ink-soft dark:text-ink-dark-soft">{{ $tx->category }}</span>@endif
                             </p>
-                            <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-0.5">{{ $tx->date->translatedFormat('j M Y') }}@if ($tx->note) · {{ $tx->note }}@endif</p>
+                            <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-0.5">{{ $tx->date->translatedFormat('l، j M Y') }}@if ($tx->note) · {{ $tx->note }}@endif</p>
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             <button type="button" wire:click="edit({{ $tx->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>

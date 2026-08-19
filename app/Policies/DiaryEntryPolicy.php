@@ -7,6 +7,11 @@ use App\Models\User;
 
 class DiaryEntryPolicy
 {
+    public function view(User $user, DiaryEntry $entry): bool
+    {
+        return $user->id === $entry->user_id;
+    }
+
     public function update(User $user, DiaryEntry $entry): bool
     {
         return $user->id === $entry->user_id;

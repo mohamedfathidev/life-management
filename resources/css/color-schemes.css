@@ -1,0 +1,91 @@
+/**
+ * Color Scheme Variables
+ * 
+ * Each scheme defines CSS custom properties for theme colors.
+ * Colors are in RGB format (without rgb()) for Tailwind compatibility.
+ */
+
+/* Default Scheme (Muted Teal & Sand) */
+:root,
+[data-color-scheme="default"] {
+    --color-primary: 63 125 122;
+    --color-primary-dark: 95 166 162;
+    --color-secondary: 216 201 163;
+    --color-secondary-dark: 185 169 124;
+    --color-success: 122 158 126;
+    --color-success-dark: 143 182 147;
+    --color-warning: 217 162 90;
+    --color-warning-dark: 224 179 120;
+    --color-danger: 199 123 123;
+    --color-danger-dark: 208 143 143;
+}
+
+/* Ocean Scheme (Deep Blues) */
+[data-color-scheme="ocean"] {
+    --color-primary: 46 92 138;
+    --color-primary-dark: 93 156 236;
+    --color-secondary: 127 179 213;
+    --color-secondary-dark: 155 196 224;
+    --color-success: 82 183 136;
+    --color-success-dark: 118 200 160;
+    --color-warning: 255 193 7;
+    --color-warning-dark: 255 213 79;
+    --color-danger: 244 67 54;
+    --color-danger-dark: 239 108 99;
+}
+
+/* Forest Scheme (Natural Greens) */
+[data-color-scheme="forest"] {
+    --color-primary: 45 106 79;
+    --color-primary-dark: 82 183 136;
+    --color-secondary: 149 213 178;
+    --color-secondary-dark: 179 229 203;
+    --color-success: 40 167 69;
+    --color-success-dark: 76 175 80;
+    --color-warning: 255 152 0;
+    --color-warning-dark: 255 183 77;
+    --color-danger: 211 47 47;
+    --color-danger-dark: 239 83 80;
+}
+
+/* Sunset Scheme (Warm Corals & Oranges) */
+[data-color-scheme="sunset"] {
+    --color-primary: 224 122 95;
+    --color-primary-dark: 255 138 101;
+    --color-secondary: 244 162 97;
+    --color-secondary-dark: 255 183 131;
+    --color-success: 126 188 111;
+    --color-success-dark: 156 204 101;
+    --color-warning: 255 179 71;
+    --color-warning-dark: 255 202 40;
+    --color-danger: 239 71 111;
+    --color-danger-dark: 240 98 146;
+}
+
+/* Lavender Scheme (Purples & Violets) */
+[data-color-scheme="lavender"] {
+    --color-primary: 155 89 182;
+    --color-primary-dark: 187 143 206;
+    --color-secondary: 215 189 226;
+    --color-secondary-dark: 225 206 232;
+    --color-success: 102 187 106;
+    --color-success-dark: 129 199 132;
+    --color-warning: 255 167 38;
+    --color-warning-dark: 255 193 7;
+    --color-danger: 229 115 115;
+    --color-danger-dark: 239 154 154;
+}
+
+/* Monochrome Scheme (Grayscale) */
+[data-color-scheme="monochrome"] {
+    --color-primary: 74 74 74;
+    --color-primary-dark: 158 158 158;
+    --color-secondary: 165 165 165;
+    --color-secondary-dark: 189 189 189;
+    --color-success: 97 97 97;
+    --color-success-dark: 117 117 117;
+    --color-warning: 130 130 130;
+    --color-warning-dark: 158 158 158;
+    --color-danger: 66 66 66;
+    --color-danger-dark: 97 97 97;
+}

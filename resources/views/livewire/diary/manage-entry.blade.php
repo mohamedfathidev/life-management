@@ -51,8 +51,8 @@
             </div>
 
             <div>
-                <x-input-label for="dy_tags" value="الوسوم (بفاصلة)" />
-                <x-text-input id="dy_tags" wire:model="form.tagsInput" type="text" class="mt-1 block w-full" placeholder="شغل، مشاعر، إنجاز" />
+                <x-input-label for="dy_tags" value="الوسوم (مثال: #عن_الحياة #تأمل أو بفاصلة)" />
+                <x-text-input id="dy_tags" wire:model="form.tagsInput" type="text" class="mt-1 block w-full" placeholder="#عن_الحياة #مشاعر #إنجاز" />
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-2">

@@ -26,6 +26,8 @@ class CloseDay extends Component
 
     public ?int $rating = null;
 
+    public ?int $mood = null;
+
     public ?string $reflection = null;
 
     /** taskId => 'carry' | 'pool' */
@@ -39,7 +41,14 @@ class CloseDay extends Component
 
         $this->day = $day;
         $this->rating = $day->rating;
+        $this->mood = null; // Will be fetched from daily log if exists
         $this->reflection = $day->reflection;
+
+        // Try to load existing mood from daily log
+        $existingLog = $day->user->dailyLogs()->whereDate('date', $day->date)->first();
+        if ($existingLog) {
+            $this->mood = $existingLog->mood;
+        }
 
         // Default every unfinished task to "carry to next day".
         $this->decisions = $this->incompleteTasks()
@@ -65,11 +74,12 @@ class CloseDay extends Component
 
         $this->validate([
             'rating' => ['required', 'integer', 'between:1,10'],
+            'mood' => ['nullable', 'integer', 'between:1,10'],
             'reflection' => ['nullable', 'string', 'max:5000'],
             'decisions.*' => [Rule::in(['carry', 'pool'])],
-        ], attributes: ['rating' => 'التقييم', 'reflection' => 'انعكاس اليوم']);
+        ], attributes: ['rating' => 'التقييم', 'mood' => 'المزاج', 'reflection' => 'انعكاس اليوم']);
 
-        $service->close($this->day, $this->rating, $this->reflection, $this->decisions);
+        $service->close($this->day, $this->rating, $this->mood, $this->reflection, $this->decisions);
 
         $this->open = false;
         $this->dispatch('day-updated');

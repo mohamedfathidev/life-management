@@ -27,7 +27,7 @@ class Overview extends Component
         return view('livewire.dashboard.overview', [
             'activeGoals' => $service->activeGoalsCount(),
             'totalGoals' => $service->totalGoalsCount(),
-            'moodTrend' => $service->moodTrend(),
+            'moodTrend' => $service->moodTrendForWeek(),
             'deadlines' => $service->upcomingDeadlines(),
             // today at a glance
             'todayPlan' => $service->todayPlan(),

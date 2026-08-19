@@ -60,8 +60,28 @@
             </div>
 
             <div>
-                <x-input-label for="rl_note" value="ملاحظة اليوم (اختياري)" />
-                <textarea id="rl_note" wire:model="form.note" rows="3" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm"></textarea>
+                <x-input-label value="ليلة اليوم (اختياري)" class="mb-2" />
+                <div class="space-y-2 text-sm">
+                    <label class="inline-flex items-center gap-2 text-ink dark:text-ink-dark cursor-pointer">
+                        <input type="checkbox" wire:model="form.stayed_up_late" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                        سهرت 🌙
+                    </label>
+                    <br>
+                    <label class="inline-flex items-center gap-2 text-ink dark:text-ink-dark cursor-pointer">
+                        <input type="checkbox" wire:model="form.had_dinner" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                        اتغذيت 🍽️
+                    </label>
+                    <br>
+                    <label class="inline-flex items-center gap-2 text-ink dark:text-ink-dark cursor-pointer">
+                        <input type="checkbox" wire:model="form.prepared_for_sleep" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                        استعديت للنوم 🛏️
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <x-input-label for="rl_note" value="كلمتين لنفسي (اختياري)" />
+                <textarea id="rl_note" wire:model="form.note" rows="3" placeholder="اكتب كلمتين لنفسك هنا…" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-2">

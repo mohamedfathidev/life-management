@@ -45,30 +45,81 @@ class DashboardService
     }
 
     /**
-     * Mood values for the last 7 days (today inclusive), oldest first.
-     * Missing days are null so the chart can show gaps.
+     * Mood values for the current week (Saturday to Friday), oldest first.
+     * Combines mood from DailyLogs, Day closure ratings, and RecoveryLogs.
      *
-     * @return array<int, array{date:string, mood:int|null}>
+     * @return array{startDate: Carbon, endDate: Carbon, points: array<int, array{date:string, dayName:string, dayNumber:string, mood:int|null, isToday:bool}>}
      */
-    public function moodTrend(int $days = 7): array
+    public function moodTrendForWeek(): array
     {
-        $start = Carbon::today()->subDays($days - 1);
+        $today = Carbon::today();
+        $start = $today->dayOfWeek === Carbon::SATURDAY
+            ? $today->copy()
+            : $today->copy()->previous(Carbon::SATURDAY);
 
-        $byDate = $this->user->dailyLogs()
+        $end = $start->copy()->addDays(6); // Friday
+
+        // Fetch moods from all sources
+        $dailyLogs = $this->user->dailyLogs()
             ->whereNotNull('mood')
-            ->whereDate('date', '>=', $start)
-            ->get()
-            ->groupBy(fn ($log) => $log->date->toDateString())
-            ->map(fn ($logs) => (int) round($logs->avg('mood')));
+            ->whereBetween('date', [$start, $end])
+            ->get();
 
-        $trend = [];
-        for ($i = 0; $i < $days; $i++) {
-            $date = $start->copy()->addDays($i)->toDateString();
-            $trend[] = ['date' => $date, 'mood' => $byDate[$date] ?? null];
+        $days = Day::ownedBy($this->user)
+            ->whereNotNull('rating')
+            ->whereBetween('date', [$start, $end])
+            ->get();
+
+        $recoveryLogs = \App\Models\RecoveryLog::query()
+            ->whereHas('recovery', fn ($q) => $q->where('user_id', $this->user->id))
+            ->whereNotNull('mood')
+            ->whereBetween('date', [$start, $end])
+            ->get();
+
+        $points = [];
+        for ($i = 0; $i < 7; $i++) {
+            $dateObj = $start->copy()->addDays($i);
+            $d = $dateObj->toDateString();
+            $scores = [];
+
+            foreach ($dailyLogs->filter(fn ($l) => $l->date->toDateString() === $d) as $dl) {
+                $scores[] = (int) $dl->mood;
+            }
+            foreach ($days->filter(fn ($l) => $l->date->toDateString() === $d) as $day) {
+                $scores[] = (int) $day->rating;
+            }
+            foreach ($recoveryLogs->filter(fn ($l) => $l->date->toDateString() === $d) as $rl) {
+                $scores[] = (int) $rl->mood;
+            }
+
+            $avgMood = ! empty($scores) ? (int) round(array_sum($scores) / count($scores)) : null;
+
+            $emoji = match (true) {
+                $avgMood === null => '',
+                $avgMood >= 9 => '🤩',
+                $avgMood >= 7 => '😊',
+                $avgMood >= 5 => '😐',
+                $avgMood >= 3 => '😔',
+                default => '😖',
+            };
+
+            $points[] = [
+                'date' => $d,
+                'dayName' => $dateObj->translatedFormat('D'),
+                'dayNumber' => $dateObj->translatedFormat('j M'),
+                'mood' => $avgMood,
+                'emoji' => $emoji,
+                'isToday' => $d === $today->toDateString(),
+            ];
         }
 
-        return $trend;
+        return [
+            'startDate' => $start,
+            'endDate' => $end,
+            'points' => $points,
+        ];
     }
+
 
     /** Goals with an upcoming (future) target date, soonest first. */
     public function upcomingDeadlines(int $limit = 5)

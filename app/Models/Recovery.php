@@ -104,4 +104,22 @@ class Recovery extends Model
 
         return max($best, (int) $cursor->diffInDays(Carbon::today()));
     }
+
+    /** Remaining days in the period (if end_date is set). */
+    public function remainingDays(): ?int
+    {
+        if (!$this->end_date) {
+            return null; // Period is open-ended
+        }
+
+        $today = Carbon::today();
+        
+        // If end date has passed, return 0
+        if ($this->end_date->lt($today)) {
+            return 0;
+        }
+
+        // Return days remaining including today
+        return (int) $today->diffInDays($this->end_date, false) + 1;
+    }
 }

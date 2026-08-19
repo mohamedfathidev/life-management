@@ -43,6 +43,43 @@
                 <x-input-error :messages="$errors->get('rating')" class="mt-1" />
             </div>
 
+            {{-- Mood 1-10 with emojis --}}
+            <div>
+                <x-input-label value="المزاج (اختياري)" />
+                <div class="grid grid-cols-5 gap-2 mt-2">
+                    @php
+                        $moods = [
+                            1 => ['emoji' => '😢', 'label' => 'سيء جداً', 'color' => 'danger'],
+                            2 => ['emoji' => '😞', 'label' => 'سيء', 'color' => 'danger'],
+                            3 => ['emoji' => '😕', 'label' => 'مش حلو', 'color' => 'warning'],
+                            4 => ['emoji' => '😐', 'label' => 'عادي', 'color' => 'ink-soft'],
+                            5 => ['emoji' => '🙂', 'label' => 'مقبول', 'color' => 'ink'],
+                            6 => ['emoji' => '😊', 'label' => 'حلو', 'color' => 'success'],
+                            7 => ['emoji' => '😄', 'label' => 'جميل', 'color' => 'success'],
+                            8 => ['emoji' => '😁', 'label' => 'رائع', 'color' => 'success'],
+                            9 => ['emoji' => '🤩', 'label' => 'ممتاز', 'color' => 'success'],
+                            10 => ['emoji' => '🥳', 'label' => 'مثالي', 'color' => 'success'],
+                        ];
+                    @endphp
+                    @foreach ($moods as $value => $data)
+                        <button type="button" wire:click="$set('mood', {{ $value }})"
+                            @class([
+                                'p-2 rounded-lg text-center transition flex flex-col items-center gap-1',
+                                'bg-primary/20 ring-2 ring-primary dark:ring-primary-dark' => $mood === $value,
+                                'bg-bg-light dark:bg-bg-dark hover:bg-primary/10 dark:hover:bg-primary-dark/10' => $mood !== $value,
+                            ])
+                            title="{{ $data['label'] }}">
+                            <span class="text-2xl">{{ $data['emoji'] }}</span>
+                            <span class="text-[10px] text-ink-soft dark:text-ink-dark-soft">{{ $value }}</span>
+                        </button>
+                    @endforeach
+                </div>
+                @if ($mood)
+                    <p class="text-xs text-center text-ink-soft dark:text-ink-dark-soft mt-2">{{ $moods[$mood]['label'] }}</p>
+                @endif
+                <x-input-error :messages="$errors->get('mood')" class="mt-1" />
+            </div>
+
             {{-- Reflection --}}
             <div>
                 <x-input-label for="reflection" value="انعكاس اليوم (اختياري)" />

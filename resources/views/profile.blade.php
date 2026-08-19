@@ -19,6 +19,13 @@
                 </div>
             </div>
 
+            {{-- Color Scheme Selector --}}
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                <div class="max-w-4xl">
+                    <livewire:settings.color-scheme-selector />
+                </div>
+            </div>
+
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <livewire:settings.privacy-pin />

@@ -30,6 +30,11 @@ class DiaryEntry extends Model
         return $this->belongsTo(Goal::class);
     }
 
+    protected function asJson($value, $flags = 0)
+    {
+        return parent::asJson($value, $flags | JSON_UNESCAPED_UNICODE);
+    }
+
     public function scopeOwnedBy(Builder $query, User $user): Builder
     {
         return $query->where('user_id', $user->id);
@@ -37,6 +42,21 @@ class DiaryEntry extends Model
 
     public function scopeWithTag(Builder $query, string $tag): Builder
     {
-        return $query->whereJsonContains('tags', $tag);
+        $clean = ltrim(trim($tag), '#');
+        if ($clean === '') {
+            return $query;
+        }
+
+        $cleanSpace = str_replace('_', ' ', $clean);
+        $cleanUnderscore = str_replace(' ', '_', $clean);
+
+        return $query->where(function ($q) use ($clean, $cleanSpace, $cleanUnderscore) {
+            $q->whereRaw("JSON_SEARCH(tags, 'one', ?) IS NOT NULL", ['%'.$clean.'%'])
+              ->orWhereRaw("JSON_SEARCH(tags, 'one', ?) IS NOT NULL", ['%'.$cleanSpace.'%'])
+              ->orWhereRaw("JSON_SEARCH(tags, 'one', ?) IS NOT NULL", ['%'.$cleanUnderscore.'%'])
+              ->orWhereJsonContains('tags', $clean)
+              ->orWhereJsonContains('tags', '#'.$clean)
+              ->orWhere('tags', 'like', '%'.$clean.'%');
+        });
     }
 }

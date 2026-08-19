@@ -50,8 +50,8 @@
                     <x-input-error :messages="$errors->get('form.importance')" class="mt-1" />
                 </div>
                 <div>
-                    <x-input-label for="topic_tags" value="الوسوم (بفاصلة)" />
-                    <x-text-input id="topic_tags" wire:model="form.tagsInput" type="text" class="mt-1 block w-full" placeholder="محفزات، مساء" />
+                    <x-input-label for="topic_tags" value="الوسوم (مثال: #السهر #افكار_الحب_الشهواني)" />
+                    <x-text-input id="topic_tags" wire:model="form.tagsInput" type="text" class="mt-1 block w-full" placeholder="#السهر #محفزات #افكار" />
                     <x-input-error :messages="$errors->get('form.tagsInput')" class="mt-1" />
                 </div>
             </div>

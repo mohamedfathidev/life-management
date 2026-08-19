@@ -24,12 +24,7 @@
                 <x-input-error :messages="$errors->get('weight')" class="mt-1" />
             </div>
 
-            <div>
-                <x-input-label for="m_note" value="ملاحظة / إزاي أتجنّبه (اختياري)" />
-                <textarea id="m_note" wire:model="note" rows="2" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm"></textarea>
-            </div>
-
-            <div class="flex items-center justify-end gap-3">
+            <div class="flex items-center justify-end gap-3 pt-1">
                 @if ($editingId)
                     <button type="button" wire:click="resetForm" class="px-4 py-2 text-sm text-ink-soft dark:text-ink-dark-soft hover:text-ink dark:hover:text-ink-dark">إلغاء</button>
                 @endif
@@ -45,21 +40,29 @@
         @else
             <div class="space-y-3">
                 @foreach ($mistakes as $mistake)
-                    <div wire:key="mistake-{{ $mistake->id }}" class="rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
+                    <div wire:key="mistake-{{ $mistake->id }}" class="group rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md border border-transparent hover:border-danger/20 p-4 transition-all duration-200">
                         <div class="flex items-start justify-between gap-3">
-                            <p class="text-sm font-medium text-ink dark:text-ink-dark">{{ $mistake->title }}</p>
+                            <a href="{{ route('recovery.mistakes.show', $mistake) }}" wire:navigate class="min-w-0 flex-1">
+                                <h3 class="text-base font-bold text-ink dark:text-ink-dark group-hover:text-danger transition">
+                                    {{ $mistake->title }}
+                                </h3>
+                            </a>
                             <div class="flex items-center gap-2 shrink-0">
-                                <button type="button" wire:click="edit({{ $mistake->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
+                                <a href="{{ route('recovery.mistakes.show', $mistake) }}" wire:navigate class="text-xs font-semibold text-primary dark:text-primary-dark hover:underline">
+                                    التفاصيل
+                                </a>
+                                <button type="button" wire:click="edit({{ $mistake->id }})" class="text-xs text-ink-soft dark:text-ink-dark-soft hover:underline">تعديل السريع</button>
                                 <button type="button" wire:click="delete({{ $mistake->id }})" wire:confirm="حذف الخطأ؟" class="text-xs text-danger hover:underline">حذف</button>
                             </div>
                         </div>
-                        <div class="mt-2 flex items-center gap-3">
-                            <div class="flex-1 h-2.5 rounded-full bg-ink-soft/15 dark:bg-ink-dark-soft/15 overflow-hidden">
-                                <div class="h-full rounded-full bg-danger" style="width: {{ $mistake->weight }}%"></div>
+
+                        {{-- Weight percentage bar linking to show details --}}
+                        <a href="{{ route('recovery.mistakes.show', $mistake) }}" wire:navigate class="mt-3 flex items-center gap-3 block group-hover:opacity-95 transition">
+                            <div class="flex-1 h-3 rounded-full bg-ink-soft/15 dark:bg-ink-dark-soft/15 overflow-hidden">
+                                <div class="h-full rounded-full bg-gradient-to-r from-rose-500 to-danger transition-all duration-300" style="width: {{ $mistake->weight }}%"></div>
                             </div>
-                            <span class="text-sm font-bold text-danger w-10 text-start">{{ $mistake->weight }}%</span>
-                        </div>
-                        @if ($mistake->note)<p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-2 whitespace-pre-line">{{ $mistake->note }}</p>@endif
+                            <span class="text-sm font-extrabold text-danger w-10 text-start">{{ $mistake->weight }}%</span>
+                        </a>
                     </div>
                 @endforeach
             </div>

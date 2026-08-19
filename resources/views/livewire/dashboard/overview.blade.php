@@ -96,18 +96,50 @@
             </div>
         </div>
 
-        {{-- Mood trend --}}
+        {{-- Mood trend (Saturday to Friday week) --}}
         <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-6 mt-6">
-            <h3 class="font-semibold text-ink dark:text-ink-dark mb-3">المزاج (٧ أيام)</h3>
-            <div class="flex items-end gap-2 h-20" dir="ltr">
-                @foreach ($moodTrend as $point)
-                    <div class="flex-1 flex flex-col items-center justify-end gap-1">
-                        <div class="w-full rounded-t bg-primary/70 dark:bg-primary-dark/70"
-                             style="height: {{ $point['mood'] ? ($point['mood'] * 10) : 3 }}%"
-                             title="{{ $point['date'] }}: {{ $point['mood'] ?? '—' }}"></div>
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="font-bold text-ink dark:text-ink-dark">المزاج (أسبوع من السبت إلى الجمعة)</h3>
+                    <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-0.5">
+                        {{ $moodTrend['startDate']->translatedFormat('j M') }} – {{ $moodTrend['endDate']->translatedFormat('j M Y') }} · يربط مزاج تقفيل اليوم والتعافي والسجل
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-end gap-2 sm:gap-4 h-32 pt-6 pb-2" dir="rtl">
+                @foreach ($moodTrend['points'] as $point)
+                    <div class="flex-1 flex flex-col items-center justify-end h-full">
+                        {{-- Score badge at top with Extra Large Emoji --}}
+                        @if ($point['mood'] !== null)
+                            <span class="mb-1 flex flex-col sm:flex-row items-center justify-center gap-1 leading-none">
+                                <span class="text-2xl sm:text-3xl drop-shadow-sm">{{ $point['emoji'] }}</span>
+                                <span class="text-xs font-extrabold text-primary dark:text-primary-dark">{{ $point['mood'] }}</span>
+                            </span>
+                        @else
+                            <span class="text-xs text-gray-300 dark:text-gray-600 mb-1">—</span>
+                        @endif
+
+                        {{-- Bar --}}
+                        <div class="w-full max-w-[40px] rounded-t-lg transition-all duration-500 {{ $point['isToday'] ? 'bg-primary dark:bg-primary-dark ring-2 ring-primary/40' : ($point['mood'] ? 'bg-primary/70 dark:bg-primary-dark/70 hover:bg-primary' : 'bg-gray-100 dark:bg-gray-800') }}"
+                             style="height: {{ $point['mood'] ? max(15, $point['mood'] * 10) : 8 }}%"
+                             title="{{ $point['dayName'] }} {{ $point['dayNumber'] }}: {{ $point['mood'] ? $point['mood'] . '/10' : 'غير مسجّل' }}"></div>
+
+                        {{-- Day name & number --}}
+                        <span class="text-xs font-bold text-ink dark:text-ink-dark mt-2 {{ $point['isToday'] ? 'text-primary dark:text-primary-dark' : '' }}">
+                            {{ $point['dayName'] }}
+                        </span>
+                        <span class="text-[10px] text-ink-soft dark:text-ink-dark-soft">
+                            {{ $point['dayNumber'] }}
+                        </span>
                     </div>
                 @endforeach
             </div>
+        </div>
+
+        {{-- Motivational quote at bottom --}}
+        <div class="mt-6">
+            <livewire:dashboard.motivational-quote />
         </div>
     </div>
 

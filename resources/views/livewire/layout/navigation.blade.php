@@ -45,6 +45,7 @@ new class extends Component
                         <x-dropdown-link :href="route('goals.index')" wire:navigate>🎯 الأهداف</x-dropdown-link>
                         <x-dropdown-link :href="route('tasks.index')" wire:navigate>🗂️ كل التاسكات</x-dropdown-link>
                         <x-dropdown-link :href="route('planner')" wire:navigate>🗓️ المخطط</x-dropdown-link>
+                        <x-dropdown-link :href="route('planner.day-overview')" wire:navigate>👁️ نظرة على اليوم</x-dropdown-link>
                         <x-dropdown-link :href="route('appointments')" wire:navigate>📅 المواعيد</x-dropdown-link>
                     </x-nav-dropdown>
 
@@ -148,8 +149,11 @@ new class extends Component
             <x-responsive-nav-link :href="route('tasks.index')" :active="request()->routeIs('tasks.*')" wire:navigate>
                 🗂️ كل التاسكات
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('planner')" :active="request()->routeIs('planner*')" wire:navigate>
+            <x-responsive-nav-link :href="route('planner')" :active="request()->routeIs('planner') || request()->routeIs('planner.week')" wire:navigate>
                 المخطط
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('planner.day-overview')" :active="request()->routeIs('planner.day-overview')" wire:navigate>
+                👁️ نظرة على اليوم
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" wire:navigate>
                 المواعيد

@@ -44,7 +44,8 @@ class RecoveryTopicForm extends Form
         $this->topic = $topic;
         $this->title = $topic->title;
         $this->content = $topic->content;
-        $this->tagsInput = implode('، ', $topic->tags ?? []);
+        $tags = array_map(fn ($t) => '#'.ltrim(trim($t), '#'), $topic->tags ?? []);
+        $this->tagsInput = implode(' ', $tags);
         $this->importance = $topic->importance->value;
     }
 
@@ -70,16 +71,16 @@ class RecoveryTopicForm extends Form
     }
 
     /**
-     * Split a free tag string (comma / Arabic comma separated) into a clean list.
+     * Split a free tag string (comma / whitespace separated hashtags) into a clean list.
      *
      * @return array<int, string>
      */
     private function parseTags(string $input): array
     {
-        $parts = preg_split('/[،,]+/u', $input) ?: [];
+        $parts = preg_split('/[،,\s]+/u', $input) ?: [];
 
         return collect($parts)
-            ->map(fn ($t) => Str::of($t)->trim()->value())
+            ->map(fn ($t) => ltrim(trim($t), '#'))
             ->filter(fn ($t) => $t !== '')
             ->unique()
             ->values()
