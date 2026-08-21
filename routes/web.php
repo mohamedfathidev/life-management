@@ -141,6 +141,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     // Sensitive sections gated by the privacy PIN
     Route::middleware('privacy.lock')->group(function () {
         Route::get('diary', \App\Livewire\Diary\Index::class)->name('diary.index');
+        Route::get('diary/reasons', \App\Livewire\Diary\Reasons::class)->name('diary.reasons');
         Route::get('diary/{entry}', \App\Livewire\Diary\Show::class)->name('diary.show');
         Route::get('recovery', RecoveryIndex::class)->name('recovery.index');
         Route::get('recovery/topics', \App\Livewire\Recovery\Topics::class)->name('recovery.topics');
@@ -150,6 +151,13 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
         Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
         Route::get('recovery/mistakes/{mistake}', \App\Livewire\Recovery\MistakeShow::class)->name('recovery.mistakes.show');
         Route::get('recovery/setbacks', \App\Livewire\Recovery\Setbacks::class)->name('recovery.setbacks');
+        Route::get('recovery/damages', \App\Livewire\Recovery\Damages::class)->name('recovery.damages');
+        Route::get('recovery/damages/{damage}', \App\Livewire\Recovery\DamageShow::class)->name('recovery.damages.show');
+        Route::get('recovery/stories', \App\Livewire\Recovery\Stories::class)->name('recovery.stories');
+        Route::get('recovery/stories/{story}', \App\Livewire\Recovery\StoryShow::class)->name('recovery.stories.show');
+        Route::get('recovery/dreams', \App\Livewire\Recovery\Dreams::class)->name('recovery.dreams');
+        Route::get('recovery/changes', \App\Livewire\Recovery\Changes::class)->name('recovery.changes');
+        Route::get('recovery/changes/{change}', \App\Livewire\Recovery\ChangeShow::class)->name('recovery.changes.show');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });
 });

@@ -13,14 +13,14 @@ use Livewire\Component;
 class Show extends Component
 {
     public Recovery $recovery;
-    public ?string $selectedWeek = null; // Format: 'YYYY-WW' or 'all'
+
+    public ?string $selectedWeek = 'all';
 
     public function mount(Recovery $recovery): void
     {
         $this->authorize('view', $recovery);
         $this->recovery = $recovery;
-        // Default to current week
-        $this->selectedWeek = 'current';
+        $this->selectedWeek = 'all';
     }
 
     public function setWeek(string $week): void
@@ -47,54 +47,52 @@ class Show extends Component
 
     public function render(): View
     {
-        // Calculate weeks for this recovery based on start_date
         $recoveryStartDate = $this->recovery->start_date;
         $recoveryEndDate = $this->recovery->end_date ?? Carbon::now();
-        
-        // Generate all weeks in the recovery period
+
+        $totalDays = (int) $recoveryStartDate->diffInDays($recoveryEndDate) + 1;
         $allWeeks = collect();
-        $currentWeekStart = $recoveryStartDate->copy()->startOfWeek();
-        $weekNumber = 1;
-        
-        while ($currentWeekStart <= $recoveryEndDate) {
-            $weekEnd = $currentWeekStart->copy()->endOfWeek();
-            if ($weekEnd > $recoveryEndDate) {
-                $weekEnd = $recoveryEndDate;
+
+        // Only create sub-blocks if period is longer than 14 days
+        if ($totalDays > 14) {
+            $blockStart = $recoveryStartDate->copy();
+            $weekNumber = 1;
+
+            while ($blockStart <= $recoveryEndDate) {
+                $blockEnd = $blockStart->copy()->addDays(6);
+                if ($blockEnd > $recoveryEndDate) {
+                    $blockEnd = $recoveryEndDate->copy();
+                }
+
+                $logsInWeek = $this->recovery->logs()
+                    ->whereBetween('date', [$blockStart, $blockEnd])
+                    ->get();
+
+                $allWeeks->push((object) [
+                    'number' => $weekNumber,
+                    'start_date' => $blockStart->copy(),
+                    'end_date' => $blockEnd->copy(),
+                    'count' => $logsInWeek->count(),
+                    'setback_count' => $logsInWeek->where('is_setback', true)->count(),
+                    'key' => 'week-'.$weekNumber,
+                ]);
+
+                $blockStart->addDays(7);
+                $weekNumber++;
             }
-            
-            // Get logs count for this week
-            $logsInWeek = $this->recovery->logs()
-                ->whereBetween('date', [$currentWeekStart, $weekEnd])
-                ->get();
-            
-            $allWeeks->push((object)[
-                'number' => $weekNumber,
-                'start_date' => $currentWeekStart->copy(),
-                'end_date' => $weekEnd->copy(),
-                'year' => $currentWeekStart->year,
-                'week' => $currentWeekStart->week,
-                'count' => $logsInWeek->count(),
-                'setback_count' => $logsInWeek->where('is_setback', true)->count(),
-                'key' => 'week-' . $weekNumber,
-            ]);
-            
-            $currentWeekStart->addWeek();
-            $weekNumber++;
         }
 
         // Base query for logs
         $logsQuery = $this->recovery->logs();
 
-        // Filter by week if selected
-        if ($this->selectedWeek && $this->selectedWeek !== 'all') {
+        // Filter by sub-week if selected
+        if ($this->selectedWeek && $this->selectedWeek !== 'all' && $allWeeks->isNotEmpty()) {
             if ($this->selectedWeek === 'current') {
-                // Current week in the recovery (the latest week)
                 $latestWeek = $allWeeks->last();
                 if ($latestWeek) {
                     $logsQuery->whereBetween('date', [$latestWeek->start_date, $latestWeek->end_date]);
                 }
             } else {
-                // Specific week by number (format: week-X)
                 $weekNum = (int) str_replace('week-', '', $this->selectedWeek);
                 $selectedWeekData = $allWeeks->firstWhere('number', $weekNum);
                 if ($selectedWeekData) {

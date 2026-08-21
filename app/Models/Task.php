@@ -89,6 +89,11 @@ class Task extends Model
         return $this->status === TaskStatus::Done;
     }
 
+    public function isCompleted(): bool
+    {
+        return $this->isDone();
+    }
+
     /** Set progress (0–100) and keep the status in sync. */
     public function setProgress(int $progress): void
     {

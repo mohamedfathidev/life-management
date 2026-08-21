@@ -66,6 +66,10 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($mistakes->hasPages())
+                <div class="mt-6">{{ $mistakes->links() }}</div>
+            @endif
         @endif
     </div>
 </div>

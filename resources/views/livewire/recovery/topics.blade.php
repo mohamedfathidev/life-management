@@ -99,6 +99,10 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($topics->hasPages())
+                <div class="mt-6">{{ $topics->links() }}</div>
+            @endif
         @endif
     </div>
 

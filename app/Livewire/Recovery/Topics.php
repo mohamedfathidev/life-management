@@ -9,10 +9,13 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class Topics extends Component
 {
+    use WithPagination;
+
     #[Url]
     public string $tag = '';
 
@@ -23,6 +26,16 @@ class Topics extends Component
     public function refreshList(): void
     {
         //
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingTag(): void
+    {
+        $this->resetPage();
     }
 
     public function render(): View
@@ -47,7 +60,7 @@ class Topics extends Component
                 });
             })
             ->latest()
-            ->get();
+            ->paginate(12);
 
         // Distinct tags across the user's topics, for the filter bar.
         $allTags = RecoveryTopic::query()

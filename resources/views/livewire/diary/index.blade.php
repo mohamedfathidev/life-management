@@ -6,7 +6,10 @@
                 <h1 class="text-2xl font-bold text-ink dark:text-ink-dark">المذكرات</h1>
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">مساحتك الخاصة — محمية بقفل الخصوصية.</p>
             </div>
-            <button type="button" wire:click="$dispatch('create-diary-entry')" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ مذكرة</button>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('diary.reasons') }}" wire:navigate class="px-4 py-2 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary-dark/25 dark:to-secondary-dark/25 text-ink dark:text-ink-dark text-sm font-medium hover:opacity-90">🌳 ليه مبتغيرش؟</a>
+                <button type="button" wire:click="$dispatch('create-diary-entry')" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ مذكرة</button>
+            </div>
         </div>
 
         {{-- Search + tag filter --}}

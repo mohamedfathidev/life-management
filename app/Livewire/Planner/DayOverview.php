@@ -63,7 +63,7 @@ class DayOverview extends Component
                 ->orderBy('position')
                 ->get();
 
-        $completedTasksCount = $tasks->filter(fn ($t) => $t->isCompleted())->count();
+        $completedTasksCount = $tasks->filter(fn ($t) => $t->isDone())->count();
         $totalTasksCount = $tasks->count();
         $completionPercent = $day ? $day->completionPercent() : ($totalTasksCount > 0 ? (int) round(($completedTasksCount / $totalTasksCount) * 100) : 0);
 
