@@ -81,7 +81,7 @@
                     @endif
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-danger/10 text-danger font-bold">
-                    عدد الانتكاسات المعروضة: {{ $setbacks->count() }}
+                    عدد الانتكاسات: {{ $setbacks->total() }}
                 </span>
             </div>
         </div>
@@ -157,6 +157,10 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($setbacks->hasPages())
+                <div class="mt-6">{{ $setbacks->links() }}</div>
+            @endif
         @endif
     </div>
 </div>

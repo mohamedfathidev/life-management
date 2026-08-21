@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 /**
  * "أخطاء التعافي" — the user's own mistakes, each weighted by how much it keeps
@@ -15,10 +16,14 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class Mistakes extends Component
 {
+    use WithPagination;
+
     public ?int $editingId = null;
 
     public string $title = '';
+
     public ?string $note = null;
+
     public int $weight = 50;
 
     public function save(): void
@@ -68,7 +73,7 @@ class Mistakes extends Component
     {
         return view('livewire.recovery.mistakes', [
             'mistakes' => RecoveryMistake::ownedBy(Auth::user())
-                ->orderByDesc('weight')->latest()->get(),
+                ->orderByDesc('weight')->latest()->paginate(12),
         ]);
     }
 }

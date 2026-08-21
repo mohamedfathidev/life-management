@@ -13,6 +13,14 @@ export default {
         'bg-warning/15', 'text-warning', 'bg-warning',
         'bg-danger/15', 'text-danger', 'bg-danger',
         'bg-ink-soft', 'bg-ink-soft/15', 'text-ink-soft',
+
+        // Recovery dreams cards cycle through this palette by index (§ dreams.blade.php)
+        ...['primary', 'secondary', 'success'].flatMap((c) => [
+            `hover:border-${c}/30`, `dark:hover:border-${c}-dark/30`,
+            `bg-${c}/10`, `dark:bg-${c}-dark/10`,
+            `bg-${c}/15`, `dark:bg-${c}-dark/20`,
+            `text-${c}`, `dark:text-${c}-dark`,
+        ]),
     ],
 
     content: [

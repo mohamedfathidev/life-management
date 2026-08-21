@@ -72,7 +72,9 @@ class Index extends Component
         );
     }
 
-    /** Daily check: 'done' (fed mind + prepared for sleep) or 'missed' (stayed up). */
+    /**
+     * Daily check: 'done' (fed mind + prepared for sleep) or 'missed' (stayed up).
+     */
     public function setNight(string $status): void
     {
         if (! in_array($status, ['done', 'missed'], true)) {

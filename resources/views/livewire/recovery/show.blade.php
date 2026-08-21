@@ -19,6 +19,7 @@
                 @endif
             </div>
             <button type="button" wire:click="editRecovery" class="shrink-0 px-3 py-1.5 rounded-lg border border-primary/40 text-primary dark:text-primary-dark text-sm hover:bg-primary/10 transition">تعديل</button>
+                <button type="button" wire:click="$dispatch('create-story', { recoveryId: {{ $recovery->id }} })" class="shrink-0 px-3 py-1.5 rounded-lg border border-primary/40 text-primary dark:text-primary-dark text-sm hover:bg-primary/10 transition">📖 اكتب حكاية</button>
         </div>
 
         {{-- Streak counter --}}
@@ -241,4 +242,5 @@
 
     <livewire:recovery.manage-recovery />
     <livewire:recovery.manage-log />
+    <livewire:recovery.manage-story />
 </div>

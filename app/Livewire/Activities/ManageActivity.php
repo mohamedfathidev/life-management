@@ -35,6 +35,17 @@ class ManageActivity extends Component
         $this->open = true;
     }
 
+    public function addReason(): void
+    {
+        $this->form->reasons[] = '';
+    }
+
+    public function removeReason(int $index): void
+    {
+        unset($this->form->reasons[$index]);
+        $this->form->reasons = array_values($this->form->reasons);
+    }
+
     public function save(): void
     {
         if ($this->form->activity) {

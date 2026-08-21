@@ -86,6 +86,21 @@
             @endif
 
             <div>
+                <div class="flex items-center justify-between mb-2">
+                    <x-input-label value="أسباب المشاركة (اختياري)" />
+                    <button type="button" wire:click="addReason" class="text-xs text-primary dark:text-primary-dark hover:underline">+ إضافة</button>
+                </div>
+                <div class="space-y-2">
+                    @foreach ($form->reasons as $i => $reason)
+                        <div wire:key="reason-{{ $i }}" class="flex items-center gap-2">
+                            <input type="text" wire:model="form.reasons.{{ $i }}" class="flex-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm" placeholder="مثال: تطوير مهاراتي في الـ AI" />
+                            <button type="button" wire:click="removeReason({{ $i }})" class="text-danger text-sm shrink-0">✕</button>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div>
                 <x-input-label for="ac_notes" value="ملاحظات (اختياري)" />
                 <textarea id="ac_notes" wire:model="form.notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm"></textarea>
             </div>

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 /**
  * "الانتكاسات" — every relapse day in one place, linked cleanly to Recovery periods
@@ -18,6 +19,8 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class Setbacks extends Component
 {
+    use WithPagination;
+
     #[Url]
     public ?int $recoveryId = null; // Filter by specific recovery period
 
@@ -34,6 +37,12 @@ class Setbacks extends Component
     public function updatedRecoveryId(): void
     {
         $this->selectedWeek = 'all';
+        $this->resetPage();
+    }
+
+    public function updatingSelectedWeek(): void
+    {
+        $this->resetPage();
     }
 
     public function render(): View
@@ -62,31 +71,37 @@ class Setbacks extends Component
                 $recoveryStartDate = $selectedRecovery->start_date;
                 $recoveryEndDate = $selectedRecovery->end_date ?? Carbon::now();
 
-                $currentWeekStart = $recoveryStartDate->copy()->startOfWeek();
-                $weekNumber = 1;
+                $totalDays = (int) $recoveryStartDate->diffInDays($recoveryEndDate) + 1;
 
-                while ($currentWeekStart <= $recoveryEndDate) {
-                    $weekEnd = $currentWeekStart->copy()->endOfWeek();
-                    if ($weekEnd > $recoveryEndDate) {
-                        $weekEnd = $recoveryEndDate;
+                // Only create sub-blocks if period is longer than 14 days,
+                // computed from the recovery's own start date (not calendar weeks).
+                if ($totalDays > 14) {
+                    $blockStart = $recoveryStartDate->copy();
+                    $weekNumber = 1;
+
+                    while ($blockStart <= $recoveryEndDate) {
+                        $blockEnd = $blockStart->copy()->addDays(6);
+                        if ($blockEnd > $recoveryEndDate) {
+                            $blockEnd = $recoveryEndDate->copy();
+                        }
+
+                        $setbacksInWeek = RecoveryLog::query()
+                            ->where('recovery_id', $this->recoveryId)
+                            ->where('is_setback', true)
+                            ->whereBetween('date', [$blockStart, $blockEnd])
+                            ->count();
+
+                        $availableWeeks->push((object) [
+                            'number' => $weekNumber,
+                            'start_date' => $blockStart->copy(),
+                            'end_date' => $blockEnd->copy(),
+                            'count' => $setbacksInWeek,
+                            'key' => 'week-'.$weekNumber,
+                        ]);
+
+                        $blockStart->addDays(7);
+                        $weekNumber++;
                     }
-
-                    $setbacksInWeek = RecoveryLog::query()
-                        ->where('recovery_id', $this->recoveryId)
-                        ->where('is_setback', true)
-                        ->whereBetween('date', [$currentWeekStart, $weekEnd])
-                        ->count();
-
-                    $availableWeeks->push((object) [
-                        'number' => $weekNumber,
-                        'start_date' => $currentWeekStart->copy(),
-                        'end_date' => $weekEnd->copy(),
-                        'count' => $setbacksInWeek,
-                        'key' => 'week-'.$weekNumber,
-                    ]);
-
-                    $currentWeekStart->addWeek();
-                    $weekNumber++;
                 }
 
                 if ($this->selectedWeek && $this->selectedWeek !== 'all') {
@@ -117,7 +132,7 @@ class Setbacks extends Component
             }
         }
 
-        $setbacks = $query->orderByDesc('date')->get();
+        $setbacks = $query->orderByDesc('date')->paginate(12);
 
         return view('livewire.recovery.setbacks', [
             'setbacks' => $setbacks,
