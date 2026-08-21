@@ -15,7 +15,7 @@ class Activity extends Model
 
     protected $fillable = [
         'user_id', 'goal_id', 'title', 'type', 'organizer', 'location',
-        'url', 'start_date', 'end_date', 'stage', 'result', 'notes', 'interview_focus', 'feedback',
+        'url', 'start_date', 'end_date', 'stage', 'result', 'notes', 'reasons', 'interview_focus', 'feedback',
     ];
 
     protected $casts = [
@@ -23,6 +23,7 @@ class Activity extends Model
         'stage' => ActivityStage::class,
         'start_date' => 'date',
         'end_date' => 'date',
+        'reasons' => 'array',
     ];
 
     public function user(): BelongsTo

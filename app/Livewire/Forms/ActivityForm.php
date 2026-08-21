@@ -24,6 +24,9 @@ class ActivityForm extends Form
     public ?string $result = null;
     public ?string $notes = null;
 
+    /** @var array<int, string> */
+    public array $reasons = [''];
+
     /** @return array<string, mixed> */
     public function rules(): array
     {
@@ -39,6 +42,7 @@ class ActivityForm extends Form
             'stage' => ['required', new Enum(ActivityStage::class)],
             'result' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string', 'max:20000'],
+            'reasons.*' => ['nullable', 'string', 'max:500'],
         ];
     }
 
@@ -72,12 +76,14 @@ class ActivityForm extends Form
         $this->stage = $activity->stage->value;
         $this->result = $activity->result;
         $this->notes = $activity->notes;
+        $this->reasons = $activity->reasons ?: [''];
     }
 
     public function persist(int $userId): Activity
     {
         $data = $this->validate();
         $data['user_id'] = $userId;
+        $data['reasons'] = array_values(array_filter(array_map('trim', $this->reasons), fn ($v) => $v !== '')) ?: null;
 
         if ($this->activity) {
             $this->activity->update($data);

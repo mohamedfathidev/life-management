@@ -8,6 +8,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('diary.reasons') }}" wire:navigate class="px-4 py-2 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary-dark/25 dark:to-secondary-dark/25 text-ink dark:text-ink-dark text-sm font-medium hover:opacity-90">🌳 ليه مبتغيرش؟</a>
+                <a href="{{ route('diary.changes') }}" wire:navigate class="px-4 py-2 rounded-lg bg-gradient-to-r from-success/20 to-primary/20 dark:from-success-dark/25 dark:to-primary-dark/25 text-ink dark:text-ink-dark text-sm font-medium hover:opacity-90">🌱 إيه اللي غيّرني؟</a>
                 <button type="button" wire:click="$dispatch('create-diary-entry')" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ مذكرة</button>
             </div>
         </div>

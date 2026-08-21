@@ -122,6 +122,9 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::get('career/activities', \App\Livewire\Activities\Index::class)->name('activities.index');
     Route::get('career/activities/{activity}', \App\Livewire\Activities\Show::class)->name('activities.show');
 
+    Route::get('career/lab', \App\Livewire\Lab\Index::class)->name('lab.index');
+    Route::get('career/lab/{project}', \App\Livewire\Lab\Show::class)->name('lab.show');
+
     Route::get('career/pitfalls', \App\Livewire\Career\Pitfalls::class)->name('career.pitfalls');
     Route::get('career/interviews', \App\Livewire\Career\Interviews::class)->name('career.interviews');
 
@@ -142,6 +145,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::middleware('privacy.lock')->group(function () {
         Route::get('diary', \App\Livewire\Diary\Index::class)->name('diary.index');
         Route::get('diary/reasons', \App\Livewire\Diary\Reasons::class)->name('diary.reasons');
+        Route::get('diary/changes', \App\Livewire\Diary\Changes::class)->name('diary.changes');
         Route::get('diary/{entry}', \App\Livewire\Diary\Show::class)->name('diary.show');
         Route::get('recovery', RecoveryIndex::class)->name('recovery.index');
         Route::get('recovery/topics', \App\Livewire\Recovery\Topics::class)->name('recovery.topics');

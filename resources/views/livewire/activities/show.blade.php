@@ -44,6 +44,17 @@
                 <div class="mt-4 text-sm rounded-lg bg-success/10 text-success px-3 py-2">🎉 النتيجة: {{ $activity->result }}</div>
             @endif
 
+            @if ($activity->reasons)
+                <div class="mt-4">
+                    <p class="text-xs text-ink-soft dark:text-ink-dark-soft mb-1">أسباب المشاركة</p>
+                    <ul class="list-disc ps-5 space-y-0.5 text-sm text-ink dark:text-ink-dark">
+                        @foreach ($activity->reasons as $reason)
+                            <li>{{ $reason }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @if ($activity->notes)
                 <div class="mt-4">
                     <p class="text-xs text-ink-soft dark:text-ink-dark-soft mb-1">ملاحظات</p>
