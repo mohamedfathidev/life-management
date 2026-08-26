@@ -45,6 +45,12 @@
                 <x-text-input id="rs_title" wire:model="form.title" type="text" class="mt-1 block w-full" />
             </div>
 
+            <div>
+                <x-input-label for="rs_brief" value="الحكاية دي بتتكلم عن ايه؟ (ملخص مختصر)" />
+                <x-text-input id="rs_brief" wire:model="form.brief" type="text" maxlength="300" class="mt-1 block w-full" placeholder="سطر واحد يلخّص فكرة الحكاية…" />
+                <x-input-error :messages="$errors->get('form.brief')" class="mt-1" />
+            </div>
+
             {{-- Rich-text editor (Trix) --}}
             <div>
                 <x-input-label value="الحكاية" />

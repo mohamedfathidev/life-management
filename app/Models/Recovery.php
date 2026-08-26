@@ -80,10 +80,31 @@ class Recovery extends Model
         return ($this->end_date && $this->end_date->lt($today)) ? $this->end_date->copy() : $today;
     }
 
-    /** Current clean streak in whole days. */
+    /**
+     * How far an in-progress clean stretch (starting at $since) has actually
+     * been confirmed — i.e. the most recent day explicitly logged clean,
+     * capped at asOfDate(). A day only counts once it's checked in; it does
+     * NOT accrue for free just because the calendar moved past it.
+     */
+    protected function confirmedThroughDate(Carbon $since): Carbon
+    {
+        $lastClean = $this->logs()
+            ->where('date', '>', $since->toDateString())
+            ->where('is_setback', false)
+            ->max('date');
+
+        $confirmed = $lastClean ? Carbon::parse($lastClean) : $since->copy();
+        $ceiling = $this->asOfDate();
+
+        return $confirmed->gt($ceiling) ? $ceiling : $confirmed;
+    }
+
+    /** Current clean streak in whole days — only counts days actually logged clean. */
     public function currentStreakDays(): int
     {
-        return (int) $this->streakSince()->diffInDays($this->asOfDate());
+        $since = $this->streakSince();
+
+        return (int) $since->diffInDays($this->confirmedThroughDate($since));
     }
 
     public function setbackCount(): int
@@ -114,7 +135,6 @@ class Recovery extends Model
             ->sort()
             ->values();
 
-        $today = $this->asOfDate();
         $periods = collect();
         $cursor = $this->start_date->copy();
 
@@ -132,11 +152,13 @@ class Recovery extends Model
             $cursor = $setback->copy();
         }
 
-        // The still-running period since the latest setback (or since the start).
+        // The still-running period since the latest setback (or since the start) —
+        // only counts through the most recently logged clean day, per confirmedThroughDate().
+        $openThrough = $this->confirmedThroughDate($cursor);
         $periods->push((object) [
             'from' => $cursor->copy(),
-            'to' => $today->copy(),
-            'days' => (int) $cursor->diffInDays($today),
+            'to' => $openThrough->copy(),
+            'days' => (int) $cursor->diffInDays($openThrough),
             'is_current' => true,
         ]);
 

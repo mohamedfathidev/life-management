@@ -18,10 +18,11 @@ class DiaryReason extends Model
 
     protected $table = 'diary_reasons';
 
-    protected $fillable = ['user_id', 'parent_id', 'body', 'sort_order'];
+    protected $fillable = ['user_id', 'parent_id', 'body', 'sort_order', 'is_important'];
 
     protected $casts = [
         'body' => 'encrypted', // sensitive
+        'is_important' => 'boolean',
     ];
 
     public function user(): BelongsTo

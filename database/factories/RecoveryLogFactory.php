@@ -34,4 +34,12 @@ class RecoveryLogFactory extends Factory
             'date' => $date instanceof Carbon ? $date->toDateString() : $date,
         ]);
     }
+
+    public function cleanOn(Carbon|string $date): static
+    {
+        return $this->state(fn () => [
+            'is_setback' => false,
+            'date' => $date instanceof Carbon ? $date->toDateString() : $date,
+        ]);
+    }
 }

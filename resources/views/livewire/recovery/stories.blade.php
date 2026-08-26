@@ -31,9 +31,17 @@
             <div class="space-y-4">
                 @foreach ($stories as $story)
                     @php
-                        $plainExcerpt = \Illuminate\Support\Str::limit(trim(strip_tags($story->content)), 160);
+                        $plainExcerpt = $story->brief ?: \Illuminate\Support\Str::limit(trim(strip_tags($story->content)), 160);
                     @endphp
-                    <div wire:key="story-{{ $story->id }}" class="group relative rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md border border-transparent hover:border-primary/20 dark:hover:border-primary-dark/20 p-5 transition-all duration-200">
+                    <div wire:key="story-{{ $story->id }}" @class([
+                        'group relative rounded-xl shadow-sm hover:shadow-md p-5 transition-all duration-200 border',
+                        'bg-amber-500/5 dark:bg-amber-400/10 border-amber-500/30 dark:border-amber-400/30' => $story->is_featured,
+                        'bg-surface-light dark:bg-surface-dark border-transparent hover:border-primary/20 dark:hover:border-primary-dark/20' => ! $story->is_featured,
+                    ])>
+                        @if ($story->is_featured)
+                            <span class="absolute -top-2 -end-2 text-xs px-2 py-0.5 rounded-full bg-amber-500 text-white font-semibold shadow-sm">⭐ مميزة</span>
+                        @endif
+
                         <div class="flex items-start justify-between gap-3">
                             <a href="{{ route('recovery.stories.show', $story) }}" wire:navigate class="min-w-0 flex-1">
                                 <div class="flex items-center gap-2 flex-wrap">
@@ -52,6 +60,7 @@
                                 </p>
                             </a>
                             <div class="flex items-center gap-2 shrink-0">
+                                <button type="button" wire:click="toggleFeatured({{ $story->id }})" title="{{ $story->is_featured ? 'إلغاء التمييز' : 'تمييز الحكاية' }}" class="text-sm {{ $story->is_featured ? 'text-amber-500' : 'text-ink-soft dark:text-ink-dark-soft hover:text-amber-500' }} transition">{{ $story->is_featured ? '⭐' : '☆' }}</button>
                                 <button type="button" wire:click="$dispatch('edit-story', { story: {{ $story->id }} })" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
                                 <button type="button" wire:click="$dispatch('delete-story', { story: {{ $story->id }} })" wire:confirm="حذف هذه الحكاية؟" class="text-xs text-danger hover:underline">حذف</button>
                             </div>

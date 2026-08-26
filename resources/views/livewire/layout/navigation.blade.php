@@ -71,9 +71,10 @@ new class extends Component
                         المحفظة
                     </x-nav-link>
                     {{-- Reports group --}}
-                    <x-nav-dropdown label="التقارير" :active="request()->routeIs('statistics') || request()->routeIs('review') || request()->routeIs('achievements') || request()->routeIs('archive')">
+                    <x-nav-dropdown label="التقارير" :active="request()->routeIs('statistics') || request()->routeIs('review') || request()->routeIs('achievements') || request()->routeIs('archive') || request()->routeIs('change-curve')">
                         <x-dropdown-link :href="route('statistics')" wire:navigate>📊 الإحصائيات</x-dropdown-link>
                         <x-dropdown-link :href="route('review')" wire:navigate>🗒️ المراجعة</x-dropdown-link>
+                        <x-dropdown-link :href="route('change-curve')" wire:navigate>📈 منحنى التغيير</x-dropdown-link>
                         <x-dropdown-link :href="route('achievements')" wire:navigate>🏅 الإنجازات</x-dropdown-link>
                         <x-dropdown-link :href="route('archive')" wire:navigate>🗄️ الأرشيف</x-dropdown-link>
                     </x-nav-dropdown>
@@ -193,6 +194,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('review')" :active="request()->routeIs('review')" wire:navigate>
                 المراجعة
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('change-curve')" :active="request()->routeIs('change-curve')" wire:navigate>
+                📈 منحنى التغيير
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('achievements')" :active="request()->routeIs('achievements')" wire:navigate>
                 الإنجازات

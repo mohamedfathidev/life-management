@@ -18,7 +18,7 @@ class RecoveryStory extends Model
     protected $table = 'recovery_stories';
 
     protected $fillable = [
-        'user_id', 'recovery_id', 'date', 'title', 'content', 'mood', 'tags',
+        'user_id', 'recovery_id', 'date', 'title', 'brief', 'content', 'mood', 'tags', 'is_featured',
     ];
 
     protected $casts = [
@@ -26,6 +26,8 @@ class RecoveryStory extends Model
         'mood' => 'integer',
         'tags' => 'array',
         'content' => 'encrypted', // sensitive
+        'brief' => 'encrypted', // sensitive
+        'is_featured' => 'boolean',
     ];
 
     public function user(): BelongsTo

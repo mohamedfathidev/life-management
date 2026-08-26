@@ -34,21 +34,20 @@
             </div>
         </div>
 
-        {{-- Timeline --}}
+        {{-- Appointments — calendar-based schedule items, independent of tasks --}}
         <section class="mb-8">
-            <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-4 flex items-center gap-2">⏱️ جدولك النهاردة <span class="text-xs font-normal text-ink-soft dark:text-ink-dark-soft">(مواعيد)</span></h2>
-            @if ($timeline->isEmpty())
-                <p class="text-sm text-ink-soft dark:text-ink-dark-soft bg-surface-light dark:bg-surface-dark rounded-2xl p-5 text-center">مفيش مواعيد محددة بوقت النهاردة — يومك مفتوح 🍃</p>
+            <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-4 flex items-center gap-2">📅 المواعيد</h2>
+            @if ($appointments->isEmpty())
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft bg-surface-light dark:bg-surface-dark rounded-2xl p-5 text-center">مفيش مواعيد النهاردة — يومك مفتوح 🍃</p>
             @else
                 <div class="relative ps-6">
                     {{-- stem --}}
                     <div class="absolute top-2 bottom-2 start-[7px] w-0.5 bg-success/25"></div>
                     <div class="space-y-3">
-                        @foreach ($timeline as $item)
-                            <div wire:key="tl-{{ $loop->index }}" class="relative">
+                        @foreach ($appointments as $item)
+                            <div wire:key="ap-{{ $loop->index }}" class="relative">
                                 <div class="absolute -start-6 top-4 w-3.5 h-3.5 rounded-full border-2 border-success {{ $item['done'] ? 'bg-success' : 'bg-bg-light dark:bg-bg-dark' }}"></div>
-                                <div class="flex items-center gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4 {{ ($item['important'] ?? false) ? 'ring-2 ring-warning/50 bg-warning/5' : '' }}">
-                                    @if ($item['important'] ?? false)<span class="shrink-0 text-warning">⭐</span>@endif
+                                <div class="flex items-center gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
                                     @if ($item['toggle'])
                                         <button type="button" wire:click="{{ $item['toggle'] }}({{ $item['id'] }})"
                                             class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition {{ $item['done'] ? 'bg-success border-success text-white' : 'border-success/40 text-transparent hover:border-success' }}">
@@ -57,6 +56,38 @@
                                     @else
                                         <span class="shrink-0 text-lg">{{ $item['emoji'] }}</span>
                                     @endif
+                                    <a href="{{ $item['url'] }}" wire:navigate class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-ink dark:text-ink-dark truncate {{ $item['done'] ? 'line-through opacity-60' : '' }}">{{ $item['title'] }}</p>
+                                        @if (! empty($item['kind']))<span class="inline-block mt-0.5 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary dark:text-primary-dark">{{ $item['kind'] }}</span>@endif
+                                    </a>
+                                    @if ($item['time'])<span class="shrink-0 text-xs font-medium text-success" dir="ltr">{{ $item['time'] }}</span>@endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </section>
+
+        {{-- Timed tasks --}}
+        <section class="mb-8">
+            <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-4 flex items-center gap-2">⏰ تاسكات بوقت</h2>
+            @if ($timedTasks->isEmpty())
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft bg-surface-light dark:bg-surface-dark rounded-2xl p-5 text-center">مفيش تاسكات بوقت محدد النهاردة.</p>
+            @else
+                <div class="relative ps-6">
+                    {{-- stem --}}
+                    <div class="absolute top-2 bottom-2 start-[7px] w-0.5 bg-success/25"></div>
+                    <div class="space-y-3">
+                        @foreach ($timedTasks as $item)
+                            <div wire:key="tt-{{ $loop->index }}" class="relative">
+                                <div class="absolute -start-6 top-4 w-3.5 h-3.5 rounded-full border-2 border-success {{ $item['done'] ? 'bg-success' : 'bg-bg-light dark:bg-bg-dark' }}"></div>
+                                <div class="flex items-center gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4 {{ ($item['important'] ?? false) ? 'ring-2 ring-warning/50 bg-warning/5' : '' }}">
+                                    @if ($item['important'] ?? false)<span class="shrink-0 text-warning">⭐</span>@endif
+                                    <button type="button" wire:click="{{ $item['toggle'] }}({{ $item['id'] }})"
+                                        class="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition {{ $item['done'] ? 'bg-success border-success text-white' : 'border-success/40 text-transparent hover:border-success' }}">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    </button>
                                     <a href="{{ $item['url'] }}" wire:navigate class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-ink dark:text-ink-dark truncate {{ $item['done'] ? 'line-through opacity-60' : '' }}">{{ $item['title'] }}</p>
                                         @if (! empty($item['kind']))<span class="inline-block mt-0.5 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary dark:text-primary-dark">{{ $item['kind'] }}</span>@endif
@@ -149,20 +180,6 @@
                             <p class="text-sm font-medium text-ink dark:text-ink-dark">عندك تغذية ذهنية تتقرأ النهاردة</p>
                         </a>
                     @endif
-                    @foreach ($recoveries as $r)
-                        <div wire:key="rec-{{ $r['id'] }}" class="flex items-center justify-between gap-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
-                            <div class="min-w-0">
-                                <p class="text-sm font-medium text-ink dark:text-ink-dark truncate">{{ $r['title'] }}</p>
-                                <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft">حالة إمبارح ({{ $yesterdayLabel }})</p>
-                            </div>
-                            <div class="flex items-center gap-2 shrink-0">
-                                <button type="button" wire:click="recordYesterday({{ $r['id'] }}, false)"
-                                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ $r['state'] === 'clean' ? 'bg-success text-white' : 'bg-success/15 text-success hover:bg-success/25' }}">نضيف ✓</button>
-                                <button type="button" wire:click="recordYesterday({{ $r['id'] }}, true)"
-                                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ $r['state'] === 'setback' ? 'bg-danger text-white' : 'bg-danger/15 text-danger hover:bg-danger/25' }}">انتكاسة</button>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
             </div>
         </section>

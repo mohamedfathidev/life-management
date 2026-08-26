@@ -59,6 +59,12 @@
                         {{ $story->title ?: $story->date->translatedFormat('l، j M Y') }}
                     </h1>
 
+                    @if ($story->brief)
+                        <p class="text-sm sm:text-base text-ink-soft dark:text-ink-dark-soft italic leading-relaxed">
+                            {{ $story->brief }}
+                        </p>
+                    @endif
+
                     @if (! empty($story->tags))
                         <div class="flex flex-wrap gap-2 pt-1">
                             @foreach ($story->tags as $t)

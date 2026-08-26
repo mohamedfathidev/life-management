@@ -19,9 +19,16 @@ class RecoveryStoryFactory extends Factory
             'recovery_id' => null,
             'date' => Carbon::today()->toDateString(),
             'title' => fake()->sentence(3),
+            'brief' => fake()->optional()->sentence(8),
             'content' => '<p>'.fake()->paragraph().'</p>',
             'mood' => fake()->numberBetween(1, 10),
             'tags' => fake()->randomElements(['الأسبوع', 'أسبوع جديد', 'التغلب', 'أمل'], 2),
+            'is_featured' => false,
         ];
+    }
+
+    public function featured(): static
+    {
+        return $this->state(fn () => ['is_featured' => true]);
     }
 }

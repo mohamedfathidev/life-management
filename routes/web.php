@@ -152,6 +152,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
         Route::get('recovery/topics/{topic}', \App\Livewire\Recovery\TopicShow::class)->name('recovery.topics.show');
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
         Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
+        Route::get('recovery/signature', \App\Livewire\Recovery\Signature::class)->name('recovery.signature');
         Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
         Route::get('recovery/mistakes/{mistake}', \App\Livewire\Recovery\MistakeShow::class)->name('recovery.mistakes.show');
         Route::get('recovery/setbacks', \App\Livewire\Recovery\Setbacks::class)->name('recovery.setbacks');
@@ -162,8 +163,15 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
         Route::get('recovery/dreams', \App\Livewire\Recovery\Dreams::class)->name('recovery.dreams');
         Route::get('recovery/changes', \App\Livewire\Recovery\Changes::class)->name('recovery.changes');
         Route::get('recovery/changes/{change}', \App\Livewire\Recovery\ChangeShow::class)->name('recovery.changes.show');
+        Route::get('recovery/telegram', \App\Livewire\Recovery\TelegramChannel::class)->name('recovery.telegram');
+        Route::get('recovery/hard-moments', \App\Livewire\Recovery\HardMoments::class)->name('recovery.hard-moments');
+        Route::get('recovery/hard-moments/{moment}', \App\Livewire\Recovery\HardMomentShow::class)->name('recovery.hard-moments.show');
+        Route::get('recovery/ideas', \App\Livewire\Recovery\Ideas::class)->name('recovery.ideas');
+        Route::get('recovery/commitments', \App\Livewire\Recovery\Commitments::class)->name('recovery.commitments');
         Route::get('recovery/{recovery}', RecoveryShow::class)->name('recovery.show');
     });
+
+    Route::get('change-curve', \App\Livewire\ChangeCurve\Index::class)->name('change-curve');
 });
 
 Route::view('profile', 'profile')

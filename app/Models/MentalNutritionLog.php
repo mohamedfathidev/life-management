@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MentalNutritionSourceType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,11 +11,13 @@ class MentalNutritionLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'recovery_topic_id', 'date', 'reflection'];
+    protected $fillable = ['user_id', 'recovery_topic_id', 'source_type', 'source_id', 'date', 'reflection'];
 
     protected $casts = [
         'date' => 'date',
         'reflection' => 'encrypted',
+        'source_type' => MentalNutritionSourceType::class,
+        'source_id' => 'integer',
     ];
 
     public function user(): BelongsTo
