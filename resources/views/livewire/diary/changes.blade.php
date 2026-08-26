@@ -23,17 +23,32 @@
         @else
             <div class="space-y-3">
                 @foreach ($changes as $change)
-                    <div wire:key="change-{{ $change->id }}" class="group flex items-start gap-3 rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md border border-transparent hover:border-success/20 dark:hover:border-success-dark/20 p-4 transition-all duration-200">
-                        <span class="mt-0.5 text-success dark:text-success-dark shrink-0">🌿</span>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm text-ink dark:text-ink-dark leading-relaxed">{{ $change->body }}</p>
-                            <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-1">{{ $change->created_at->translatedFormat('j M Y') }}</p>
+                    @if ($change->is_important)
+                        {{-- Starred = one of the most important changes: a standout circle instead of a row --}}
+                        <div wire:key="change-{{ $change->id }}" class="group relative w-36 h-36 sm:w-40 sm:h-40 mx-auto rounded-full bg-gradient-to-br from-success/15 to-primary/10 dark:from-success-dark/20 dark:to-primary-dark/10 border-2 border-success/50 dark:border-success-dark/50 shadow-md flex items-center justify-center text-center p-4 overflow-hidden transition-transform hover:scale-105">
+                            <span class="absolute top-2 end-3 text-lg">⭐</span>
+                            <p class="text-xs sm:text-sm font-semibold text-ink dark:text-ink-dark leading-snug line-clamp-5">{{ $change->body }}</p>
+
+                            <div class="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-3 text-white text-xs">
+                                <button type="button" wire:click="toggleImportant({{ $change->id }})" title="شيلها من الأهم">☆</button>
+                                <button type="button" wire:click="edit({{ $change->id }})" class="hover:underline">تعديل</button>
+                                <button type="button" wire:click="delete({{ $change->id }})" wire:confirm="حذف الحاجة دي؟" class="hover:underline">حذف</button>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition">
-                            <button type="button" wire:click="edit({{ $change->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
-                            <button type="button" wire:click="delete({{ $change->id }})" wire:confirm="حذف الحاجة دي؟" class="text-xs text-danger hover:underline">حذف</button>
+                    @else
+                        <div wire:key="change-{{ $change->id }}" class="group flex items-start gap-3 rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md border border-transparent hover:border-success/20 dark:hover:border-success-dark/20 p-4 transition-all duration-200">
+                            <span class="mt-0.5 text-success dark:text-success-dark shrink-0">🌿</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-ink dark:text-ink-dark leading-relaxed">{{ $change->body }}</p>
+                                <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-1">{{ $change->created_at->translatedFormat('j M Y') }}</p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition">
+                                <button type="button" wire:click="toggleImportant({{ $change->id }})" class="text-sm text-warning hover:scale-110 transition" title="علّمها كأهم حاجة">☆</button>
+                                <button type="button" wire:click="edit({{ $change->id }})" class="text-xs text-primary dark:text-primary-dark hover:underline">تعديل</button>
+                                <button type="button" wire:click="delete({{ $change->id }})" wire:confirm="حذف الحاجة دي؟" class="text-xs text-danger hover:underline">حذف</button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             </div>
         @endif

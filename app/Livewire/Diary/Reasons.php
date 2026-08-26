@@ -62,6 +62,13 @@ class Reasons extends Component
         }
     }
 
+    /** Mark/unmark a reason as one of the most important ones ("نجمة"). */
+    public function toggleImportant(int $id): void
+    {
+        $reason = DiaryReason::ownedBy(Auth::user())->findOrFail($id);
+        $reason->update(['is_important' => ! $reason->is_important]);
+    }
+
     public function resetForm(): void
     {
         $this->reset('editingId', 'body', 'parentId');

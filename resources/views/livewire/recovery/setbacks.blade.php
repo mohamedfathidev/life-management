@@ -17,6 +17,25 @@
             </p>
         </div>
 
+        {{-- Totals across ALL recovery periods, regardless of status --}}
+        <div class="mb-6">
+            <div class="grid grid-cols-3 gap-3">
+                <div class="rounded-2xl bg-gradient-to-br from-primary/10 to-transparent dark:from-primary-dark/15 p-4 text-center">
+                    <p class="text-2xl font-extrabold text-ink dark:text-ink-dark">{{ $totalRecoveryDays }}</p>
+                    <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-0.5">🗓️ إجمالي الأيام</p>
+                </div>
+                <div class="rounded-2xl bg-success/10 p-4 text-center">
+                    <p class="text-2xl font-extrabold text-success">{{ $totalCleanDays }}</p>
+                    <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-0.5">🌿 أيام نضيفة</p>
+                </div>
+                <div class="rounded-2xl bg-danger/10 p-4 text-center">
+                    <p class="text-2xl font-extrabold text-danger">{{ $totalSetbackDays }}</p>
+                    <p class="text-[11px] text-ink-soft dark:text-ink-dark-soft mt-0.5">💔 انتكاسات</p>
+                </div>
+            </div>
+            <p class="text-xs text-ink-soft dark:text-ink-dark-soft mt-2 text-center">في كل فترات التعافي، أيًّا كانت حالتها</p>
+        </div>
+
         {{-- Filter Control Card --}}
         <div class="mb-6 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-5 space-y-4 border border-gray-100 dark:border-gray-800">
             <div class="flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-gray-800">

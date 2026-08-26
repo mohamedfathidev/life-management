@@ -32,11 +32,16 @@ class RecoveryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_streak_counts_days_since_start_without_setbacks(): void
+    public function test_streak_does_not_count_a_day_until_its_actually_logged_clean(): void
     {
         $recovery = Recovery::factory()->create(['start_date' => '2026-08-01']);
 
-        $this->assertSame(10, $recovery->currentStreakDays());
+        // Nothing logged yet today — the streak must NOT advance just because time passed.
+        $this->assertSame(0, $recovery->currentStreakDays());
+
+        RecoveryLog::factory()->for($recovery)->cleanOn('2026-08-11')->create();
+
+        $this->assertSame(10, $recovery->fresh()->currentStreakDays());
         $this->assertSame(0, $recovery->setbackCount());
     }
 
@@ -88,8 +93,9 @@ class RecoveryTest extends TestCase
         $recovery = Recovery::factory()->create(['start_date' => '2026-08-01']);
         RecoveryLog::factory()->for($recovery)->setbackOn('2026-08-05')->create();
         RecoveryLog::factory()->for($recovery)->setbackOn('2026-08-09')->create();
+        RecoveryLog::factory()->for($recovery)->cleanOn('2026-08-11')->create();
 
-        $this->assertSame(2, $recovery->currentStreakDays()); // 08-09 → 08-11
+        $this->assertSame(2, $recovery->currentStreakDays()); // 08-09 → 08-11, confirmed by the 08-11 check-in
         $this->assertSame(2, $recovery->setbackCount());
     }
 
@@ -152,7 +158,9 @@ class RecoveryTest extends TestCase
             'recovery_id' => $recovery->id,
             'is_setback' => true,
         ]);
-        $this->assertSame(1, $recovery->fresh()->currentStreakDays()); // 08-10 → 08-11
+        // 08-11 hasn't been checked in as clean yet, so the fresh streak sits at 0 — not an
+        // optimistic "1 day since the setback" just because the calendar moved past it.
+        $this->assertSame(0, $recovery->fresh()->currentStreakDays());
     }
 
     public function test_sensitive_note_is_encrypted_at_rest(): void

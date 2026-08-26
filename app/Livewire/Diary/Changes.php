@@ -47,6 +47,13 @@ class Changes extends Component
         }
     }
 
+    /** Mark/unmark a change as one of the most important ones ("نجمة"). */
+    public function toggleImportant(int $id): void
+    {
+        $change = DiaryChange::ownedBy(Auth::user())->findOrFail($id);
+        $change->update(['is_important' => ! $change->is_important]);
+    }
+
     public function resetForm(): void
     {
         $this->reset('editingId', 'body');

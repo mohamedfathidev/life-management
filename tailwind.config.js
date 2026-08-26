@@ -33,6 +33,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Cairo', 'Tajawal', ...defaultTheme.fontFamily.sans],
+                signature: ['Aref Ruqaa', 'cursive'],
             },
             colors: {
                 // Quiet & clear palette (§9) — light + dark handled via `dark:` variants

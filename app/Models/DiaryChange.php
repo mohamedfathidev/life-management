@@ -12,10 +12,11 @@ class DiaryChange extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'body'];
+    protected $fillable = ['user_id', 'body', 'is_important'];
 
     protected $casts = [
         'body' => 'encrypted', // sensitive
+        'is_important' => 'boolean',
     ];
 
     public function user(): BelongsTo

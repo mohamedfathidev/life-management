@@ -111,4 +111,38 @@ class DiaryReasonsTest extends TestCase
 
         $this->assertDatabaseHas('diary_reasons', ['id' => $reason->id]);
     }
+
+    public function test_starring_a_reason_toggles_is_important(): void
+    {
+        $user = User::factory()->create();
+        $reason = DiaryReason::factory()->for($user)->create(['is_important' => false]);
+
+        Livewire::actingAs($user)->test(Reasons::class)->call('toggleImportant', $reason->id);
+        $this->assertTrue($reason->fresh()->is_important);
+
+        Livewire::actingAs($user)->test(Reasons::class)->call('toggleImportant', $reason->id);
+        $this->assertFalse($reason->fresh()->is_important);
+    }
+
+    public function test_intruder_cannot_star_another_users_reason(): void
+    {
+        $owner = User::factory()->create();
+        $intruder = User::factory()->create();
+        $reason = DiaryReason::factory()->for($owner)->create(['is_important' => false]);
+
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+
+        Livewire::actingAs($intruder)->test(Reasons::class)->call('toggleImportant', $reason->id);
+    }
+
+    public function test_starred_reason_renders_as_a_circle_instead_of_a_row(): void
+    {
+        $user = User::factory()->create();
+        DiaryReason::factory()->for($user)->create(['body' => 'خطر مهم جدًا', 'is_important' => true]);
+
+        Livewire::actingAs($user)
+            ->test(Reasons::class)
+            ->assertSee('خطر مهم جدًا')
+            ->assertSeeHtml('rounded-full');
+    }
 }

@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>سيبها على الله — نظّم حياتك</title>
-
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=cairo:400,600,700&display=swap" rel="stylesheet" />
-
-        <script>
-            try {
-                const t = localStorage.getItem('theme');
-                if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                }
-            } catch (e) {}
-        </script>
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @include('partials.head', ['title' => 'سيبها على الله — نظّم حياتك'])
     </head>
     <body class="antialiased font-sans text-ink dark:text-ink-dark">
         <div class="relative min-h-screen overflow-hidden bg-bg-light dark:bg-bg-dark flex items-center justify-center px-6">

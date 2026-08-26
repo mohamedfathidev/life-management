@@ -44,6 +44,12 @@ class Stories extends Component
         $this->dispatch('create-story', recoveryId: $recoveryId);
     }
 
+    public function toggleFeatured(int $storyId): void
+    {
+        $story = RecoveryStory::ownedBy(Auth::user())->findOrFail($storyId);
+        $story->update(['is_featured' => ! $story->is_featured]);
+    }
+
     public function render(): View
     {
         $user = Auth::user();
@@ -59,6 +65,7 @@ class Stories extends Component
                         ->orWhere('content', 'like', '%'.$term.'%');
                 });
             })
+            ->orderByDesc('is_featured')
             ->latest('date')
             ->latest()
             ->paginate(12);

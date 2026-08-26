@@ -139,6 +139,10 @@ class Setbacks extends Component
             'recoveries' => $recoveries,
             'availableWeeks' => $availableWeeks,
             'recovery' => $selectedRecovery,
+            // Totals across ALL recovery periods, regardless of status — unaffected by the filters above.
+            'totalRecoveryDays' => $recoveries->sum(fn (Recovery $r) => $r->periodTotalDays()),
+            'totalCleanDays' => $recoveries->sum(fn (Recovery $r) => $r->cleanDaysCount()),
+            'totalSetbackDays' => $recoveries->sum(fn (Recovery $r) => $r->setbackCount()),
         ]);
     }
 }

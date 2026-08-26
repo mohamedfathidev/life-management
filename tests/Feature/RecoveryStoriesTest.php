@@ -41,6 +41,35 @@ class RecoveryStoriesTest extends TestCase
         $this->assertSame(['أسبوعي_الأول', 'أمل'], $story->tags);
     }
 
+    public function test_user_can_save_a_brief_for_a_story(): void
+    {
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)
+            ->test(ManageStory::class)
+            ->call('openForCreate')
+            ->set('form.date', '2026-08-21')
+            ->set('form.title', 'حكاية')
+            ->set('form.brief', 'الحكاية دي عن أول مرة قاومت فيها الرغبة')
+            ->set('form.content', '<p>تفاصيل الحكاية</p>')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $story = RecoveryStory::first();
+        $this->assertSame('الحكاية دي عن أول مرة قاومت فيها الرغبة', $story->brief);
+    }
+
+    public function test_brief_is_encrypted_at_rest(): void
+    {
+        $user = User::factory()->create();
+        $story = RecoveryStory::factory()->for($user)->create(['brief' => 'ملخص سري']);
+
+        $raw = DB::table('recovery_stories')->where('id', $story->id)->value('brief');
+
+        $this->assertNotSame('ملخص سري', $raw);
+        $this->assertSame('ملخص سري', $story->fresh()->brief);
+    }
+
     public function test_story_content_is_encrypted_at_rest(): void
     {
         $user = User::factory()->create();
@@ -89,6 +118,46 @@ class RecoveryStoriesTest extends TestCase
             ->set('recoveryId', $recovery->id)
             ->assertSee('حكاية الأسبوع')
             ->assertDontSee('حكاية عامة');
+    }
+
+    public function test_user_can_toggle_a_story_as_featured(): void
+    {
+        $user = User::factory()->create();
+        $story = RecoveryStory::factory()->for($user)->create();
+
+        Livewire::actingAs($user)
+            ->test(Stories::class)
+            ->call('toggleFeatured', $story->id);
+
+        $this->assertTrue($story->fresh()->is_featured);
+
+        Livewire::actingAs($user)
+            ->test(Stories::class)
+            ->call('toggleFeatured', $story->id);
+
+        $this->assertFalse($story->fresh()->is_featured);
+    }
+
+    public function test_featured_stories_are_listed_first(): void
+    {
+        $user = User::factory()->create();
+        RecoveryStory::factory()->for($user)->create(['title' => 'حكاية عادية', 'date' => '2026-08-20']);
+        $featured = RecoveryStory::factory()->featured()->for($user)->create(['title' => 'حكاية مميزة', 'date' => '2026-08-01']);
+
+        Livewire::actingAs($user)
+            ->test(Stories::class)
+            ->assertSeeInOrder(['حكاية مميزة', 'حكاية عادية']);
+    }
+
+    public function test_user_cannot_toggle_another_users_story(): void
+    {
+        $owner = User::factory()->create();
+        $intruder = User::factory()->create();
+        $story = RecoveryStory::factory()->for($owner)->create();
+
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+
+        Livewire::actingAs($intruder)->test(Stories::class)->call('toggleFeatured', $story->id);
     }
 
     public function test_stories_index_is_paginated(): void

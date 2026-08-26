@@ -14,6 +14,8 @@ class RecoveryStoryForm extends Form
 
     public ?string $title = null;
 
+    public ?string $brief = null;
+
     public ?string $content = null;
 
     public ?int $mood = null;
@@ -28,6 +30,7 @@ class RecoveryStoryForm extends Form
         return [
             'date' => ['required', 'date'],
             'title' => ['nullable', 'string', 'max:255'],
+            'brief' => ['nullable', 'string', 'max:300'],
             'content' => ['nullable', 'string', 'max:100000'],
             'mood' => ['nullable', 'integer', 'between:1,10'],
             'recovery_id' => ['nullable', 'integer', 'exists:recoveries,id'],
@@ -38,7 +41,7 @@ class RecoveryStoryForm extends Form
     /** @return array<string, string> */
     public function validationAttributes(): array
     {
-        return ['date' => 'التاريخ', 'title' => 'العنوان', 'mood' => 'المزاج', 'recovery_id' => 'فترة التعافي'];
+        return ['date' => 'التاريخ', 'title' => 'العنوان', 'brief' => 'ملخص الحكاية', 'mood' => 'المزاج', 'recovery_id' => 'فترة التعافي'];
     }
 
     public function setStory(RecoveryStory $story): void
@@ -46,6 +49,7 @@ class RecoveryStoryForm extends Form
         $this->story = $story;
         $this->date = $story->date->toDateString();
         $this->title = $story->title;
+        $this->brief = $story->brief;
         $this->content = $story->content;
         $this->mood = $story->mood;
         $this->recovery_id = $story->recovery_id;
@@ -68,6 +72,7 @@ class RecoveryStoryForm extends Form
             'user_id' => $userId,
             'date' => $data['date'],
             'title' => $data['title'],
+            'brief' => $data['brief'],
             'content' => $data['content'],
             'mood' => $data['mood'],
             'recovery_id' => $data['recovery_id'],

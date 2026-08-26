@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Recovery;
 
+use App\Enums\MentalNutritionSourceType;
 use App\Models\MentalNutritionLog;
-use App\Models\RecoveryTopic;
+use App\Services\MentalNutritionPoolService;
+use App\Support\MentalNutritionItem;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -16,55 +18,72 @@ class MentalNutrition extends Component
 {
     public ?string $reflection = null;
 
-    /** Optional manual override of the suggested topic ("موضوع تاني"). */
-    public ?int $suggestedTopicId = null;
+    /** Optional manual override of the suggested item ("موضوع تاني"), as "type:id". */
+    public ?string $suggestedKey = null;
 
-    /** Pick a different random topic than the current suggestion. */
+    /** Pick a different item than the current suggestion, from any source. */
     public function shuffleSuggestion(): void
     {
-        $ids = RecoveryTopic::ownedBy(Auth::user())->pluck('id');
-        $others = $ids->reject(fn ($id) => $id === $this->suggestedTopicId);
+        $pool = $this->pool()->pool();
+        $others = $pool->reject(fn (MentalNutritionItem $item) => $item->key() === $this->suggestedKey);
 
-        $this->suggestedTopicId = ($others->isNotEmpty() ? $others : $ids)->random();
+        $this->suggestedKey = ($others->isNotEmpty() ? $others : $pool)->random()?->key();
     }
 
-    /** Mark today's topic as consumed (read + reflected on). */
-    public function markConsumed(int $topicId): void
+    /** Mark today's item as consumed (read + reflected on). */
+    public function markConsumed(string $type, int $id): void
     {
-        $topic = RecoveryTopic::ownedBy(Auth::user())->findOrFail($topicId);
+        $sourceType = MentalNutritionSourceType::from($type);
+        $item = $this->pool()->resolve($sourceType, $id);
+
+        if (! $item) {
+            return;
+        }
 
         MentalNutritionLog::updateOrCreate(
             ['user_id' => Auth::id(), 'date' => Carbon::today()->toDateString()],
-            ['recovery_topic_id' => $topic->id, 'reflection' => $this->reflection],
+            ['source_type' => $sourceType, 'source_id' => $id, 'reflection' => $this->reflection],
         );
 
         $this->reflection = null;
     }
 
-    /**
-     * The topic to read today: an explicit override, else the least-recently
-     * read topic (never-read first), breaking ties by highest importance.
-     */
-    private function suggestTopic(Collection $topics): ?RecoveryTopic
+    private function pool(): MentalNutritionPoolService
     {
-        if ($this->suggestedTopicId) {
-            $override = $topics->firstWhere('id', $this->suggestedTopicId);
+        return new MentalNutritionPoolService(Auth::user());
+    }
+
+    /**
+     * The item to show today: an explicit override, else the least-recently
+     * shown item across every source, tie-broken by a per-day pseudo-random
+     * order so untouched items rotate across sources instead of always
+     * favoring whichever tab happens to sort first.
+     */
+    private function suggestItem(Collection $pool): ?MentalNutritionItem
+    {
+        if ($this->suggestedKey) {
+            $override = $pool->first(fn (MentalNutritionItem $item) => $item->key() === $this->suggestedKey);
             if ($override) {
                 return $override;
             }
         }
 
-        $lastRead = MentalNutritionLog::query()
+        $lastShown = MentalNutritionLog::query()
             ->where('user_id', Auth::id())
-            ->whereNotNull('recovery_topic_id')
-            ->selectRaw('recovery_topic_id, MAX(date) as last_date')
-            ->groupBy('recovery_topic_id')
-            ->pluck('last_date', 'recovery_topic_id');
+            ->whereNotNull('source_type')
+            ->whereNotNull('source_id')
+            ->selectRaw('source_type, source_id, MAX(date) as last_date')
+            ->groupBy('source_type', 'source_id')
+            ->get()
+            ->keyBy(fn ($row) => $row->source_type->value.':'.$row->source_id)
+            ->map(fn ($row) => $row->last_date);
 
-        return $topics
-            ->sortBy(fn (RecoveryTopic $t) => [
-                $lastRead[$t->id] ?? '0000-00-00',
-                -$t->importance->weight(),
+        $daySeed = (int) Carbon::today()->format('Ymd');
+
+        return $pool
+            ->sortBy(fn (MentalNutritionItem $item) => [
+                $lastShown[$item->key()] ?? '0000-00-00',
+                crc32($item->key().$daySeed),
             ])
             ->first();
     }
@@ -101,27 +120,29 @@ class MentalNutrition extends Component
 
     public function render(): View
     {
-        $topics = RecoveryTopic::ownedBy(Auth::user())->get();
+        $pool = $this->pool()->pool();
 
         $todayLog = MentalNutritionLog::query()
             ->where('user_id', Auth::id())
             ->whereDate('date', Carbon::today())
-            ->with('topic')
             ->first();
 
         $recent = MentalNutritionLog::query()
             ->where('user_id', Auth::id())
-            ->with('topic')
             ->orderByDesc('date')
             ->limit(7)
             ->get();
 
         return view('livewire.recovery.mental-nutrition', [
-            'hasTopics' => $topics->isNotEmpty(),
+            'hasItems' => $pool->isNotEmpty(),
             'todayLog' => $todayLog,
-            'suggested' => $todayLog?->topic ?? $this->suggestTopic($topics),
+            'todayItem' => $todayLog && $todayLog->source_type ? $this->pool()->resolve($todayLog->source_type, $todayLog->source_id) : null,
+            'suggested' => $todayLog ? null : $this->suggestItem($pool),
             'streak' => $this->currentStreak(),
-            'recent' => $recent,
+            'recent' => $recent->map(fn (MentalNutritionLog $log) => [
+                'log' => $log,
+                'item' => $log->source_type ? $this->pool()->resolve($log->source_type, $log->source_id) : null,
+            ]),
         ]);
     }
 }

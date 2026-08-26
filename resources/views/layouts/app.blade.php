@@ -33,5 +33,18 @@
             class="fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary dark:bg-primary-dark text-white shadow-lg hover:scale-105 hover:opacity-95 transition print:hidden">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         </button>
+
+        {{-- Fixed mantra badge: appears on every page --}}
+        <div class="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-40 print:hidden pointer-events-none max-w-[85vw] sm:max-w-md">
+            <div class="pointer-events-auto rounded-2xl bg-ink dark:bg-black text-white shadow-lg px-5 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-bold leading-relaxed text-center">
+                <span class="text-success">القرار</span>
+                <span class="text-white/25 mx-1">•</span>
+                <span class="text-success">الجرأة</span>
+                <span class="text-white/25 mx-1">•</span>
+                <span class="text-success">الفعل</span>
+                <span class="block sm:inline text-danger font-black tracking-tighter mx-1.5">≫≫≫</span>
+                <span class="text-white/45 font-medium">التخطيط والكلام الكتير والوعود</span>
+            </div>
+        </div>
     </body>
 </html>
