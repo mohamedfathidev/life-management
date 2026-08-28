@@ -21,9 +21,28 @@
                 </div>
                 <div class="flex items-end">
                     <label class="inline-flex items-center gap-2 text-sm text-ink dark:text-ink-dark">
-                        <input type="checkbox" wire:model="form.is_setback" class="rounded border-gray-300 text-danger focus:ring-danger" />
+                        <input type="checkbox" wire:model.live="form.is_setback" class="rounded border-gray-300 text-danger focus:ring-danger" />
                         سجّل كانتكاسة
                     </label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <x-input-label for="rl_sleep_location" value="نمت فين (اختياري)" />
+                    <select id="rl_sleep_location" wire:model="form.sleep_location" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm">
+                        <option value="">—</option>
+                        <option value="home">في البيت</option>
+                        <option value="outside">برا</option>
+                    </select>
+                </div>
+                <div>
+                    <x-input-label for="rl_sleep_spot" value="نمت على إيه (اختياري)" />
+                    <select id="rl_sleep_spot" wire:model="form.sleep_spot" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm">
+                        <option value="">—</option>
+                        <option value="bed">على السرير</option>
+                        <option value="elsewhere">نومة تانية</option>
+                    </select>
                 </div>
             </div>
 
@@ -58,6 +77,38 @@
                 <x-input-label for="rl_trigger" value="المُحفّز (اختياري)" />
                 <x-text-input id="rl_trigger" wire:model="form.trigger_note" type="text" class="mt-1 block w-full" placeholder="إيه اللي أثار الرغبة؟" />
             </div>
+
+            @if ($form->is_setback)
+                <div>
+                    <x-input-label value="ازاي كنت اقدر اتجنب السقوط ده؟ (اختياري)" class="mb-2" />
+                    <div class="space-y-2">
+                        @foreach ($form->avoidance_reasons as $i => $reason)
+                            <div class="flex items-center gap-2">
+                                <span class="text-ink-soft dark:text-ink-dark-soft">•</span>
+                                <input type="text" wire:model="form.avoidance_reasons.{{ $i }}" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm" placeholder="سبب..." />
+                                <button type="button" wire:click="removeAvoidanceReason({{ $i }})" class="text-ink-soft dark:text-ink-dark-soft hover:text-danger px-1">×</button>
+                            </div>
+                        @endforeach
+                        <button type="button" wire:click="addAvoidanceReason" class="text-xs text-primary dark:text-primary-dark hover:underline">+ إضافة سبب</button>
+                    </div>
+                    <x-input-error :messages="$errors->get('form.avoidance_reasons.*')" class="mt-1" />
+                </div>
+            @else
+                <div>
+                    <x-input-label value="عملت ايه عشان مقعتش ضحية التخيلات والأفكار دي؟ (اختياري)" class="mb-2" />
+                    <div class="space-y-2">
+                        @foreach ($form->protection_actions as $i => $action)
+                            <div class="flex items-center gap-2">
+                                <span class="text-ink-soft dark:text-ink-dark-soft">•</span>
+                                <input type="text" wire:model="form.protection_actions.{{ $i }}" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-ink-dark focus:border-primary focus:ring-primary text-sm" placeholder="خطوة..." />
+                                <button type="button" wire:click="removeProtectionAction({{ $i }})" class="text-ink-soft dark:text-ink-dark-soft hover:text-danger px-1">×</button>
+                            </div>
+                        @endforeach
+                        <button type="button" wire:click="addProtectionAction" class="text-xs text-primary dark:text-primary-dark hover:underline">+ إضافة خطوة</button>
+                    </div>
+                    <x-input-error :messages="$errors->get('form.protection_actions.*')" class="mt-1" />
+                </div>
+            @endif
 
             <div>
                 <x-input-label value="ليلة اليوم (اختياري)" class="mb-2" />

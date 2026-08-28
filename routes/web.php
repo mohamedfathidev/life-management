@@ -51,11 +51,13 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
 
     Route::get('dreams', \App\Livewire\Dreams\Index::class)->name('dreams.index');
     Route::get('dreams/{dream}', \App\Livewire\Dreams\Show::class)->name('dreams.show');
+    Route::get('dreams/{dream}/road', \App\Livewire\Dreams\Road::class)->name('dreams.road');
 
     Route::get('tasks', \App\Livewire\Tasks\Index::class)->name('tasks.index');
     Route::get('tasks/{task}', \App\Livewire\Tasks\Show::class)->name('tasks.show');
     Route::get('focus', \App\Livewire\Focus\Index::class)->name('focus');
     Route::get('mind', \App\Livewire\Mind\Index::class)->name('mind');
+    Route::get('health', \App\Livewire\Health\Index::class)->name('health');
 
     Route::get('planner', WeekView::class)->name('planner');
     Route::get('planner/pool', \App\Livewire\Planner\Pool::class)->name('planner.pool');
@@ -83,6 +85,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
     Route::get('religion', \App\Livewire\Religion\Index::class)->name('religion');
     Route::get('religion/prayers', \App\Livewire\Religion\Prayers::class)->name('religion.prayers');
     Route::get('religion/quran', \App\Livewire\Religion\Quran::class)->name('religion.quran');
+    Route::get('religion/quran/read', \App\Livewire\Religion\QuranRead::class)->name('religion.quran.read');
     Route::get('religion/donations', \App\Livewire\Religion\Donations::class)->name('religion.donations');
     Route::get('religion/duaas', \App\Livewire\Religion\Duaas::class)->name('religion.duaas');
 
@@ -127,6 +130,7 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
 
     Route::get('career/pitfalls', \App\Livewire\Career\Pitfalls::class)->name('career.pitfalls');
     Route::get('career/interviews', \App\Livewire\Career\Interviews::class)->name('career.interviews');
+    Route::get('career/dreams', \App\Livewire\Career\Dreams::class)->name('career.dreams');
 
     Route::get('career/cvs', \App\Livewire\Cvs\Index::class)->name('cvs.index');
     Route::get('career/cvs/{cv}', \App\Livewire\Cvs\Show::class)->name('cvs.show');
@@ -152,15 +156,23 @@ Route::middleware(['auth', 'verified', 'owner.only'])->group(function () {
         Route::get('recovery/topics/{topic}', \App\Livewire\Recovery\TopicShow::class)->name('recovery.topics.show');
         Route::get('recovery/nutrition', \App\Livewire\Recovery\MentalNutrition::class)->name('recovery.nutrition');
         Route::get('recovery/pledge', \App\Livewire\Recovery\Pledge::class)->name('recovery.pledge');
+        Route::get('recovery/prison', \App\Livewire\Recovery\Prison::class)->name('recovery.prison');
+        Route::get('recovery/brain-comparisons', \App\Livewire\Recovery\BrainComparisons::class)->name('recovery.brain-comparisons');
+        Route::get('recovery/blessings', \App\Livewire\Recovery\Blessings::class)->name('recovery.blessings');
         Route::get('recovery/signature', \App\Livewire\Recovery\Signature::class)->name('recovery.signature');
         Route::get('recovery/mistakes', \App\Livewire\Recovery\Mistakes::class)->name('recovery.mistakes');
         Route::get('recovery/mistakes/{mistake}', \App\Livewire\Recovery\MistakeShow::class)->name('recovery.mistakes.show');
         Route::get('recovery/setbacks', \App\Livewire\Recovery\Setbacks::class)->name('recovery.setbacks');
+        Route::get('recovery/remember', \App\Livewire\Recovery\Remember::class)->name('recovery.remember');
+        Route::get('recovery/remember/{road}', \App\Livewire\Recovery\RememberRoad::class)
+            ->whereIn('road', ['destruction', 'salvation'])
+            ->name('recovery.remember.road');
         Route::get('recovery/damages', \App\Livewire\Recovery\Damages::class)->name('recovery.damages');
         Route::get('recovery/damages/{damage}', \App\Livewire\Recovery\DamageShow::class)->name('recovery.damages.show');
         Route::get('recovery/stories', \App\Livewire\Recovery\Stories::class)->name('recovery.stories');
         Route::get('recovery/stories/{story}', \App\Livewire\Recovery\StoryShow::class)->name('recovery.stories.show');
         Route::get('recovery/dreams', \App\Livewire\Recovery\Dreams::class)->name('recovery.dreams');
+        Route::get('recovery/dreams/road', \App\Livewire\Recovery\DreamsRoad::class)->name('recovery.dreams.road');
         Route::get('recovery/changes', \App\Livewire\Recovery\Changes::class)->name('recovery.changes');
         Route::get('recovery/changes/{change}', \App\Livewire\Recovery\ChangeShow::class)->name('recovery.changes.show');
         Route::get('recovery/telegram', \App\Livewire\Recovery\TelegramChannel::class)->name('recovery.telegram');

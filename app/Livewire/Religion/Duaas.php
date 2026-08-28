@@ -46,6 +46,39 @@ class Duaas extends Component
         $duaa->update(['is_favorite' => ! $duaa->is_favorite]);
     }
 
+    /**
+     * Imports the curated, sourced duas from public/files/duaas.json
+     * (Quran/hadith text with citations) — skips any already imported,
+     * matched by title, so this is safe to click more than once.
+     */
+    public function importTrusted(): void
+    {
+        $path = public_path('files/duaas.json');
+        if (! is_file($path)) {
+            return;
+        }
+
+        $data = json_decode((string) file_get_contents($path), true);
+        $categories = $data['categories'] ?? [];
+
+        $existingTitles = Duaa::ownedBy(Auth::user())->pluck('title')->all();
+
+        foreach ($categories as $category => $items) {
+            foreach ($items as $item) {
+                if (in_array($item['title'], $existingTitles, true)) {
+                    continue;
+                }
+
+                Duaa::create([
+                    'user_id' => Auth::id(),
+                    'title' => $item['title'],
+                    'content' => trim($item['content'])."\n\n📖 ".$item['source'],
+                    'tags' => [$category],
+                ]);
+            }
+        }
+    }
+
     public function save(): void
     {
         $this->form->persist(Auth::id());
@@ -61,12 +94,16 @@ class Duaas extends Component
 
     public function render(): View
     {
+        // Filtered in PHP, not via whereJsonContains(): MySQL stores this JSON
+        // column's Arabic text \uXXXX-escaped, and JSON_CONTAINS doesn't match
+        // across that encoding difference — it silently returns nothing.
         $duaas = Duaa::query()
             ->ownedBy(Auth::user())
-            ->when($this->tag !== '', fn ($q) => $q->withTag($this->tag))
             ->orderByDesc('is_favorite')
             ->latest()
-            ->get();
+            ->get()
+            ->filter(fn (Duaa $d) => $this->tag === '' || in_array($this->tag, $d->tags ?? [], true))
+            ->values();
 
         $allTags = Duaa::query()->ownedBy(Auth::user())->pluck('tags')->flatten()->filter()->unique()->sort()->values();
 

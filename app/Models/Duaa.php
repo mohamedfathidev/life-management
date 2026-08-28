@@ -29,9 +29,4 @@ class Duaa extends Model
     {
         return $query->where('user_id', $user->id);
     }
-
-    public function scopeWithTag(Builder $query, string $tag): Builder
-    {
-        return $query->whereJsonContains('tags', $tag);
-    }
 }

@@ -14,9 +14,14 @@
                         مش بس بتهرب من حاجة — إنت ماشي لحاجة. اكتب حلمك، وليه يستاهل كل التعب.
                     </p>
                 </div>
-                <button type="button" wire:click="createDream" class="shrink-0 px-5 py-2.5 rounded-xl bg-primary dark:bg-primary-dark text-white text-sm font-semibold shadow-md hover:opacity-90 hover:shadow-lg transition">
-                    + حلم جديد
-                </button>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="{{ route('recovery.dreams.road') }}" wire:navigate class="px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-dark border border-primary/20 dark:border-primary-dark/20 text-primary dark:text-primary-dark text-sm font-semibold shadow-sm hover:opacity-90 transition">
+                        🛣️ شوف طريق أحلامك
+                    </a>
+                    <button type="button" wire:click="createDream" class="px-5 py-2.5 rounded-xl bg-primary dark:bg-primary-dark text-white text-sm font-semibold shadow-md hover:opacity-90 hover:shadow-lg transition">
+                        + حلم جديد
+                    </button>
+                </div>
             </div>
         </div>
 

@@ -51,9 +51,10 @@ new class extends Component
 
                     {{-- Self-development group --}}
                     <x-nav-dropdown label="التطوير"
-                        :active="request()->routeIs('focus') || request()->routeIs('mind') || request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
+                        :active="request()->routeIs('focus') || request()->routeIs('mind') || request()->routeIs('health') || request()->routeIs('habits.*') || request()->routeIs('recovery.*') || request()->routeIs('diary.*') || request()->routeIs('comfort-zone') || request()->routeIs('challenges.*')">
                         <x-dropdown-link :href="route('focus')" wire:navigate>🎯 التركيز</x-dropdown-link>
                         <x-dropdown-link :href="route('mind')" wire:navigate>🧠 تنضيف العقل</x-dropdown-link>
+                        <x-dropdown-link :href="route('health')" wire:navigate>🏥 الصحة</x-dropdown-link>
                         <x-dropdown-link :href="route('habits.index')" wire:navigate>🔁 العادات</x-dropdown-link>
                         <x-dropdown-link :href="route('challenges.index')" wire:navigate>🔥 التحديات</x-dropdown-link>
                         <x-dropdown-link :href="route('recovery.index')" wire:navigate>🌱 التعافي</x-dropdown-link>
@@ -173,6 +174,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('mind')" :active="request()->routeIs('mind')" wire:navigate>
                 🧠 تنضيف العقل
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('health')" :active="request()->routeIs('health')" wire:navigate>
+                🏥 الصحة
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('habits.index')" :active="request()->routeIs('habits.*')" wire:navigate>
                 العادات

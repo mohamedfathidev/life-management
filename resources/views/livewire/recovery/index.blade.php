@@ -9,12 +9,16 @@
             <div class="flex items-center gap-2 flex-wrap">
                 <a href="{{ route('recovery.nutrition') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🧠 التغذية الذهنية</a>
                 <a href="{{ route('recovery.pledge') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🤝 تعهد أمام الله</a>
+                <a href="{{ route('recovery.prison') }}" wire:navigate class="px-4 py-2 rounded-lg bg-danger/20 dark:bg-danger-dark/25 text-danger dark:text-danger-dark text-sm font-medium hover:opacity-90">🔒 ماذا لو لم أدخل هذا السجن؟</a>
+                <a href="{{ route('recovery.brain-comparisons') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🧠 الدماغ الإدماني ضد دماغي الطبيعية</a>
+                <a href="{{ route('recovery.blessings') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">🤍 النعم اللي بغفل عنها</a>
                 <a href="{{ route('recovery.signature') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">✍️ توقيع التغيير</a>
                 <a href="{{ route('recovery.mistakes') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">⛓️ أخطاء التعافي</a>
                 <a href="{{ route('recovery.hard-moments') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">⚡ أصعب اللحظات</a>
                 <a href="{{ route('recovery.ideas') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">💡 أفكار تراودني</a>
                 <a href="{{ route('recovery.commitments') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">📜 حاجات لازم تلتزم بيها</a>
                 <a href="{{ route('recovery.setbacks') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">💔 الانتكاسات</a>
+                <a href="{{ route('recovery.remember') }}" wire:navigate class="px-4 py-2 rounded-lg bg-danger/20 dark:bg-danger-dark/25 text-danger dark:text-danger-dark text-sm font-medium hover:opacity-90">🛑 قبل الوقوع تذكر</a>
                 <a href="{{ route('recovery.damages') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">⚠️ أضرار الإدمان</a>
                 <a href="{{ route('recovery.stories') }}" wire:navigate class="px-4 py-2 rounded-lg bg-secondary/25 text-ink dark:text-ink-dark text-sm hover:opacity-90">📖 حكايات التعافي</a>
                 <a href="{{ route('recovery.dreams') }}" wire:navigate class="px-4 py-2 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary-dark/25 dark:to-secondary-dark/25 text-ink dark:text-ink-dark text-sm font-medium hover:opacity-90">✨ أحلام التعافي</a>

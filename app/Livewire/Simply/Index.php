@@ -3,8 +3,10 @@
 namespace App\Livewire\Simply;
 
 use App\Enums\ChallengeStatus;
+use App\Enums\ExperienceStatus;
 use App\Models\Appointment;
 use App\Models\Challenge;
+use App\Models\ComfortExperience;
 use App\Models\Habit;
 use App\Models\JobApplication;
 use App\Models\MentalNutritionLog;
@@ -76,6 +78,21 @@ class Index extends Component
             ['user_id' => Auth::id(), 'date' => $today],
             ['status' => $status],
         );
+    }
+
+    /** Quick mark-done from the light Simply view — no reflection prompt (that stays on the full page). */
+    public function toggleComfortExperience(int $id): void
+    {
+        $experience = ComfortExperience::ownedBy(Auth::user())->find($id);
+        if (! $experience) {
+            return;
+        }
+
+        if ($experience->status === ExperienceStatus::Done) {
+            $experience->update(['status' => ExperienceStatus::Doing, 'done_on' => null]);
+        } else {
+            $experience->update(['status' => ExperienceStatus::Done, 'done_on' => $experience->done_on ?? Carbon::today()]);
+        }
     }
 
     public function toggleAppointment(int $id): void
@@ -151,6 +168,16 @@ class Index extends Component
             ->where('status', ChallengeStatus::Active)
             ->with(['logs' => fn ($q) => $q->whereDate('date', $today)])->get();
 
+        // Comfort-zone experiences currently in progress ("خارج الزون") — plus
+        // anything just marked done today, so it stays visible (checked) here
+        // instead of vanishing the moment it's completed.
+        $comfortExperiences = ComfortExperience::query()->ownedBy($user)
+            ->where(function ($q) use ($today) {
+                $q->where('status', ExperienceStatus::Doing)
+                    ->orWhere(fn ($q2) => $q2->where('status', ExperienceStatus::Done)->whereDate('done_on', $today));
+            })
+            ->latest()->get();
+
         // Spiritual
         $prayerDone = PrayerDay::query()->where('user_id', $user->id)->whereDate('date', $today)->first()?->doneCount() ?? 0;
         $quranDone = QuranWirdDay::query()->where('user_id', $user->id)->whereDate('date', $today)->exists();
@@ -161,8 +188,9 @@ class Index extends Component
         $doneCount = $tasks->where('progress', 100)->count()
             + $habits->filter(fn (Habit $h) => $h->logs->isNotEmpty())->count()
             + $challenges->filter(fn (Challenge $c) => $c->logs->isNotEmpty())->count()
+            + $comfortExperiences->where('status', ExperienceStatus::Done)->count()
             + ($prayerDone >= 5 ? 1 : 0) + ($quranDone ? 1 : 0) + ($nutritionDone ? 1 : 0);
-        $totalCount = $tasks->count() + $habits->count() + $challenges->count() + 2 + ($hasTopics ? 1 : 0);
+        $totalCount = $tasks->count() + $habits->count() + $challenges->count() + $comfortExperiences->count() + 2 + ($hasTopics ? 1 : 0);
         $percent = $totalCount > 0 ? (int) round($doneCount / $totalCount * 100) : 0;
 
         $hour = (int) now()->format('H');
@@ -179,6 +207,7 @@ class Index extends Component
             'untimedTasks' => $untimedTasks,
             'habits' => $habits,
             'challenges' => $challenges,
+            'comfortExperiences' => $comfortExperiences,
             'today' => $today->toDateString(),
             'prayerDone' => $prayerDone,
             'quranDone' => $quranDone,

@@ -158,6 +158,12 @@
                                             {{ $log->prepared_for_sleep ? '🛏️ استعدّ للنوم' : '⚠️ مااستعدّش' }}
                                         </span>
                                     @endif
+                                    @if ($log->sleep_location)
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-ink-soft/10 text-ink-soft dark:text-ink-dark-soft">{{ $log->sleep_location === 'home' ? '🏠 نام في البيت' : '🚶 نام برا' }}</span>
+                                    @endif
+                                    @if ($log->sleep_spot)
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-ink-soft/10 text-ink-soft dark:text-ink-dark-soft">{{ $log->sleep_spot === 'bed' ? '🛏️ على السرير' : '↔️ نومة تانية' }}</span>
+                                    @endif
                                 </div>
                             </div>
                         @else
@@ -169,6 +175,16 @@
                         {{-- Causes --}}
                         @if ($log->trigger_note)
                             <p class="text-sm text-ink dark:text-ink-dark mt-3"><span class="text-danger font-medium">المُحفّز:</span> {{ $log->trigger_note }}</p>
+                        @endif
+                        @if ($log->avoidance_reasons)
+                            <div class="text-sm text-ink dark:text-ink-dark mt-1.5">
+                                <span class="text-danger font-medium">ازاي كنت اقدر اتجنب السقوط:</span>
+                                <ul class="list-disc pr-5 mt-0.5">
+                                    @foreach ($log->avoidance_reasons as $reason)
+                                        <li>{{ $reason }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endif
                         @if ($log->note)
                             <p class="text-sm text-ink dark:text-ink-dark mt-1.5 whitespace-pre-line"><span class="text-primary dark:text-primary-dark font-medium">كلمتين لنفسي:</span> {{ $log->note }}</p>

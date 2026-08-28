@@ -24,6 +24,8 @@ class ManageLog extends Component
         $this->resetValidation();
         $this->form->prepareForCreate($recoveryId);
         $this->form->is_setback = $setback;
+        $this->form->avoidance_reasons = [''];
+        $this->form->protection_actions = [''];
         $this->open = true;
     }
 
@@ -33,7 +35,37 @@ class ManageLog extends Component
         $this->authorize('update', $log->recovery);
         $this->resetValidation();
         $this->form->setLog($log);
+
+        if ($this->form->avoidance_reasons === []) {
+            $this->form->avoidance_reasons = [''];
+        }
+        if ($this->form->protection_actions === []) {
+            $this->form->protection_actions = [''];
+        }
+
         $this->open = true;
+    }
+
+    public function addAvoidanceReason(): void
+    {
+        $this->form->avoidance_reasons[] = '';
+    }
+
+    public function removeAvoidanceReason(int $index): void
+    {
+        unset($this->form->avoidance_reasons[$index]);
+        $this->form->avoidance_reasons = array_values($this->form->avoidance_reasons);
+    }
+
+    public function addProtectionAction(): void
+    {
+        $this->form->protection_actions[] = '';
+    }
+
+    public function removeProtectionAction(int $index): void
+    {
+        unset($this->form->protection_actions[$index]);
+        $this->form->protection_actions = array_values($this->form->protection_actions);
     }
 
     #[On('delete-recovery-log')]
