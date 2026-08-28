@@ -15,6 +15,8 @@ class RecoveryLog extends Model
         'trigger_note', 'note', 'is_setback',
         'hardest_from', 'hardest_to',
         'stayed_up_late', 'had_dinner', 'prepared_for_sleep',
+        'sleep_location', 'sleep_spot',
+        'avoidance_reasons', 'protection_actions',
     ];
 
     protected $casts = [
@@ -28,6 +30,8 @@ class RecoveryLog extends Model
         // sensitive fields encrypted at rest (§12)
         'trigger_note' => 'encrypted',
         'note' => 'encrypted',
+        'avoidance_reasons' => 'encrypted:array',
+        'protection_actions' => 'encrypted:array',
     ];
 
     public function recovery(): BelongsTo

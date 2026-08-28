@@ -74,11 +74,9 @@
                     @endif
                 </header>
 
-                <div class="prose dark:prose-invert max-w-none">
+                <div class="prose prose-base sm:prose-lg dark:prose-invert max-w-none">
                     @if ($story->content)
-                        <div class="trix-content text-base sm:text-lg text-ink/90 dark:text-ink-dark/90 leading-relaxed sm:leading-loose tracking-wide space-y-4">
-                            {!! $story->content !!}
-                        </div>
+                        {!! $story->content !!}
                     @else
                         <p class="text-ink-soft dark:text-ink-dark-soft italic text-center py-10">لا يوجد نص لهذه الحكاية.</p>
                     @endif

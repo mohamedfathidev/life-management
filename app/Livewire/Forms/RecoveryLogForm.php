@@ -22,6 +22,12 @@ class RecoveryLogForm extends Form
     public ?bool $stayed_up_late = null;
     public ?bool $had_dinner = null;
     public ?bool $prepared_for_sleep = null;
+    public ?string $sleep_location = null;
+    public ?string $sleep_spot = null;
+    /** @var array<int, string> */
+    public array $avoidance_reasons = [];
+    /** @var array<int, string> */
+    public array $protection_actions = [];
 
     /** @return array<string, mixed> */
     public function rules(): array
@@ -39,6 +45,12 @@ class RecoveryLogForm extends Form
             'stayed_up_late' => ['nullable', 'boolean'],
             'had_dinner' => ['nullable', 'boolean'],
             'prepared_for_sleep' => ['nullable', 'boolean'],
+            'sleep_location' => ['nullable', 'in:home,outside'],
+            'sleep_spot' => ['nullable', 'in:bed,elsewhere'],
+            'avoidance_reasons' => ['nullable', 'array'],
+            'avoidance_reasons.*' => ['nullable', 'string', 'max:2000'],
+            'protection_actions' => ['nullable', 'array'],
+            'protection_actions.*' => ['nullable', 'string', 'max:2000'],
         ];
     }
 
@@ -51,6 +63,10 @@ class RecoveryLogForm extends Form
             'mood' => 'المزاج',
             'trigger_note' => 'المُحفّز',
             'note' => 'ملاحظة',
+            'sleep_location' => 'مكان النوم',
+            'sleep_spot' => 'مكان النوم بالتحديد',
+            'avoidance_reasons' => 'طرق تجنب السقوط',
+            'protection_actions' => 'خطوات الحماية من الأفكار',
         ];
     }
 
@@ -69,11 +85,18 @@ class RecoveryLogForm extends Form
         $this->stayed_up_late = $log->stayed_up_late;
         $this->had_dinner = $log->had_dinner;
         $this->prepared_for_sleep = $log->prepared_for_sleep;
+        $this->sleep_location = $log->sleep_location;
+        $this->sleep_spot = $log->sleep_spot;
+        $this->avoidance_reasons = $log->avoidance_reasons ?: [];
+        $this->protection_actions = $log->protection_actions ?: [];
     }
 
     public function persist(): RecoveryLog
     {
         $data = $this->validate();
+
+        $data['avoidance_reasons'] = $this->cleanBullets($data['avoidance_reasons'] ?? []);
+        $data['protection_actions'] = $this->cleanBullets($data['protection_actions'] ?? []);
 
         if ($this->log) {
             $this->log->update($data);
@@ -89,5 +112,19 @@ class RecoveryLogForm extends Form
         $this->reset();
         $this->recovery_id = $recoveryId;
         $this->date = Carbon::today()->toDateString();
+    }
+
+    /**
+     * @param  array<int, string|null>  $bullets
+     * @return array<int, string>|null
+     */
+    private function cleanBullets(array $bullets): ?array
+    {
+        $bullets = array_values(array_filter(
+            array_map(fn ($bullet) => trim((string) $bullet), $bullets),
+            fn ($bullet) => $bullet !== ''
+        ));
+
+        return $bullets === [] ? null : $bullets;
     }
 }

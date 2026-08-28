@@ -34,6 +34,13 @@
             <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         </button>
 
+        {{-- Floating SOS: straight to طريق الهلاك بتفاصيله — reachable from anywhere, in the moment of urge --}}
+        <a href="{{ route('recovery.remember.road', 'destruction') }}" wire:navigate title="SOS — قبل ما تقع، شوف نهايتك"
+            class="fixed bottom-24 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-danger dark:bg-danger-dark text-white shadow-lg hover:scale-105 hover:opacity-95 transition text-2xl print:hidden">
+            <span class="absolute inset-0 rounded-full bg-danger dark:bg-danger-dark opacity-60 animate-ping pointer-events-none"></span>
+            <span class="relative">🆘</span>
+        </a>
+
         {{-- Fixed mantra badge: appears on every page --}}
         <div class="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-40 print:hidden pointer-events-none max-w-[85vw] sm:max-w-md">
             <div class="pointer-events-auto rounded-2xl bg-ink dark:bg-black text-white shadow-lg px-5 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-bold leading-relaxed text-center">

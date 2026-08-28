@@ -21,6 +21,7 @@ class TelegramChannelSyncService
     public const CHANNELS = [
         'G_Y_17' => 'خطر العادة السرية',
         'G_Y_19' => 'خطر الإباحية',
+        'uraware2014' => 'واعي',
     ];
 
     private readonly string $channel;

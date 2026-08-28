@@ -157,6 +157,17 @@
                 </div>
             </div>
 
+            @if ($comfortExperiences->isNotEmpty())
+                <div>
+                    <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-3">🚀 خارج الزون</h2>
+                    <div class="space-y-2">
+                        @foreach ($comfortExperiences as $ce)
+                            <x-simply-check :done="$ce->status->value === 'done'" wire:key="ce-{{ $ce->id }}" toggle="toggleComfortExperience({{ $ce->id }})" :title="$ce->title" :emoji="$ce->kind->emoji()" :hint="$ce->kind->label()" :url="route('comfort-zone')" />
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             {{-- Recovery band --}}
             <div>
                 <h2 class="text-sm font-semibold text-ink-soft dark:text-ink-dark-soft mb-3">🌱 التعافي</h2>
@@ -180,6 +191,19 @@
                             <p class="text-sm font-medium text-ink dark:text-ink-dark">عندك تغذية ذهنية تتقرأ النهاردة</p>
                         </a>
                     @endif
+
+                    {{-- Daily blessing reminder — health & wellness, easy to take for granted --}}
+                    <div class="rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm p-4">
+                        <p class="text-sm font-medium text-ink dark:text-ink-dark mb-1.5">🤍 نعمة النهاردة: الصحة والعافية</p>
+                        <p class="text-xs text-ink-soft dark:text-ink-dark-soft leading-relaxed">
+                            الصحة والعافية نعمة عظيمة كتير مننساها. لو فيه حاجة بتشتكي منها، افتكر اللي مبتلين بأمراض خبيثة وعمليات وألم كل يوم — اللهم عافينا. يومك العادي النهاردة نعمة كبيرة أوي والله.
+                        </p>
+                        <p class="text-xs text-ink dark:text-ink-dark leading-relaxed mt-3 italic border-t border-ink-soft/10 dark:border-ink-dark-soft/10 pt-3">
+                            «مَن أصبحَ معافًى في بدنِه، آمنًا في سِربِه، عندَه قوتُ يومِه، فكأنَّما حِيزَت له الدُّنيا بحذافيرِها»
+                            <span class="block not-italic text-[11px] text-ink-soft dark:text-ink-dark-soft mt-1">— حديث شريف</span>
+                        </p>
+                        <a href="{{ route('recovery.blessings') }}" wire:navigate class="inline-block text-xs text-primary dark:text-primary-dark hover:underline mt-3">🌍 شوف باقي النعم اللي بغفل عنها ←</a>
+                    </div>
                 </div>
             </div>
         </section>

@@ -71,6 +71,13 @@
                 <h3 class="font-semibold text-ink dark:text-ink-dark">السير الذاتية (CVs)</h3>
                 <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">ارفع نسخك الموجّهة واعرضها هنا.</p>
             </a>
+
+            {{-- Career dreams --}}
+            <a href="{{ route('career.dreams') }}" wire:navigate class="block rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md transition p-6">
+                <div class="text-3xl mb-2">🌠</div>
+                <h3 class="font-semibold text-ink dark:text-ink-dark">أحلام الكارير</h3>
+                <p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">لوحة أحلامك — دايرة لكل حلم، مليانة لو اتحقق.</p>
+            </a>
         </div>
     </div>
 </div>

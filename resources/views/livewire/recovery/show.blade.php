@@ -206,7 +206,7 @@
                             @if ($log->mood)<span>😊 المزاج: {{ $log->mood }}/10</span>@endif
                             @if ($log->hardest_from && $log->hardest_to)<span>⏰ أصعب فترة: {{ \Illuminate\Support\Carbon::parse($log->hardest_from)->translatedFormat('g:i A') }} – {{ \Illuminate\Support\Carbon::parse($log->hardest_to)->translatedFormat('g:i A') }}</span>@endif
                         </div>
-                        @if ($log->stayed_up_late !== null || $log->had_dinner !== null || $log->prepared_for_sleep !== null)
+                        @if ($log->stayed_up_late !== null || $log->had_dinner !== null || $log->prepared_for_sleep !== null || $log->sleep_location || $log->sleep_spot)
                             <div class="flex items-center gap-3 mt-1 text-xs flex-wrap">
                                 <span class="text-ink-soft dark:text-ink-dark-soft">ليلة اليوم:</span>
                                 @if ($log->stayed_up_late !== null)
@@ -224,9 +224,35 @@
                                         {{ $log->prepared_for_sleep ? '🛏️ استعدّ للنوم' : '⚠️ مااستعدّش' }}
                                     </span>
                                 @endif
+                                @if ($log->sleep_location)
+                                    <span class="text-ink-soft dark:text-ink-dark-soft">{{ $log->sleep_location === 'home' ? '🏠 نام في البيت' : '🚶 نام برا' }}</span>
+                                @endif
+                                @if ($log->sleep_spot)
+                                    <span class="text-ink-soft dark:text-ink-dark-soft">{{ $log->sleep_spot === 'bed' ? '🛏️ على السرير' : '↔️ نومة تانية' }}</span>
+                                @endif
                             </div>
                         @endif
                         @if ($log->trigger_note)<p class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1"><span class="text-danger font-medium">المُحفّز:</span> {{ $log->trigger_note }}</p>@endif
+                        @if ($log->avoidance_reasons)
+                            <div class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">
+                                <span class="text-danger font-medium">ازاي كنت اقدر اتجنب السقوط:</span>
+                                <ul class="list-disc pr-5 mt-0.5">
+                                    @foreach ($log->avoidance_reasons as $reason)
+                                        <li>{{ $reason }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if ($log->protection_actions)
+                            <div class="text-sm text-ink-soft dark:text-ink-dark-soft mt-1">
+                                <span class="text-success font-medium">عملت ايه عشان محصلش سقوط:</span>
+                                <ul class="list-disc pr-5 mt-0.5">
+                                    @foreach ($log->protection_actions as $action)
+                                        <li>{{ $action }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         @if ($log->note)<p class="text-sm text-ink dark:text-ink-dark mt-1"><span class="text-primary dark:text-primary-dark font-medium">كلمتين لنفسي:</span> {{ $log->note }}</p>@endif
                     </div>
                     <div class="flex items-center gap-2 shrink-0">

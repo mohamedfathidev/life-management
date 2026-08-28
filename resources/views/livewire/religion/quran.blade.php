@@ -6,7 +6,10 @@
                 <a href="{{ route('religion') }}" wire:navigate class="text-sm text-primary dark:text-primary-dark hover:underline">← الدين</a>
                 <h1 class="text-2xl font-bold text-ink dark:text-ink-dark mt-1">القرآن</h1>
             </div>
-            <button type="button" wire:click="openCreate" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ ورد</button>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ route('religion.quran.read') }}" wire:navigate class="px-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-primary/30 dark:border-primary-dark/30 text-primary dark:text-primary-dark text-sm font-medium shadow-sm hover:opacity-90 transition">📖 اقرأ</a>
+                <button type="button" wire:click="openCreate" class="px-4 py-2 rounded-lg bg-primary dark:bg-primary-dark text-white text-sm font-medium shadow-sm hover:opacity-90 transition">+ ورد</button>
+            </div>
         </div>
 
         {{-- Verse of the day --}}
